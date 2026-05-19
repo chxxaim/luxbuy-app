@@ -188,6 +188,7 @@
   }
   .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
   .form-grid.items-grid { grid-template-columns: 1fr; }
+  .form-grid chanting { font-size: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.span2 { grid-column: span 2; }
   .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
@@ -681,7 +682,7 @@
       <p>1. แท็บ <strong style="color:var(--text)">ตารางนัด</strong> → เพิ่มนัดหมายลูกค้าด้านบน</p>
       <p>2. เมื่อลูกค้ามาถึง สามารถเลือกปรับสถานะนัดและเงินเป็นแบบ Dropdown ได้โดยตรงในตาราง</p>
       <p>3. กดปุ่ม <strong style="color:var(--navy)">🔍 ตรวจสินค้า</strong> เพื่อประเมินและตรวจสภาพแบบรายชิ้น (รองรับหลายชิ้นพร้อมหน้ารวมสรุป)</p>
-      <p>4. เลือกหมวด → กดเลือกคะแนนแต่ละหัวข้อ → ระบบคำนวณเกรดให้อัตโนมัติ</p>
+      <p>4. เลือกหมวดสินค้าที่ต้องการตรวจ (รองรับ 4 ประเภท) → ระบบจะแสดงชุดอุปกรณ์ของสินค้านั้นให้โดยอัตโนมัติ</p>
       <p>5. สามารถกดปุ่มตรวจสินค้าอีกครั้งเพื่อดูข้อมูลสรุปหรือกลับมาแก้ไขผลตรวจสภาพย้อนหลังได้ตลอดเวลา</p>
     </div>
   </div>
@@ -740,52 +741,17 @@
       </div>
 
       <hr class="divider">
-      <div class="form-section-title">อุปกรณ์ที่ได้รับ</div>
-
-      <div class="equipment-grid">
-        <div class="equip-item">
-          <span class="equip-label">ใบเสร็จ</span>
-          <div class="toggle-wrap">
-            <button class="toggle-btn yes" id="eq_receipt_yes" onclick="toggleEquip(this,'receipt','yes')">มี</button>
-            <button class="toggle-btn no"  id="eq_receipt_no" onclick="toggleEquip(this,'receipt','no')">ไม่มี</button>
-          </div>
-        </div>
-        <div class="equip-item">
-          <span class="equip-label">กล่อง</span>
-          <div class="toggle-wrap">
-            <button class="toggle-btn yes" id="eq_box_yes" onclick="toggleEquip(this,'box','yes')">มี</button>
-            <button class="toggle-btn no"  id="eq_box_no" onclick="toggleEquip(this,'box','no')">ไม่มี</button>
-          </div>
-        </div>
-        <div class="equip-item">
-          <span class="equip-label">ถุงผ้า</span>
-          <div class="toggle-wrap">
-            <button class="toggle-btn yes" id="eq_dustbag_yes" onclick="toggleEquip(this,'dustbag','yes')">มี</button>
-            <button class="toggle-btn no"  id="eq_dustbag_no" onclick="toggleEquip(this,'dustbag','no')">ไม่มี</button>
-          </div>
-        </div>
-        <div class="equip-item">
-          <span class="equip-label">การ์ด</span>
-          <div class="toggle-wrap">
-            <button class="toggle-btn yes" id="eq_card_yes" onclick="toggleEquip(this,'card','yes')">มี</button>
-            <button class="toggle-btn no"  id="eq_card_no" onclick="toggleEquip(this,'card','no')">ไม่มี</button>
-          </div>
-        </div>
-        <div class="equip-item">
-          <span class="equip-label">คู่มือ</span>
-          <div class="toggle-wrap">
-            <button class="toggle-btn yes" id="eq_manual_yes" onclick="toggleEquip(this,'manual','yes')">มี</button>
-            <button class="toggle-btn no"  id="eq_manual_no" onclick="toggleEquip(this,'manual','no')">ไม่มี</button>
-          </div>
-        </div>
-        <div class="equip-item">
-          <span class="equip-label">ล็อคกุญแจ</span>
-          <div class="toggle-wrap">
-            <button class="toggle-btn yes" id="eq_lock_yes" onclick="toggleEquip(this,'lock','yes')">มี</button>
-            <button class="toggle-btn no"  id="eq_lock_no" onclick="toggleEquip(this,'lock','no')">ไม่มี</button>
-          </div>
-        </div>
+      <div class="form-section-title">เลือกประเภทสินค้า</div>
+      <div class="category-tabs">
+        <button class="cat-btn" id="cat_shoes" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
+        <button class="cat-btn" id="cat_bag" onclick="selectCategory('bag',this)">👜 กระเป๋า</button>
+        <button class="cat-btn" id="cat_jewelry" onclick="selectCategory('jewelry',this)">💎 Fine jewelry</button>
+        <button class="cat-btn" id="cat_acc" onclick="selectCategory('acc',this)">🧣 Acc อื่นๆ</button>
       </div>
+
+      <hr class="divider">
+      <div class="form-section-title">อุปกรณ์ที่ได้รับตามประเภทสินค้า</div>
+      <div class="equipment-grid" id="equipmentContainer"></div>
 
       <div class="form-group" style="margin-bottom:16px">
         <label>หมายเหตุอุปกรณ์</label>
@@ -794,12 +760,6 @@
 
       <hr class="divider">
       <div class="form-section-title">ประเมินคะแนนสภาพ</div>
-
-      <div class="category-tabs">
-        <button class="cat-btn" id="cat_shoes" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
-        <button class="cat-btn" id="cat_bag" onclick="selectCategory('bag',this)">👜 กระเป๋า</button>
-        <button class="cat-btn" id="cat_jewelry" onclick="selectCategory('jewelry',this)">💎 เครื่องประดับ</button>
-      </div>
 
       <div class="score-display">
         <div>
@@ -857,7 +817,7 @@
 
 <script>
 // =============================================
-// CONFIG — Script URL hardcoded ตามที่ขอ
+// CONFIG — Script URL hardcoded
 // =============================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec';
 const BUDGET_LIMIT = 2000000;
@@ -879,6 +839,41 @@ let equipState      = {};
 let scoreState      = {};
 let currentCategory = 'shoes';
 let historyCache    = [];
+
+// =============================================
+// EQUIPMENT SCHEMAS PER CATEGORY
+// =============================================
+const EQUIPMENT_SCHEMAS = {
+  shoes: [
+    { key: 'box', label: 'กล่อง' },
+    { key: 'dustbag', label: 'ถุงผ้า' },
+    { key: 'receipt', label: 'ใบเสร็จ' },
+    { key: 'extra_lace', label: 'เชือกสำรอง' },
+    { key: 'care_card', label: 'แคร์การ์ด/บุ๊ค' }
+  ],
+  bag: [
+    { key: 'box', label: 'กล่อง' },
+    { key: 'dustbag', label: 'ถุงผ้า' },
+    { key: 'receipt', label: 'ใบเสร็จ' },
+    { key: 'strap', label: 'สายสะพาย' },
+    { key: 'card', label: 'การ์ด/ชิป/เล่มบุ๊ค' },
+    { key: 'key_lock', label: 'กุญแจ/แม่กุญแจ' }
+  ],
+  jewelry: [
+    { key: 'box', label: 'กล่อง/กล่องนอก' },
+    { key: 'pouch', label: 'ถุงผ้า/เคสพกพา' },
+    { key: 'receipt', label: 'ใบเสร็จ' },
+    { key: 'cert', label: 'ใบเซอร์/การ์ดการันตี' },
+    { key: 'booklet', label: 'คู่มือ/เล่มบุ๊ค' }
+  ],
+  acc: [
+    { key: 'box', label: 'กล่อง' },
+    { key: 'dustbag', label: 'ถุงผ้า/ซองผ้า' },
+    { key: 'receipt', label: 'ใบเสร็จ' },
+    { key: 'tag', label: 'ป้ายแท็ก' },
+    { key: 'card_book', label: 'การ์ด/เล่มคู่มือ' }
+  ]
+};
 
 // =============================================
 // INSPECTION CRITERIA
@@ -912,6 +907,13 @@ const CRITERIA = {
     { key:'stain',   label:'รอยเปื้อน',             max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุด',5]] },
     { key:'glue',    label:'กาวซึม',                max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
     { key:'oxidize', label:'ออกซิไดซ์',             max:20, opts:[['ไม่มี',20],['มี',0]] },
+  ],
+  acc: [
+    { key:'shape',   label:'รูปทรง/ความยืดหยุ่น',    max:20, opts:[['ปกติไม่ย้วย',20],['ย้วยเล็กน้อย',10],['ผิดรูปทรง',0]] },
+    { key:'hardware',label:'อะไหล่/กระดุม/ซิป',       max:20, opts:[['ใช้งานลื่นไหล',20],['ฝืดเล็กน้อย',10],['ชำรุด',0]] },
+    { key:'scratch', label:'รอยขีดข่วน/รอยเกี่ยว',    max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุดขึ้นไป',0]] },
+    { key:'stain',   label:'คราบสกปรียบ/สีเฟด',      max:20, opts:[['สีสดไม่มีคราบ',20],['สีเฟด/คราบจาง',10],['คราบฝังลึก',0]] },
+    { key:'smell',   label:'กลิ่นอับ/น้ำหอมฉุน',      max:20, opts:[['กลิ่นปกติ',20],['มีกลิ่นอับ',10],['กลิ่นรุนแรง',0]] }
   ]
 };
 
@@ -1073,7 +1075,6 @@ function esc(s) {
   return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// เปลี่ยนเป็น Dropdown สำหรับแก้ไขสถานะนัดหมายย้อนหลังได้ตลอดเวลา
 function renderApptDropdown(status, id) {
   const s = status || 'รอเข้าพบ';
   let cls = 'badge-select-wait';
@@ -1091,7 +1092,6 @@ function renderApptDropdown(status, id) {
   `;
 }
 
-// เปลี่ยนเป็น Dropdown สำหรับแก้ไขสถานะการเงินย้อนหลังได้ตลอดเวลา
 function renderPayDropdown(status, id) {
   const s = status || 'ยังไม่จ่าย';
   let cls = 'badge-select-pay-no';
@@ -1155,13 +1155,12 @@ async function updateStatus(id, field, value) {
 }
 
 // =============================================
-// INSPECT MODAL (รองรับแก้ไข และ ตรวจหลายชิ้น)
+// INSPECT MODAL (ระบบหลายชิ้นและรองรับสินค้า 4 ประเภท)
 // =============================================
 function openInspect(id, name, phone, product, price) {
   currentApptId    = id;
   currentApptPrice = price;
 
-  // ค้นหาว่าเคยมีการบันทึกข้อมูลการตรวจสินค้าในนัดหมายนี้ไว้ใน LocalStorage หรือไม่ (ช่วยให้ดึงมาแก้ไขใหม่ย้อนหลังได้)
   const savedInspection = localStorage.getItem('inspect_' + id);
   if (savedInspection) {
     try {
@@ -1174,7 +1173,6 @@ function openInspect(id, name, phone, product, price) {
   }
 
   if (inspectionItems.length === 0) {
-    // ถ้ายังไม่เคยมีบันทึก ให้สร้างชิ้นที่ 1 เป็นค่าเริ่มต้น
     addNewItem(product, price);
   } else {
     activeItemIndex = 0;
@@ -1227,21 +1225,16 @@ function loadItemData(index) {
   scoreState = item.scores || {};
   currentCategory = item.category || 'shoes';
 
-  // ปรับการตั้งค่า UI Toggles อุปกรณ์
-  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-  for (const [k, v] of Object.entries(equipState)) {
-    const el = document.getElementById(`eq_${k}_${v}`);
-    if (el) el.classList.add('active');
-  }
-
-  // ปรับการตั้งค่า UI Category
+  // ปรับ UI Category
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   const catBtn = document.getElementById('cat_' + currentCategory);
   if (catBtn) catBtn.classList.add('active');
 
-  renderCriteria(currentCategory);
+  // วาดและผูกข้อมูลอุปกรณ์
+  renderEquipmentGrid(currentCategory);
   
   // โหลดคะแนนที่เลือกไว้เดิมกลับมาบน UI
+  renderCriteria(currentCategory);
   for (const [key, val] of Object.entries(scoreState)) {
     const inspectGroups = document.getElementById('inspectCriteria').querySelectorAll('.inspect-group');
     inspectGroups.forEach(group => {
@@ -1256,7 +1249,30 @@ function loadItemData(index) {
     });
   }
 
-  updateScore(false); // อัปเดตคะแนนภายในแบบไม่บันทึกภายนอกอัตโนมัติ
+  updateScore(false);
+}
+
+function renderEquipmentGrid(cat) {
+  const container = document.getElementById('equipmentContainer');
+  const schema = EQUIPMENT_SCHEMAS[cat] || EQUIPMENT_SCHEMAS['shoes'];
+  
+  container.innerHTML = schema.map(eq => {
+    // กำหนดค่าเริ่มต้นของสเตตอุปกรณ์หากยังไม่มี
+    if (!equipState[eq.key]) {
+      equipState[eq.key] = 'no'; 
+    }
+    const currentVal = equipState[eq.key];
+    
+    return `
+      <div class="equip-item">
+        <span class="equip-label">${eq.label}</span>
+        <div class="toggle-wrap">
+          <button class="toggle-btn yes ${currentVal === 'yes' ? 'active' : ''}" onclick="toggleEquip(this,'${eq.key}','yes')">มี</button>
+          <button class="toggle-btn no ${currentVal === 'no' ? 'active' : ''}" onclick="toggleEquip(this,'${eq.key}','no')">ไม่มี</button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 function saveCurrentItemState() {
@@ -1273,7 +1289,6 @@ function saveCurrentItemState() {
     item.scores = scoreState;
     item.category = currentCategory;
     
-    // คำนวณคะแนนและเกรด
     const total = Object.values(scoreState).reduce((s,v) => s+v, 0);
     const criteria = CRITERIA[currentCategory];
     const maxPossible = criteria.reduce((s,c) => s + c.max, 0);
@@ -1329,9 +1344,10 @@ function updateItemsSummary() {
   let totalAllItemsPrice = 0;
   let html = inspectionItems.map((item, idx) => {
     totalAllItemsPrice += Number(item.price || 0);
+    let catThai = item.category === 'shoes' ? 'รองเท้า' : item.category === 'bag' ? 'กระเป๋า' : item.category === 'jewelry' ? 'Fine jewelry' : 'Acc อื่นๆ';
     return `
       <div class="items-summary-item">
-        <span><strong>ชิ้นที่ ${idx+1}:</strong> ${esc(item.title || 'ไม่ระบุชื่อ')} [หมวด: ${item.category}]</span>
+        <span><strong>ชิ้นที่ ${idx+1}:</strong> ${esc(item.title || 'ไม่ระบุชื่อ')} [หมวด: ${catThai}]</span>
         <span>สภาพเกรด: <span style="color:var(--navy); font-weight:bold;">${item.grade || 'USED'}</span> (${item.totalScore || 0} คะแนน) | ราคา: ฿${Number(item.price || 0).toLocaleString('th-TH')}</span>
       </div>
     `;
@@ -1360,8 +1376,12 @@ function closeModal(id) {
 function selectCategory(cat, btn) {
   currentCategory = cat;
   scoreState = {};
+  equipState = {}; // เคลียร์สเตตอุปกรณ์ตัวเดิมเพื่อใช้อุปกรณ์ของหมวดหมู่ใหม่
+  
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  
+  renderEquipmentGrid(cat);
   renderCriteria(cat);
   updateScore();
 }
@@ -1427,9 +1447,8 @@ function toggleEquip(btn, key, val) {
 }
 
 async function saveInspection() {
-  saveCurrentItemState(); // ตรวจสอบความถูกต้องและบันทึกข้อมูลชิ้นปัจจุบันลงใน State หลัก
+  saveCurrentItemState();
 
-  // ตรวจสอบความสมบูรณ์ขั้นต่ำของทุกชิ้นงานก่อนส่งข้อมูล
   for(let i=0; i < inspectionItems.length; i++) {
     if (!inspectionItems[i].inspector.trim()) {
       showToast('error', `⚠️ กรุณาระบุชื่อพนักงานผู้ตรวจใน สินค้าชิ้นที่ ${i+1}`);
@@ -1438,10 +1457,8 @@ async function saveInspection() {
     }
   }
 
-  // คำนวณราคาประเมินรวมของทุกชิ้นงาน
   const totalAllItemsPrice = inspectionItems.reduce((s, item) => s + Number(item.price || 0), 0);
 
-  // สรุปข้อมูลส่งชีตแบบหลายชิ้น
   const finalMergedCategory = inspectionItems.map(item => item.category).join(', ');
   const finalMergedGrade = inspectionItems.map((item, idx) => `ชิ้นที่${idx+1}:${item.grade}(${item.totalScore}คะแนน)`).join(' | ');
   const finalMergedEquipSummary = inspectionItems.map((item, idx) => `ชิ้นที่${idx+1}[${Object.entries(item.equip).map(([k,v]) => `${k}:${v}`).join(',')}]`).join(' | ');
@@ -1453,24 +1470,22 @@ async function saveInspection() {
   const res = await apiCall({
     action:           'save_inspection',
     appt_id:          currentApptId,
-    brand:            finalMergedCategory, // ส่งชื่อหมวดหมู่ที่ทำการตรวจสภาพรวมกัน
+    brand:            finalMergedCategory, 
     date_code:        inspectionItems.map(item => item.datecode || '-').join(', '),
     declaration:      inspectionItems.map(item => item.declaration || '-').join(', '),
-    inspector:        inspectionItems[0].inspector, // พนักงานหลัก
+    inspector:        inspectionItems[0].inspector, 
     equipment_summary:finalMergedEquipSummary,
     equipment_notes:  inspectionItems.map(item => item.equipNote || '-').join(' | '),
     score_details:    { multi_items_summary: finalMergedGrade },
-    total_score:      Math.round(inspectionItems.reduce((s, item) => s + item.totalScore, 0) / inspectionItems.length), // ใช้คะแนนเฉลี่ย
+    total_score:      Math.round(inspectionItems.reduce((s, item) => s + item.totalScore, 0) / inspectionItems.length), 
     final_condition:  `รวม ${inspectionItems.length} ชิ้น (${finalMergedGrade})`,
-    estimated_price:  totalAllItemsPrice // อัปเดตยอดรวมราคาทุกชิ้นงานเข้าไปยังระบบ
+    estimated_price:  totalAllItemsPrice 
   });
 
   btn.disabled = false; sp.style.display = 'none';
 
   if (res && res.status === 'success') {
-    // บันทึกสถานะโครงสร้างหลายชิ้นงานลง LocalStorage เพื่อให้กดกลับเข้ามาเปิดดู/แก้ไขรายละเอียดภายหลังได้ครบถ้วน
     localStorage.setItem('inspect_' + currentApptId, JSON.stringify(inspectionItems));
-    
     showToast('success', `✅ บันทึกผลตรวจสำเร็จรวมทั้งสิ้น ${inspectionItems.length} ชิ้น ยอดรวม ฿${totalAllItemsPrice.toLocaleString('th-TH')}`);
     closeModal('inspectModal');
     await loadAppointments();
@@ -1632,7 +1647,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 document.getElementById('loginPass').addEventListener('keydown', function(e) {
-  if (event.key === 'Enter') doLogin();
+  if (e.key === 'Enter') doLogin();
 });
 </script>
 </body>
