@@ -773,8 +773,13 @@ async function apiCall(data) {
     return null;
   }
   try {
+    // ปรับโครงสร้าง Fetch ให้ฝั่ง Google Apps Script รับค่าได้ง่ายขึ้น
     const resp = await fetch(SCRIPT_URL, {
       method: 'POST',
+      mode: 'cors', // เพิ่มโหมดเปิด cors ชัดเจน
+      headers: {
+        // ไม่ใส่ Content-Type: application/json เพื่อหลีกเลี่ยงข้อกำหนด Preflight Request บางอย่างบน Google Server
+      },
       body: JSON.stringify(data)
     });
     return await resp.json();
@@ -783,7 +788,6 @@ async function apiCall(data) {
     return null;
   }
 }
-
 async function loadDashboard() {
   const data = await apiCall({ action: 'get_dashboard_data' });
   if (data && data.status === 'success') {
@@ -3026,7 +3030,7 @@ const BUDGET_LIMIT = 2000000;
 // =============================================
 // STATE & CRITERIA (ใช้ Checklist เดิมตามรูปภาพ)
 // =============================================
-let SCRIPT_URL = localStorage.getItem('scriptUrl') || '';
+let SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec";
 let currentApptId = null;
 let currentSpend = 0;
 let allAppointments = [];
