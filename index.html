@@ -36,6 +36,8 @@
     overflow-x: hidden;
   }
 
+  /* === 🔓 ลบสไตล์ของ LOGIN OVERLAY ออกทั้งหมดแล้ว === */
+
   /* === TOP BAR === */
   #topBar {
     position: sticky; top: 0; z-index: 100;
@@ -60,6 +62,7 @@
     cursor: pointer; transition: border-color 0.2s;
   }
   .budget-wrap:hover { border-color: var(--gold); }
+  .budget-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
   .budget-bar-outer {
     flex: 1; height: 6px; background: var(--dark4);
     border-radius: 4px; overflow: hidden;
@@ -132,7 +135,6 @@
   .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
   .btn-sm { padding: 6px 14px; font-size: 12px; }
   .btn-danger { background: rgba(232,90,74,0.15); color: var(--red); border: 1px solid rgba(232,90,74,0.3); }
-  .btn-danger:hover { background: var(--red); color: white; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* === APPOINTMENT TABLE === */
@@ -185,7 +187,7 @@
   .badge-pay-done { background: rgba(76,175,122,0.15); color: var(--green); border: 1px solid rgba(76,175,122,0.3); }
   .badge-pay-done::before { background: var(--green); }
 
-  .actions { display: flex; gap: 6px; align-items: center; }
+  .actions { display: flex; gap: 8px; align-items: center; }
 
   /* Empty state */
   .empty-state {
@@ -279,6 +281,7 @@
   .grade-A { background: rgba(76,175,122,0.2); color: var(--green); border: 1px solid var(--green); }
   .grade-B { background: rgba(232,148,58,0.2); color: var(--orange); border: 1px solid var(--orange); }
 
+  /* Category selector */
   .category-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
   .cat-btn {
     padding: 8px 16px; border-radius: 20px;
@@ -322,6 +325,7 @@
   .toggle-btn.no { border-color: var(--red); color: var(--red); }
   .toggle-btn.no.active { background: var(--red); color: white; }
 
+  /* Info banner in inspect */
   .info-banner {
     background: var(--dark3); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 12px 16px;
@@ -338,6 +342,7 @@
     color: var(--red); font-size: 13px; margin-top: 16px; display: none;
   }
 
+  /* Divider */
   .divider {
     border: none; border-top: 1px solid var(--border);
     margin: 20px 0;
@@ -414,6 +419,7 @@
   .toast-success { border-color: rgba(76,175,122,0.5); }
   .toast-error { border-color: rgba(232,90,74,0.5); }
 
+  /* Loading spinner */
   .spinner {
     width: 16px; height: 16px;
     border: 2px solid rgba(201,168,76,0.2);
@@ -423,6 +429,7 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* Responsive */
   @media (max-width: 768px) {
     #topBar { padding: 0 16px; }
     .tabs { display: none; }
@@ -433,6 +440,7 @@
     .stats-row { grid-template-columns: 1fr 1fr; }
   }
 
+  /* Mobile bottom tabs */
   .mobile-tabs {
     display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
     background: var(--dark2); border-top: 1px solid var(--border);
@@ -479,10 +487,10 @@
 </div>
 
 <div class="tab-content active" id="tab-appt">
-  <div class="form-card" id="apptFormCard">
-    <div class="form-card-title" id="formActionTitle">➕ เพิ่มนัดหมายใหม่</div>
+
+  <div class="form-card">
+    <div class="form-card-title">➕ เพิ่มนัดหมายใหม่</div>
     <div class="form-grid">
-      <input type="hidden" id="f_appt_id_edit">
       <div class="form-group">
         <label>ชื่อลูกค้า</label>
         <input class="form-control" id="f_name" placeholder="เช่น คุณสมชาย">
@@ -509,12 +517,9 @@
       </div>
     </div>
     <div class="form-actions">
-      <button class="btn btn-gold" id="addApptBtn" onclick="saveAppointmentForm()">
+      <button class="btn btn-gold" id="addApptBtn" onclick="addAppointment()">
         <span class="spinner" id="addSpinner" style="display:none"></span>
-        <span id="addBtnLabel">บันทึกนัดหมาย</span>
-      </button>
-      <button class="btn btn-outline" id="cancelEditBtn" style="display:none" onclick="resetApptForm()">
-        ยกเลิกการแก้ไข
+        บันทึกนัดหมาย
       </button>
       <div class="budget-warning-inline" id="budgetWarnInline">
         ⛔ ราคาที่กรอกจะทำให้วงเงินวันนี้เกิน 2,000,000 บาท
@@ -535,7 +540,7 @@
           <th>ลูกค้า</th>
           <th>สินค้า</th>
           <th>ราคา</th>
-          <th>สถานะนัด</th>
+          <th>Def สถานะนัด</th>
           <th>สถานะเงิน</th>
           <th>การดำเนินการ</th>
         </tr>
@@ -576,7 +581,9 @@
       <span class="search-icon">🔍</span>
       <input class="search-input" id="searchInput" placeholder="ค้นหาจากชื่อหรือเบอร์โทรลูกค้า..." oninput="searchCustomer()">
     </div>
-    <button class="btn btn-outline" onclick="loadHistory()">รีเฟรช</button>
+    <button class="btn btn-outline" onclick="loadHistory()">
+      รีเฟรช
+    </button>
   </div>
 
   <div id="historyResults">
@@ -604,163 +611,635 @@
     </div>
     <button class="btn btn-gold" onclick="saveSettings()">💾 บันทึกการตั้งค่า</button>
   </div>
+
+  <div class="form-card">
+    <div class="form-card-title">📋 คำแนะนำการใช้งาน</div>
+    <div style="font-size:14px; line-height:1.8; color:var(--text-muted)">
+      <p><strong style="color:var(--text)">วิธีใช้งานเบื้องต้น:</strong></p>
+      <p>1. ตั้งค่า URL ของ Google Apps Script ในหน้านี้ก่อน</p>
+      <p>2. เพิ่มนัดหมายลูกค้าในแท็บ "ตารางนัด"</p>
+      <p>3. เมื่อลูกค้ามา กดปุ่ม "🔍 ตรวจสินค้า" เพื่อเปิดฟอร์มประเมินคะแนน</p>
+      <p>4. เลือกหมวดสินค้า กรอกคะแนนแต่ละหัวข้อ → ระบบคำนวณเกรดให้อัตโนมัติ</p>
+      <p>5. อัปเดตสถานะนัดและสถานะเงินได้จากปุ่มในตาราง</p>
+      <p style="margin-top:12px"><strong style="color:var(--text)">วงเงิน:</strong> ระบบจะ lock ปุ่มบันทึกอัตโนมัติเมื่อยอดรวมจะเกิน 2,000,000 บาท/วัน</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inspectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔍 ตรวจสภาพสินค้า</div>
+      <button class="modal-close" onclick="closeModal('inspectModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-banner">
+        <div class="icon">👤</div>
+        <div>
+          <div class="info-name" id="modal_custName">—</div>
+          <div class="info-detail" id="modal_custDetail">—</div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>ชื่อพนักงานผู้ตรวจ</label>
+        <input class="form-control" id="m_inspector" placeholder="ชื่อพนักงาน">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Date Code / ปีผลิต</label>
+        <input class="form-control" id="m_datecode" placeholder="เช่น 2021, 30XXXXXX">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>สภาพตามลูกค้าแจ้ง</label>
+        <select class="form-control" id="m_declaration">
+          <option value="ไม่เคยใช้งาน">ไม่เคยใช้งาน</option>
+          <option value="ผ่านการใช้งาน">ผ่านการใช้งาน</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">อุปกรณ์ที่ได้รับ</div>
+
+      <div class="equipment-grid">
+        <div class="equip-item">
+          <span class="equip-label">ใบเสร็จ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'receipt','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'receipt','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">กล่อง</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'box','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'box','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">ถุงผ้า</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'dustbag','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'dustbag','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">การ์ด</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'card','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'card','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">คู่มือ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'manual','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'manual','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">ล็อคกุญแจ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'lock','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'lock','no')">ไม่มี</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>หมายเหตุอุปกรณ์</label>
+        <input class="form-control" id="m_equip_note" placeholder="เช่น ใบเสร็จระบุ Saudi Arabia">
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">ประเมินคะแนนสภาพ</div>
+
+      <div class="category-tabs">
+        <button class="cat-btn active" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
+        <button class="cat-btn" onclick="selectCategory('bag',this)">👜 กระเป๋า</button>
+        <button class="cat-btn" onclick="selectCategory('jewelry',this)">💎 เครื่องประดับ</button>
+      </div>
+
+      <div class="score-display">
+        <div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">คะแนนรวม</div>
+          <div class="score-number" id="scoreNum">0</div>
+          <div style="font-size:12px;color:var(--text-muted)">/ 100 คะแนน</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">เกรดสภาพ</div>
+          <div class="score-grade grade-B" id="scoreGrade">USED</div>
+        </div>
+      </div>
+
+      <div id="inspectCriteria"></div>
+
+      <div class="used-warning" id="usedWarning">
+        ⚠️ สินค้าได้คะแนนต่ำกว่า 75 — กรุณาระบุรายละเอียดเพิ่มเติมและความเสี่ยงด้านราคา
+        <textarea class="form-control" style="margin-top:8px;min-height:60px" id="m_risk_note" placeholder="ระบุเหตุผล / ความเสี่ยง..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inspectModal')">ยกเลิก</button>
+      <button class="btn btn-gold" id="saveInspectBtn" onclick="saveInspection()">
+        <span class="spinner" id="saveSpinner" style="display:none"></span>
+        💾 บันทึกผลตรวจ
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-tabs">
+  <button class="mobile-tab active" onclick="showTab('appt',this)">
+    <span class="icon">📋</span>ตารางนัด
+  </button>
+  <button class="mobile-tab" onclick="showTab('history',this)">
+    <span class="icon">📊</span>ประวัติ
+  </button>
+  <button class="mobile-tab" onclick="showTab('settings',this)">
+    <span class="icon">⚙️</span>ตั้งค่า
+  </button>
 </div>
 
 <div class="toast" id="toast">
-  <span class="toast-icon" id="toastIcon"></span>
+  <span class="toast-icon" id="toastIcon">✅</span>
   <span class="toast-text" id="toastText"></span>
 </div>
 
 <script>
-  // เริ่มต้นระบบโดยดึงข้อมูลทำงานทันที ไม่ต้องผ่านสเต็ปตรวจสอบรหัสผ่าน
-  window.onload = function() {
-    // ดึงค่า URL ของสคริปต์ที่เคยบันทึกไว้
-    let savedUrl = localStorage.getItem('luxbuy_script_url') || '';
-    if (savedUrl) {
-      document.getElementById('scriptUrl').value = savedUrl;
-      loadDashboard();
-    } else {
-      showTab('settings');
-      showToast('error', 'กรุณาตั้งค่า Web App URL ของ Google Apps Script ก่อนเริ่มใช้งาน');
-    }
-    
-    // ตั้งค่าฟอร์มวันที่ให้เป็นวันปัจจุบัน
-    document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
-  };
+const BUDGET_LIMIT = 2000000;
 
-  function showTab(tab) {
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(c => c.classList.remove('active'));
-    
-    const btns = document.querySelectorAll('.tab-btn');
-    btns.forEach(b => b.classList.remove('active'));
-    
-    document.getElementById('tab-' + tab).classList.add('active');
-    
-    // ไฮไลท์ปุ่มเมนูที่เปิดอยู่
-    const tabOrder = ['appt','history','settings'];
-    const idx = tabOrder.indexOf(tab);
-    if(btns[idx]) btns[idx].classList.add('active');
-    
-    if (tab === 'history') loadHistory();
-    if (tab === 'appt') loadDashboard();
+// =============================================
+// STATE
+// =============================================
+let SCRIPT_URL = localStorage.getItem('scriptUrl') || '';
+let currentApptId = null;
+let currentSpend = 0;
+let allAppointments = [];
+let equipState = {};
+let scoreState = {};
+let currentCategory = 'shoes';
+
+const CRITERIA = {
+  shoes: [
+    { key:'shape',    label:'ทรงรองเท้า',           max:20, opts:[['ปกติ',20],['ไม่ปกติ',10]] },
+    { key:'oxidize',  label:'อะไหล่ออกซิไดซ์/สนิม', max:20, opts:[['ไม่มี',20],['1-2 จุด',10],['3+ จุด',0]] },
+    { key:'glue',     label:'กาวซึม',               max:20, opts:[['ไม่มี',20],['1-2 จุด',10],['3+ จุด',0]] },
+    { key:'smell',    label:'กลิ่น',                max:10, opts:[['ปกติ',10],['ไม่ปกติ',5]] },
+    { key:'gems',     label:'เพชรหลุด',             max:10, opts:[['ไม่มี',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'scratch',  label:'ถลอก/เฟด/ขีด',         max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'sole',     label:'พื้นรองเท้า',           max:10, opts:[['ไม่มีรอย',10],['รอยเล็กน้อย',5],['รอยเยอะ',0]] },
+  ],
+  bag: [
+    { key:'leather',  label:'หนังกระเป๋า',           max:15, opts:[['หนังแข็งสวย',15],['หนังนิ่มลง',10],['หนังนิ่มย้วย',5]] },
+    { key:'hardware', label:'อะไหล่',               max:10, opts:[['ไม่มีรอย',10],['ขนแมวบางๆ',5],['ขนแมวเยอะ',0]] },
+    { key:'smell',    label:'กลิ่น',                max:5,  opts:[['ปกติ',5],['ไม่ปกติ',0]] },
+    { key:'corner',   label:'ขอบมุม',               max:10, opts:[['ไม่มีรอย',10],['มีรอยบาง',5],['รอยถลอกลึก',0]] },
+    { key:'stain',    label:'รอยปากกา/เครื่องสำอาง', max:10, opts:[['ไม่มีรอย',10],['เล็ก 1-2 จุด',5],['ใหญ่ 3+ จุด',0]] },
+    { key:'scratch',  label:'ถลอก/เหนียว/เล็บ',     max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'glue',     label:'กาวซึม',               max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'water',    label:'คราบน้ำ',              max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'press',    label:'รอยกดทับ',             max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'oxidize',  label:'ออกซิไดซ์',            max:10, opts:[['ไม่มี',10],['มี',0]] },
+  ],
+  jewelry: [
+    { key:'shape',    label:'ทรง',                  max:10, opts:[['ปกติ',10],['ไม่ปกติ',0]] },
+    { key:'hardware', label:'อะไหล่',               max:20, opts:[['ไม่มีรอย',20],['ขนแมวบางๆ',10],['ขนแมวเยอะ',5]] },
+    { key:'scratch',  label:'ถลอก/ขาด/ขีด',         max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุด',5]] },
+    { key:'stain',    label:'รอยเปื้อน',            max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุด',5]] },
+    { key:'glue',     label:'กาวซึม',               max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'oxidize',  label:'ออกซิไดซ์',            max:20, opts:[['ไม่มี',20],['มี',0]] },
+  ]
+};
+
+// =============================================
+// 🔓 ฟังก์ชันการทำงานเมื่อหน้าเว็บโหลดเสร็จ (เข้าหน้าโปรแกรมโดยตรง)
+// =============================================
+window.onload = function() {
+  const today = new Date();
+  document.getElementById('todayDate').textContent = today.toLocaleDateString('th-TH', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('f_date').value = today.toISOString().split('T')[0];
+  document.getElementById('f_time').value = '10:00';
+  document.getElementById('scriptUrl').value = SCRIPT_URL;
+  
+  // เรียกข้อมูลนัดหมายมาทำงานทันที
+  loadAppointments();
+};
+
+// =============================================
+// API CALL
+// =============================================
+async function apiCall(data) {
+  if (!SCRIPT_URL) {
+    showToast('error', '⚠️ กรุณาตั้งค่า URL ของ Google Apps Script ในหน้า ⚙️ ตั้งค่า ก่อน');
+    return null;
   }
-
-  function saveSettings() {
-    let url = document.getElementById('scriptUrl').value.trim();
-    if(!url) {
-      showToast('error', 'กรุณากรอก URL ให้ถูกต้อง');
-      return;
-    }
-    localStorage.setItem('luxbuy_script_url', url);
-    showToast('success', 'บันทึกการตั้งค่าระบบเรียบร้อยแล้ว');
-    loadDashboard();
-    showTab('appt');
-  }
-
-  // ฟังก์ชันแสดงข้อความแจ้งเตือน Toast
-  let toastTimer;
-  function showToast(type, msg) {
-    const t = document.getElementById('toast');
-    const icon = document.getElementById('toastIcon');
-    const text = document.getElementById('toastText');
-    t.className = 'toast toast-' + type + ' show';
-    icon.textContent = type === 'success' ? '✅' : '❌';
-    text.textContent = msg;
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  // ---- ฟังก์ชันติดต่อเชื่อมข้อมูลกับ Apps Script ด้านล่างพาร์ทนี้ตามสถาปัตยกรรมเดิมของคุณ ----
-  function callAPI(data, callback) {
-    let url = localStorage.getItem('luxbuy_script_url');
-    if(!url) {
-      showToast('error', 'กรุณาไปที่แท็บ ตั้งค่า เพื่อระบุ Web App URL');
-      return;
-    }
-    
-    fetch(url, {
+  try {
+    const resp = await fetch(SCRIPT_URL, {
       method: 'POST',
-      mode: 'cors',
       body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(res => callback(res))
-    .catch(err => {
-      console.error(err);
-      showToast('error', 'การเชื่อมต่อผิดพลาด: ตรวจสอบความถูกต้องของ URL สคริปต์');
     });
+    return await resp.json();
+  } catch(e) {
+    showToast('error', '❌ ไม่สามารถเชื่อมต่อ Google Sheets ได้: ' + e.message);
+    return null;
   }
+}
 
-  function loadDashboard() {
-    const tbody = document.getElementById('apptTbody');
-    callAPI({ action: 'get_dashboard_data' }, function(res) {
-      if(res.status === 'success') {
-        document.getElementById('todayDate').textContent = res.today;
-        
-        // อัปเดตข้อมูลวงเงินงบประมาณ
-        let percent = (res.today_spend / res.limit) * 100;
-        if(percent > 100) percent = 100;
-        document.getElementById('budgetBar').style.width = percent + '%';
-        document.getElementById('budgetAmt').textContent = '฿' + res.today_spend.toLocaleString();
-        
-        if(res.today_spend >= res.limit) {
-          document.getElementById('budgetAlert').style.display = 'inline-block';
-          document.getElementById('budgetBar').style.background = 'var(--red)';
-        } else {
-          document.getElementById('budgetAlert').style.display = 'none';
-          document.getElementById('budgetBar').style.background = 'var(--green)';
-        }
-
-        // นำรายการตารางนัดมาแสดงผล
-        renderApptTable(res.appointments);
-      }
-    });
+// =============================================
+// BUDGET
+// =============================================
+async function loadDashboard() {
+  const data = await apiCall({ action: 'get_dashboard_data' });
+  if (data && data.status === 'success') {
+    currentSpend = data.today_spend || 0;
+    updateBudgetBar();
+    updateStats(data);
+    allAppointments = data.appointments || [];
+    renderTable(allAppointments);
   }
+}
 
-  function renderApptTable(appts) {
-    const tbody = document.getElementById('apptTbody');
-    if(!appts || appts.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p>ไม่มีคิวนัดหมายสำหรับวันนี้</p></div></td></tr>`;
-      return;
-    }
-    
-    let html = '';
-    appts.forEach(a => {
-      html += `
-        <tr>
-          <td class="time-slot">${a.time_slot}</td>
-          <td>
-            <div class="customer-name">${a.customer_name}</div>
-            <div class="customer-phone">${a.customer_phone}</div>
-          </td>
-          <td class="product-text">${a.product_name}</td>
-          <td class="price-text">฿${Number(a.estimated_price).toLocaleString()}</td>
-          <td><span class="badge ${getStatusClass(a.appt_status)}">${a.appt_status}</span></td>
-          <td><span class="badge ${getPayStatusClass(a.payment_status)}">${a.payment_status}</span></td>
-          <td class="actions">
-            <button class="btn btn-outline btn-sm" onclick="openInspectModal('${a.appt_id}')">🔍 ตรวจสินค้า</button>
-          </td>
-        </tr>
-      `;
-    });
-    tbody.innerHTML = html;
+function updateBudgetBar() {
+  const pct = Math.min((currentSpend / BUDGET_LIMIT) * 100, 100);
+  const bar = document.getElementById('budgetBar');
+  const amt = document.getElementById('budgetAmt');
+  const alert = document.getElementById('budgetAlert');
+  bar.style.width = pct + '%';
+  amt.textContent = '฿' + currentSpend.toLocaleString('th-TH');
+  if (pct >= 100) { bar.style.background = 'var(--red)'; alert.style.display = 'block'; }
+  else if (pct >= 90) { bar.style.background = 'var(--red)'; alert.style.display = 'none'; }
+  else if (pct >= 75) { bar.style.background = 'var(--orange)'; alert.style.display = 'none'; }
+  else { bar.style.background = 'var(--green)'; alert.style.display = 'none'; }
+}
+
+function checkBudgetLive() {
+  const price = Number(document.getElementById('f_price').value) || 0;
+  const btn = document.getElementById('addApptBtn');
+  const warn = document.getElementById('budgetWarnInline');
+  const today = document.getElementById('f_date').value === new Date().toISOString().split('T')[0];
+  if (today && currentSpend + price > BUDGET_LIMIT) {
+    btn.disabled = true;
+    warn.style.display = 'block';
+  } else {
+    btn.disabled = false;
+    warn.style.display = 'none';
   }
+}
 
-  function getStatusClass(st) {
-    if(st === 'รอเข้าพบ') return 'badge-wait';
-    if(st === 'มาตามนัด') return 'badge-arrived';
-    if(st === 'สำเร็จ') return 'badge-done';
-    return 'badge-cancel';
+// =============================================
+// APPOINTMENTS
+// =============================================
+async function loadAppointments() {
+  await loadDashboard();
+}
+
+function renderTable(appts) {
+  const tbody = document.getElementById('apptTbody');
+  if (!appts || appts.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <div class="icon">📋</div><p>ไม่มีนัดหมายสำหรับวันนี้</p>
+    </div></td></tr>`;
+    return;
   }
+  tbody.innerHTML = appts.map(a => `
+    <tr>
+      <td><div class="time-slot">${a.time_slot || '—'}</div></td>
+      <td>
+        <div class="customer-name">${a.customer_name || '—'}</div>
+        <div class="customer-phone">${a.customer_phone || ''}</div>
+      </td>
+      <td><div class="product-text">${a.product_name || '—'}</div></td>
+      <td><div class="price-text">฿${Number(a.estimated_price||0).toLocaleString('th-TH')}</div></td>
+      <td>${renderApptBadge(a.appt_status, a.appt_id)}</td>
+      <td>${renderPayBadge(a.payment_status, a.appt_id)}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-outline btn-sm" onclick="openInspect('${a.appt_id}','${a.customer_name}','${a.customer_phone}','${a.product_name}')">
+            🔍 ตรวจสินค้า
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
 
-  function getPayStatusClass(st) {
-    if(st === 'ยังไม่จ่าย') return 'badge-pay-no';
-    if(st === 'กำลังโอน') return 'badge-pay-sending';
-    return 'badge-pay-done';
+function renderApptBadge(status, id) {
+  const map = {
+    'รอเข้าพบ': ['badge-wait','รอเข้าพบ','มาตามนัด'],
+    'มาตามนัด': ['badge-arrived','มาตามนัด','สำเร็จ'],
+    'สำเร็จ': ['badge-done','สำเร็จ',null],
+    'ยกเลิก': ['badge-cancel','ยกเลิก',null],
+  };
+  const s = status || 'รอเข้าพบ';
+  const [cls, label, next] = map[s] || ['badge-wait','รอเข้าพบ','มาตามนัด'];
+  const click = next ? `onclick="updateStatus('${id}','appt_status','${next}')"` : '';
+  const title = next ? `title="กดเพื่อเปลี่ยนเป็น: ${next}"` : '';
+  return `<span class="badge ${cls}" ${click} ${title}>${label}${next?'  →':''}</span>`;
+}
+
+function renderPayBadge(status, id) {
+  const map = {
+    'ยังไม่จ่าย': ['badge-pay-no','ยังไม่จ่าย','กำลังโอนเงิน'],
+    'กำลังโอนเงิน': ['badge-pay-sending','กำลังโอนเงิน','จ่ายเงินสำเร็จ'],
+    'จ่ายเงินสำเร็จ': ['badge-pay-done','จ่ายเงินสำเร็จ',null],
+  };
+  const s = status || 'ยังไม่จ่าย';
+  const [cls, label, next] = map[s] || ['badge-pay-no','ยังไม่จ่าย','กำลังโอนเงิน'];
+  const click = next ? `onclick="updateStatus('${id}','payment_status','${next}')"` : '';
+  const title = next ? `title="กดเพื่อเปลี่ยนเป็น: ${next}"` : '';
+  return `<span class="badge ${cls}" ${click} ${title}>${label}${next?'  →':''}</span>`;
+}
+
+async function addAppointment() {
+  const name = document.getElementById('f_name').value.trim();
+  const phone = document.getElementById('f_phone').value.trim();
+  const date = document.getElementById('f_date').value;
+  const time = document.getElementById('f_time').value;
+  const product = document.getElementById('f_product').value.trim();
+  const price = Number(document.getElementById('f_price').value) || 0;
+  if (!name || !phone || !date || !time || !product || !price) {
+    showToast('error', '⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    return;
   }
+  const apptId = 'APT-' + date.replace(/-/g,'') + '-' + Date.now().toString().slice(-4);
+  const btn = document.getElementById('addApptBtn');
+  const spinner = document.getElementById('addSpinner');
+  btn.disabled = true; spinner.style.display = 'inline-block';
+  const res = await apiCall({
+    action: 'add_appointment',
+    appt_id: apptId,
+    date, time_slot: time,
+    customer_name: name,
+    customer_phone: phone,
+    product_name: product,
+    estimated_price: price,
+    appt_status: 'รอเข้าพบ',
+    payment_status: 'ยังไม่จ่าย'
+  });
+  btn.disabled = false; spinner.style.display = 'none';
+  if (res && res.status === 'success') {
+    showToast('success', '✅ เพิ่มนัดหมายเรียบร้อยแล้ว!');
+    document.getElementById('f_name').value = '';
+    document.getElementById('f_phone').value = '';
+    document.getElementById('f_product').value = '';
+    document.getElementById('f_price').value = '';
+    await loadAppointments();
+  }
+}
 
-  // (ฟังก์ชันเสริมอื่นๆ เช่น saveAppointmentForm, checkBudgetLive ให้คงไว้ตามเดิมได้เลยครับ)
+async function updateStatus(id, field, value) {
+  const res = await apiCall({ action: 'update_status', appt_id: id, field, value });
+  if (res && res.status === 'success') {
+    showToast('success', `✅ อัปเดตสถานะเป็น "${value}" แล้ว`);
+    await loadAppointments();
+  }
+}
+
+// =============================================
+// INSPECT MODAL
+// =============================================
+function openInspect(id, name, phone, product) {
+  currentApptId = id;
+  equipState = {};
+  scoreState = {};
+  document.getElementById('modal_custName').textContent = name;
+  document.getElementById('modal_custDetail').textContent = `${phone} · ${product} (ID: ${id})`;
+  document.getElementById('m_inspector').value = '';
+  document.getElementById('m_datecode').value = '';
+  document.getElementById('m_equip_note').value = '';
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  selectCategory('shoes', document.querySelector('.cat-btn'));
+  updateScore();
+  document.getElementById('inspectModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function selectCategory(cat, btn) {
+  currentCategory = cat;
+  scoreState = {};
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCriteria(cat);
+  updateScore();
+}
+
+function renderCriteria(cat) {
+  const container = document.getElementById('inspectCriteria');
+  const items = CRITERIA[cat];
+  container.innerHTML = items.map(item => `
+    <div class="inspect-group">
+      <label>${item.label} <span style="color:var(--gold)">(${item.max} คะแนน)</span></label>
+      <div class="options">
+        ${item.opts.map(([label, val]) => `
+          <button class="opt-btn" onclick="selectScore('${item.key}',${val},this)">
+            ${label} <span style="color:var(--text-dim)">(${val})</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectScore(key, val, btn) {
+  scoreState[key] = val;
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateScore();
+}
+
+function updateScore() {
+  const total = Object.values(scoreState).reduce((s,v) => s+v, 0);
+  document.getElementById('scoreNum').textContent = total;
+  let grade = 'USED', cls = 'grade-B';
+  if (total >= 95) { grade = 'NEW'; cls = 'grade-N'; }
+  else if (total >= 85) { grade = 'KEPT UNUSED'; cls = 'grade-S'; }
+  else if (total >= 75) { grade = 'LIKE NEW'; cls = 'grade-A'; }
+  const g = document.getElementById('scoreGrade');
+  g.textContent = grade;
+  g.className = 'score-grade ' + cls;
+  document.getElementById('usedWarning').style.display = total < 75 ? 'block' : 'none';
+}
+
+function toggleEquip(btn, key, val) {
+  equipState[key] = val;
+  const wrap = btn.closest('.toggle-wrap');
+  wrap.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function saveInspection() {
+  const inspector = document.getElementById('m_inspector').value.trim();
+  if (!inspector) { showToast('error', '⚠️ กรุณาระบุชื่อพนักงานผู้ตรวจ'); return; }
+  const total = Object.values(scoreState).reduce((s,v) => s+v, 0);
+  let grade = 'USED';
+  if (total >= 95) grade = 'NEW';
+  else if (total >= 85) grade = 'KEPT UNUSED';
+  else if (total >= 75) grade = 'LIKE NEW';
+
+  const equipSummary = Object.entries(equipState).map(([k,v]) => `${k}:${v}`).join(', ');
+  const btn = document.getElementById('saveInspectBtn');
+  const spinner = document.getElementById('saveSpinner');
+  btn.disabled = true; spinner.style.display = 'inline-block';
+
+  const res = await apiCall({
+    action: 'save_inspection',
+    appt_id: currentApptId,
+    brand: document.getElementById('modal_custDetail').textContent.split('·')[1]?.trim() || '',
+    date_code: document.getElementById('m_datecode').value,
+    declaration: document.getElementById('m_declaration').value,
+    inspector: inspector,
+    equipment_summary: equipSummary,
+    equipment_notes: document.getElementById('m_equip_note').value,
+    score_details: scoreState,
+    total_score: total,
+    final_condition: grade,
+    estimated_price: allAppointments.find(a => a.appt_id === currentApptId)?.estimated_price || 0
+  });
+  btn.disabled = false; spinner.style.display = 'none';
+  if (res && res.status === 'success') {
+    showToast('success', `✅ บันทึกผลตรวจสำเร็จ — เกรด: ${grade} (${total} คะแนน)`);
+    closeModal('inspectModal');
+    await loadAppointments();
+  } else if (res && res.status === 'error') {
+    showToast('error', '❌ ' + res.message);
+  }
+}
+
+// =============================================
+// HISTORY
+// =============================================
+async function loadHistory() {
+  const res = await apiCall({ action: 'get_all_data' });
+  if (!res || res.status !== 'success') return;
+  const appts = res.appointments || [];
+  const today = new Date().toISOString().split('T')[0];
+
+  const todayAppts = appts.filter(a => a.date === today);
+  const todaySpend = todayAppts.filter(a => a.appt_status !== 'ยกเลิก').reduce((s,a) => s + Number(a.estimated_price||0), 0);
+  const doneCnt = todayAppts.filter(a => a.appt_status === 'สำเร็จ').length;
+  const totalAll = appts.filter(a => a.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,a) => s + Number(a.estimated_price||0), 0);
+
+  document.getElementById('stat-appts').textContent = todayAppts.length;
+  document.getElementById('stat-spend').textContent = '฿' + todaySpend.toLocaleString('th-TH');
+  document.getElementById('stat-done').textContent = doneCnt;
+  document.getElementById('stat-total').textContent = '฿' + totalAll.toLocaleString('th-TH');
+
+  renderCustomerCards(appts, '');
+}
+
+function searchCustomer() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  renderCustomerCards(allAppointments, q);
+}
+
+function renderCustomerCards(appts, q) {
+  const container = document.getElementById('historyResults');
+  const map = {};
+  appts.forEach(a => {
+    const key = a.customer_phone || a.customer_name;
+    if (!map[key]) map[key] = { name: a.customer_name, phone: a.customer_phone, records: [] };
+    map[key].records.push(a);
+  });
+  let customers = Object.values(map);
+  if (q) customers = customers.filter(c => (c.name||'').toLowerCase().includes(q) || (c.phone||'').includes(q));
+  if (!customers.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>ไม่พบข้อมูลลูกค้า</p></div>`;
+    return;
+  }
+  container.innerHTML = customers.map(c => {
+    const total = c.records.filter(r => r.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,r) => s + Number(r.estimated_price||0), 0);
+    const cancelCnt = c.records.filter(r => r.appt_status === 'ยกเลิก').length;
+    const risk = cancelCnt >= 3 ? 'high' : cancelCnt >= 1 ? 'mid' : total >= 500000 ? 'vip' : 'low';
+    const riskLabel = { high:'ความเสี่ยงสูง', mid:'ความเสี่ยงกลาง', low:'ความเสี่ยงต่ำ', vip:'VIP' }[risk];
+    const riskCls = { high:'risk-high', mid:'risk-mid', low:'risk-low', vip:'risk-vip' }[risk];
+    return `
+      <div class="customer-card">
+        <div class="customer-card-header">
+          <div>
+            <div class="customer-card-name">${c.name}</div>
+            <div class="customer-card-phone">📞 ${c.phone}</div>
+          </div>
+          <span class="risk-badge ${riskCls}">${riskLabel}</span>
+        </div>
+        <div class="customer-stats">
+          <div class="cstat">
+            <div class="cstat-label">จำนวนครั้งที่มา</div>
+            <div class="cstat-value">${c.records.length} ครั้ง</div>
+          </div>
+          <div class="cstat">
+            <div class="cstat-label">ยอดรับซื้อรวม</div>
+            <div class="cstat-value" style="color:var(--gold)">฿${total.toLocaleString('th-TH')}</div>
+          </div>
+          <div class="cstat">
+            <div class="cstat-label">ยกเลิก</div>
+            <div class="cstat-value" style="color:${cancelCnt>0?'var(--red)':'var(--green)'}">${cancelCnt} ครั้ง</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// =============================================
+// SETTINGS
+// =============================================
+function saveSettings() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  if (url) { SCRIPT_URL = url; localStorage.setItem('scriptUrl', url); }
+  showToast('success', '✅ บันทึกการตั้งค่าเรียบร้อยแล้ว!');
+  if (url) loadAppointments();
+}
+
+// =============================================
+// UI HELPERS
+// =============================================
+function showTab(tab, mobileBtn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const desktopBtns = document.querySelectorAll('.tab-btn');
+  const tabOrder = ['appt','history','settings'];
+  const idx = tabOrder.indexOf(tab);
+  if (desktopBtns[idx]) desktopBtns[idx].classList.add('active');
+  if (mobileBtn) mobileBtn.classList.add('active');
+  if (tab === 'history') loadHistory();
+}
+
+function updateStats(data) {
+  if (!data) return;
+  const appts = data.appointments || [];
+  const today = new Date().toISOString().split('T')[0];
+  const todayAppts = appts.filter(a => a.date === today);
+  document.getElementById('stat-appts').textContent = todayAppts.length;
+}
+
+let toastTimer;
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  const icon = document.getElementById('toastIcon');
+  const text = document.getElementById('toastText');
+  t.className = 'toast toast-' + type + ' show';
+  icon.textContent = type === 'success' ? '✅' : '❌';
+  text.textContent = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+document.getElementById('inspectModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('inspectModal');
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
 </script>
 </body>
 </html>
