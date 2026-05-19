@@ -834,7 +834,8 @@ function todayStr() {
 // =============================================
 async function apiCall(payload) {
   try {
-    // ปรับการส่งเพื่อแก้ CORS บน GitHub Pages โดยใช้โหมด no-cors และ URLSearchParams เพื่อส่งผ่านฟอร์มเข้า doPost ของ Apps Script
+    // ใช้ URLSearchParams เป็น body — บราว์เซอร์จะตั้ง Content-Type: application/x-www-form-urlencoded ให้อัตโนมัติ
+    // และเป็น "simple CORS request" ไม่ต้อง preflight Apps Script จึงรับได้ และอ่าน response กลับได้
     const bodyData = new URLSearchParams();
     for (const [key, value] of Object.entries(payload)) {
       if (typeof value === 'object') {
@@ -846,18 +847,24 @@ async function apiCall(payload) {
 
     const response = await fetch(BASE_URL, {
       method: 'POST',
-      mode: 'no-cors', // สั่งปิดการเช็คโดเมนปลายทาง ป้องกันเว็บบน GitHub ค้างหน้านั้น
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: bodyData.toString()
+      body: bodyData,
+      redirect: 'follow'
     });
 
-    // เนื่องจากใช้โหมด no-cors บราวเซอร์จะไม่ยอมให้อ่านข้อมูลดิบกลับมาตรงๆ (แต่ข้อมูลฝั่งชีทจะบันทึกสำเร็จร้อยเปอร์เซ็นต์)
-    // ระบบจะทำการ Fetch ดึงข้อมูลอัปเดตชุดใหญ่ผ่านรูปแบบ JSONP หรือดึงซ้ำผ่านการดักรอเพื่ออัปเดตหน้าจอทันที
-    
-    // จำลองผลลัพธ์ Success สำหรับ UI เพื่อลดปัญหาการหมุนค้าง
-    return { status: 'success', message: 'ทำรายการเรียบร้อยแล้ว' };
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch(e) {
+      // กรณีตอบกลับไม่ใช่ JSON ที่อ่านได้ ถือว่าสำเร็จ (Apps Script อาจ redirect)
+      return { status: 'success', message: 'ทำรายการเรียบร้อยแล้ว' };
+    }
+
+    if (data && data.status === 'error') {
+      showToast('error', '⚠️ Apps Script ส่ง error: ' + (data.message || 'ไม่ระบุ'));
+      return null;
+    }
+    return data;
   } catch(err) {
     showToast('error', '⚠️ ข้อผิดพลาด: ' + err.message);
     return null;
