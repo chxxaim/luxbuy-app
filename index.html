@@ -3,25 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuxBuy — ระบบรับซื้อแบรนด์เนม</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Farevefarm Buying system</title>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --gold-dim: rgba(201,168,76,0.15);
-    --dark: #0D0D0D;
-    --dark2: #161616;
-    --dark3: #1F1F1F;
-    --dark4: #2A2A2A;
-    --text: #F0EDE8;
-    --text-muted: #8A8480;
-    --text-dim: #5A5550;
-    --green: #4CAF7A;
-    --orange: #E8943A;
-    --red: #E85A4A;
-    --blue: #4A8FE8;
-    --border: rgba(201,168,76,0.2);
+    --estate-blue: #1F3151;
+    --foggy-day: #11151D;
+    --coarse-wool: #B4C4D3;
+    --elevated-cream: #EAE7DF;
+    
+    --navy: var(--estate-blue);
+    --navy-light: #2A3F64;
+    --navy-dim: rgba(31, 49, 81, 0.08);
+    --cream: #FDFCFB;
+    --cream-dark: var(--elevated-cream);
+    --white: #FFFFFF;
+    --gray-dark: #334155;
+    --gray-light: #F1F5F9;
+    --text: var(--foggy-day);
+    --text-muted: #576574;
+    --text-dim: #8395a7;
+    --green: #10B981;
+    --orange: #F59E0B;
+    --red: #EF4444;
+    --blue: #3B82F6;
+    --border: var(--coarse-wool);
     --radius: 12px;
     --radius-sm: 8px;
   }
@@ -29,8 +35,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--dark);
+    font-family: 'Work Sans', 'Anuphan', sans-serif;
+    background: var(--cream);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
@@ -40,77 +46,79 @@
   /* === LOGIN OVERLAY === */
   #loginOverlay {
     position: fixed; inset: 0; z-index: 9999;
-    background: var(--dark);
-    display: flex; align-items: center; justify-content: center;
+    background: var(--navy);
+    display: none; align-items: center; justify-content: center;
     flex-direction: column; gap: 24px;
   }
   .login-box {
-    background: var(--dark2);
+    background: var(--white);
     border: 1px solid var(--border);
     border-radius: 20px;
     padding: 48px 40px;
     width: 340px;
     text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   }
   .login-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px; color: var(--gold);
+    font-family: 'Work Sans', 'Anuphan', serif;
+    font-size: 28px; color: var(--navy);
     letter-spacing: 3px; margin-bottom: 6px;
+    font-weight: 700;
   }
   .login-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 28px; }
   .login-box input {
     width: 100%; padding: 14px 18px;
-    background: var(--dark3); border: 1px solid var(--border);
+    background: var(--gray-light); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    font-family: 'Work Sans', 'Anuphan', sans-serif; font-size: 15px;
     text-align: center; letter-spacing: 4px;
     outline: none; margin-bottom: 14px;
     transition: border-color 0.2s;
   }
-  .login-box input:focus { border-color: var(--gold); }
+  .login-box input:focus { border-color: var(--navy); }
   .login-box input::placeholder { letter-spacing: 1px; color: var(--text-dim); }
   .login-btn {
     width: 100%; padding: 14px;
-    background: var(--gold); border: none;
-    border-radius: var(--radius-sm); color: var(--dark);
-    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    background: var(--navy); border: none;
+    border-radius: var(--radius-sm); color: var(--white);
+    font-family: 'Work Sans', 'Anuphan', sans-serif; font-weight: 600;
     font-size: 15px; cursor: pointer; transition: all 0.2s;
   }
-  .login-btn:hover { background: var(--gold-light); }
+  .login-btn:hover { background: var(--navy-light); }
   .login-error {
     color: var(--red); font-size: 13px; margin-top: 10px;
     display: none;
-    background: rgba(232,90,74,0.1); padding: 8px 12px;
+    background: rgba(239,68,68,0.1); padding: 8px 12px;
     border-radius: var(--radius-sm);
   }
 
   /* === TOP BAR === */
   #topBar {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(13,13,13,0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    background: var(--navy);
     padding: 0 32px;
     display: flex; align-items: center; gap: 20px; height: 64px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
   .logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px; color: var(--gold);
+    font-family: 'Work Sans', 'Anuphan', serif;
+    font-size: 20px; color: var(--white);
     letter-spacing: 3px; white-space: nowrap; flex-shrink: 0;
+    font-weight: 700;
   }
-  .logo span { font-size: 10px; display: block; color: var(--text-muted); letter-spacing: 2px; margin-top: -2px; }
+  .logo span { font-size: 10px; display: block; color: var(--coarse-wool); letter-spacing: 2px; margin-top: -2px; font-weight: 400; }
 
   /* Budget Bar */
   .budget-wrap {
     flex: 1; display: flex; align-items: center; gap: 10px;
-    background: var(--dark2); border: 1px solid var(--border);
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
     border-radius: 30px; padding: 7px 14px;
     cursor: pointer; transition: border-color 0.2s; min-width: 0;
   }
-  .budget-wrap:hover { border-color: var(--gold); }
-  .budget-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+  .budget-wrap:hover { border-color: var(--white); }
+  .budget-label { font-size: 11px; color: var(--coarse-wool); white-space: nowrap; flex-shrink: 0; }
   .budget-bar-outer {
-    flex: 1; height: 6px; background: var(--dark4);
+    flex: 1; height: 6px; background: rgba(0,0,0,0.2);
     border-radius: 4px; overflow: hidden; min-width: 40px;
   }
   .budget-bar-inner {
@@ -119,8 +127,8 @@
     transition: width 0.6s ease, background 0.4s;
     width: 0%;
   }
-  .budget-amount { font-size: 13px; font-weight: 600; white-space: nowrap; color: var(--gold); flex-shrink: 0; }
-  .budget-sub { font-size: 10px; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
+  .budget-amount { font-size: 13px; font-weight: 600; white-space: nowrap; color: var(--white); flex-shrink: 0; }
+  .budget-sub { font-size: 10px; color: var(--coarse-wool); white-space: nowrap; flex-shrink: 0; }
   .budget-alert {
     background: var(--red); color: white;
     font-size: 11px; font-weight: 600;
@@ -133,12 +141,12 @@
   .tab-btn {
     padding: 8px 18px; border-radius: 30px;
     background: transparent; border: 1px solid transparent;
-    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    color: var(--coarse-wool); font-family: 'Work Sans', 'Anuphan', sans-serif;
     font-size: 13px; font-weight: 500; cursor: pointer;
     transition: all 0.2s; white-space: nowrap;
   }
-  .tab-btn:hover { color: var(--text); border-color: var(--border); }
-  .tab-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .tab-btn:hover { color: var(--white); }
+  .tab-btn.active { background: rgba(255,255,255,0.15); border-color: var(--white); color: var(--white); }
 
   /* === MAIN CONTENT === */
   .tab-content { display: none; padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
@@ -149,106 +157,98 @@
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
   }
-  .section-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text); }
-  .section-title span { color: var(--gold); }
+  .section-title { font-family: 'Work Sans', 'Anuphan', serif; font-size: 20px; color: var(--text); font-weight: 700; }
+  .section-title span { color: var(--navy); }
   .section-date {
     font-size: 12px; color: var(--text-muted);
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     padding: 5px 13px; border-radius: 20px;
   }
 
   /* === BUTTONS === */
   .btn {
     padding: 10px 20px; border-radius: var(--radius-sm);
-    border: none; font-family: 'DM Sans', sans-serif;
+    border: none; font-family: 'Work Sans', 'Anuphan', sans-serif;
     font-size: 13px; font-weight: 500; cursor: pointer;
     transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
   }
-  .btn-gold { background: var(--gold); color: var(--dark); }
-  .btn-gold:hover { background: var(--gold-light); }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-gold { background: var(--navy); color: var(--white); }
+  .btn-gold:hover { background: var(--navy-light); }
+  .btn-outline { background: var(--white); border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-outline:hover { border-color: var(--navy); color: var(--navy); }
   .btn-sm { padding: 6px 12px; font-size: 12px; }
   .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
   /* === ADD APPOINTMENT FORM === */
   .form-card {
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 24px;
     margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.01);
   }
   .form-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px; color: var(--gold); margin-bottom: 18px;
+    font-family: 'Work Sans', 'Anuphan', serif;
+    font-size: 16px; color: var(--navy); margin-bottom: 18px;
+    font-weight: 700;
   }
   .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
-  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.span2 { grid-column: span 2; }
   .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
   .form-control {
     padding: 11px 13px;
-    background: var(--dark3); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    font-family: 'Work Sans', 'Anuphan', sans-serif; font-size: 14px;
     outline: none; transition: border-color 0.2s; width: 100%;
   }
-  .form-control:focus { border-color: var(--gold); }
-  .form-control option { background: var(--dark3); }
+  .form-control:focus { border-color: var(--navy); }
+  .form-control option { background: var(--white); }
   .form-actions { display: flex; gap: 12px; margin-top: 18px; align-items: center; flex-wrap: wrap; }
   .budget-warning-inline {
     color: var(--red); font-size: 13px; display: none;
-    background: rgba(232,90,74,0.1); border: 1px solid rgba(232,90,74,0.3);
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
     padding: 8px 14px; border-radius: var(--radius-sm);
   }
 
   /* === APPOINTMENT TABLE === */
   .appt-table-wrap {
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius); overflow: hidden; overflow-x: auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.01);
   }
   .appt-table { width: 100%; border-collapse: collapse; min-width: 700px; }
   .appt-table th {
     padding: 13px 18px; text-align: left;
     font-size: 11px; font-weight: 600;
     color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
-    background: var(--dark3); border-bottom: 1px solid var(--border);
+    background: var(--gray-light); border-bottom: 1px solid var(--border);
     white-space: nowrap;
   }
   .appt-table td {
-    padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
     font-size: 14px; vertical-align: middle;
   }
   .appt-table tr:last-child td { border-bottom: none; }
-  .appt-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .appt-table tr:hover td { background: rgba(0,0,0,0.01); }
 
-  .time-slot { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--gold); }
+  .time-slot { font-family: 'Work Sans', 'Anuphan', serif; font-size: 16px; color: var(--navy); font-weight: 700; }
   .customer-name { font-weight: 500; }
   .customer-phone { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
   .product-text { font-size: 13px; color: var(--text-muted); max-width: 200px; }
   .price-text { font-weight: 600; white-space: nowrap; }
 
-  /* Status Badges */
-  .badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 11px; border-radius: 20px; font-size: 12px; font-weight: 500;
-    cursor: pointer; transition: all 0.2s; white-space: nowrap; user-select: none;
+  /* Dropdown Badges Styles */
+  .badge-select {
+    padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    font-family: 'Work Sans', 'Anuphan', sans-serif; cursor: pointer; outline: none; border: 1px solid transparent;
   }
-  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-  .badge-wait   { background: rgba(90,85,80,0.3);    color: var(--text-muted); border: 1px solid var(--dark4); }
-  .badge-wait::before   { background: var(--text-dim); }
-  .badge-arrived{ background: rgba(74,143,232,0.15); color: var(--blue);       border: 1px solid rgba(74,143,232,0.3); }
-  .badge-arrived::before{ background: var(--blue); }
-  .badge-done   { background: rgba(76,175,122,0.15); color: var(--green);      border: 1px solid rgba(76,175,122,0.3); }
-  .badge-done::before   { background: var(--green); }
-  .badge-cancel { background: rgba(232,90,74,0.15);  color: var(--red);        border: 1px solid rgba(232,90,74,0.3); }
-  .badge-cancel::before { background: var(--red); }
-  .badge-pay-no      { background: rgba(90,85,80,0.3);    color: var(--text-muted); border: 1px solid var(--dark4); }
-  .badge-pay-no::before      { background: var(--text-dim); }
-  .badge-pay-sending { background: rgba(232,148,58,0.15); color: var(--orange);     border: 1px solid rgba(232,148,58,0.3); }
-  .badge-pay-sending::before { background: var(--orange); }
-  .badge-pay-done    { background: rgba(76,175,122,0.15); color: var(--green);      border: 1px solid rgba(76,175,122,0.3); }
-  .badge-pay-done::before    { background: var(--green); }
+  .badge-select-wait   { background: var(--gray-light); color: var(--gray-dark); border-color: var(--border); }
+  .badge-select-arrived{ background: rgba(59,130,246,0.15); color: var(--blue); border-color: rgba(59,130,246,0.3); }
+  .badge-select-done   { background: rgba(16,185,129,0.15); color: var(--green); border-color: rgba(16,185,129,0.3); }
+  .badge-select-cancel { background: rgba(239,68,68,0.15); color: var(--red); border-color: rgba(239,68,68,0.3); }
+  .badge-select-pay-no      { background: var(--gray-light); color: var(--gray-dark); border-color: var(--border); }
+  .badge-select-pay-sending { background: rgba(245,158,11,0.15); color: var(--orange); border-color: rgba(245,158,11,0.3); }
+  .badge-select-pay-done    { background: rgba(16,185,129,0.15); color: var(--green); border-color: rgba(16,185,129,0.3); }
 
   .actions { display: flex; gap: 8px; align-items: center; }
 
@@ -260,42 +260,43 @@
   /* === MODAL === */
   .modal-overlay {
     position: fixed; inset: 0; z-index: 500;
-    background: rgba(0,0,0,0.82); backdrop-filter: blur(6px);
+    background: rgba(15,23,42,0.6); backdrop-filter: blur(6px);
     display: none; align-items: center; justify-content: center; padding: 16px;
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--dark2); border: 1px solid var(--border);
-    border-radius: 20px; width: 100%; max-width: 660px;
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 750px;
     max-height: 90vh; overflow-y: auto;
     animation: slideUp 0.25s ease;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
   }
   @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .modal-header {
     padding: 22px 26px 18px;
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; background: var(--dark2); z-index: 10;
+    position: sticky; top: 0; background: var(--white); z-index: 10;
   }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 19px; color: var(--gold); }
+  .modal-title { font-family: 'Work Sans', 'Anuphan', serif; font-size: 19px; color: var(--navy); font-weight: 700; }
   .modal-close {
-    background: var(--dark3); border: 1px solid var(--border);
+    background: var(--gray-light); border: 1px solid var(--border);
     color: var(--text-muted); width: 32px; height: 32px;
     border-radius: 50%; cursor: pointer; font-size: 16px;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.2s; flex-shrink: 0;
   }
-  .modal-close:hover { color: var(--text); border-color: var(--gold); }
+  .modal-close:hover { color: var(--text); border-color: var(--navy); }
   .modal-body { padding: 22px 26px; }
   .modal-footer {
     padding: 18px 26px; border-top: 1px solid var(--border);
     display: flex; gap: 12px; align-items: center; justify-content: space-between;
-    position: sticky; bottom: 0; background: var(--dark2); z-index: 10;
+    position: sticky; bottom: 0; background: var(--white); z-index: 10;
   }
 
   /* Info banner in modal */
   .info-banner {
-    background: var(--dark3); border: 1px solid var(--border);
+    background: var(--gray-light); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 12px 15px;
     display: flex; gap: 10px; margin-bottom: 18px; align-items: flex-start;
   }
@@ -303,45 +304,63 @@
   .info-banner .info-name { font-weight: 600; color: var(--text); font-size: 14px; }
   .info-banner .info-detail { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
 
+  /* Multi-item Summary & Navigation styling */
+  .items-summary-box {
+    background: var(--navy-dim); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 18px; margin-bottom: 18px;
+  }
+  .items-summary-title { font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+  .items-summary-list { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-muted); }
+  .items-summary-item { display: flex; justify-content: space-between; background: var(--white); padding: 4px 10px; border-radius: 6px; }
+
+  .items-nav-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+  .item-tab {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--white); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;
+    font-family: 'Work Sans', 'Anuphan', sans-serif;
+  }
+  .item-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .item-tab.add-btn { background: var(--gray-light); border-style: dashed; color: var(--navy); }
+
   /* Score display */
   .score-display {
-    background: var(--dark3); border: 1px solid var(--border);
+    background: var(--gray-light); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 14px 18px;
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 18px;
   }
-  .score-number { font-family: 'Playfair Display', serif; font-size: 44px; color: var(--gold); line-height: 1; }
+  .score-number { font-family: 'Work Sans', 'Anuphan', serif; font-size: 44px; color: var(--navy); line-height: 1; font-weight: 700; }
   .score-grade {
     font-size: 13px; font-weight: 600; padding: 5px 14px;
     border-radius: 20px; text-align: center;
   }
-  .grade-N { background: rgba(201,168,76,0.2);  color: var(--gold);   border: 1px solid var(--gold); }
-  .grade-S { background: rgba(74,143,232,0.2);  color: var(--blue);   border: 1px solid var(--blue); }
-  .grade-A { background: rgba(76,175,122,0.2);  color: var(--green);  border: 1px solid var(--green); }
-  .grade-B { background: rgba(232,148,58,0.2);  color: var(--orange); border: 1px solid var(--orange); }
+  .grade-N { background: rgba(31,49,81,0.1);  color: var(--navy);   border: 1px solid var(--navy); }
+  .grade-S { background: rgba(59,130,246,0.15);  color: var(--blue);   border: 1px solid var(--blue); }
+  .grade-A { background: rgba(16,185,129,0.15);  color: var(--green);  border: 1px solid var(--green); }
+  .grade-B { background: rgba(245,158,11,0.15);  color: var(--orange); border: 1px solid var(--orange); }
 
   /* Category selector */
   .category-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
   .cat-btn {
     padding: 7px 15px; border-radius: 20px;
-    border: 1px solid var(--border); background: transparent;
-    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    border: 1px solid var(--border); background: var(--white);
+    color: var(--text-muted); font-family: 'Work Sans', 'Anuphan', sans-serif;
     font-size: 13px; cursor: pointer; transition: all 0.2s;
   }
-  .cat-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .cat-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .cat-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .cat-btn.active { background: var(--navy-dim); border-color: var(--navy); color: var(--navy); }
 
   .inspect-group { margin-bottom: 14px; }
   .inspect-group > label { font-size: 12px; color: var(--text-muted); margin-bottom: 7px; display: block; }
   .inspect-group .options { display: flex; gap: 8px; flex-wrap: wrap; }
   .opt-btn {
     padding: 6px 13px; border-radius: 20px;
-    border: 1px solid var(--border); background: transparent;
+    border: 1px solid var(--border); background: var(--white);
     color: var(--text-muted); font-size: 12px; cursor: pointer;
     transition: all 0.2s;
   }
-  .opt-btn:hover { border-color: var(--gold-light); color: var(--text); }
-  .opt-btn.selected { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+  .opt-btn:hover { border-color: var(--navy-light); color: var(--text); }
+  .opt-btn.selected { background: var(--navy-dim); border-color: var(--navy); color: var(--navy); }
 
   /* Equipment grid */
   .equipment-grid {
@@ -349,7 +368,7 @@
     margin-bottom: 14px;
   }
   .equip-item {
-    background: var(--dark3); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius-sm); padding: 9px 12px;
     display: flex; align-items: center; justify-content: space-between; gap: 6px;
   }
@@ -358,12 +377,12 @@
   .toggle-btn {
     padding: 3px 9px; border-radius: 12px; font-size: 11px;
     border: 1px solid transparent; cursor: pointer; transition: all 0.2s;
-    background: transparent; font-family: 'DM Sans', sans-serif;
+    background: transparent; font-family: 'Work Sans', 'Anuphan', sans-serif;
   }
   .toggle-btn.yes { border-color: var(--green); color: var(--green); }
-  .toggle-btn.yes.active { background: var(--green); color: var(--dark); }
+  .toggle-btn.yes.active { background: var(--green); color: var(--white); font-weight: bold; }
   .toggle-btn.no  { border-color: var(--red);   color: var(--red); }
-  .toggle-btn.no.active  { background: var(--red);   color: white; }
+  .toggle-btn.no.active  { background: var(--red);   color: white; font-weight: bold; }
 
   .divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
   .form-section-title {
@@ -372,7 +391,7 @@
   }
 
   .used-warning {
-    background: rgba(232,90,74,0.1); border: 1px solid rgba(232,90,74,0.3);
+    background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: var(--radius-sm); padding: 12px 15px;
     color: var(--red); font-size: 13px; margin-top: 14px; display: none;
   }
@@ -383,11 +402,12 @@
     gap: 14px; margin-bottom: 24px;
   }
   .stat-card {
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 18px 22px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.01);
   }
   .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .stat-value { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--gold); }
+  .stat-value { font-family: 'Work Sans', 'Anuphan', serif; font-size: 28px; color: var(--navy); font-weight: 700; }
   .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
 
   .search-bar { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; }
@@ -398,35 +418,36 @@
   }
   .search-input {
     width: 100%; padding: 11px 13px 11px 40px;
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    font-family: 'Work Sans', 'Anuphan', sans-serif; font-size: 14px;
     outline: none; transition: border-color 0.2s;
   }
-  .search-input:focus { border-color: var(--gold); }
+  .search-input:focus { border-color: var(--navy); }
 
   .customer-card {
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 20px 22px;
     margin-bottom: 14px; transition: border-color 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.01);
   }
-  .customer-card:hover { border-color: rgba(201,168,76,0.5); }
+  .customer-card:hover { border-color: rgba(31, 49, 81, 0.3); }
   .customer-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; gap: 12px; }
   .customer-card-name { font-weight: 600; font-size: 15px; }
   .customer-card-phone { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
   .risk-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
-  .risk-vip  { background: rgba(201,168,76,0.2);  color: var(--gold);   border: 1px solid var(--gold); }
-  .risk-low  { background: rgba(76,175,122,0.2);  color: var(--green);  border: 1px solid var(--green); }
-  .risk-mid  { background: rgba(232,148,58,0.2);  color: var(--orange); border: 1px solid var(--orange); }
-  .risk-high { background: rgba(232,90,74,0.2);   color: var(--red);    border: 1px solid var(--red); }
+  .risk-vip  { background: var(--navy-dim);  color: var(--navy);   border: 1px solid var(--navy); }
+  .risk-low  { background: rgba(16,185,129,0.15);  color: var(--green);  border: 1px solid var(--green); }
+  .risk-mid  { background: rgba(245,158,11,0.15);  color: var(--orange); border: 1px solid var(--orange); }
+  .risk-high { background: rgba(239,68,68,0.15);   color: var(--red);    border: 1px solid var(--red); }
   .customer-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-  .cstat { background: var(--dark3); border-radius: var(--radius-sm); padding: 10px 14px; }
+  .cstat { background: var(--gray-light); border-radius: var(--radius-sm); padding: 10px 14px; }
   .cstat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
   .cstat-value { font-weight: 600; font-size: 14px; }
 
   /* Config note */
   .config-note {
-    background: rgba(74,143,232,0.1); border: 1px solid rgba(74,143,232,0.3);
+    background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
     border-radius: var(--radius-sm); padding: 13px 16px;
     font-size: 13px; color: var(--blue); margin-bottom: 20px; line-height: 1.6;
   }
@@ -435,23 +456,23 @@
   /* Toast */
   .toast {
     position: fixed; bottom: 80px; right: 20px; z-index: 9000;
-    background: var(--dark2); border: 1px solid var(--border);
+    background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 13px 18px;
     display: flex; align-items: center; gap: 10px;
-    max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);
     transform: translateY(60px); opacity: 0;
     transition: all 0.3s ease; pointer-events: none;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast-text { font-size: 13px; line-height: 1.4; }
-  .toast-success { border-color: rgba(76,175,122,0.5); }
-  .toast-error   { border-color: rgba(232,90,74,0.5); }
+  .toast-success { border-color: rgba(16,185,129,0.5); }
+  .toast-error   { border-color: rgba(239,68,68,0.5); }
 
   /* Spinner */
   .spinner {
     width: 15px; height: 15px;
-    border: 2px solid rgba(201,168,76,0.2);
-    border-top-color: var(--gold);
+    border: 2px solid rgba(31, 49, 81, 0.2);
+    border-top-color: var(--navy);
     border-radius: 50%; animation: spin 0.6s linear infinite;
     display: inline-block; flex-shrink: 0;
   }
@@ -460,16 +481,16 @@
   /* Mobile bottom tabs */
   .mobile-tabs {
     display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
-    background: var(--dark2); border-top: 1px solid var(--border);
+    background: var(--white); border-top: 1px solid var(--border);
     padding: 6px 0 8px;
   }
   .mobile-tab {
     flex: 1; display: flex; flex-direction: column; align-items: center;
     gap: 3px; padding: 6px 4px; border: none; background: transparent;
-    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    color: var(--text-muted); font-family: 'Work Sans', 'Anuphan', sans-serif;
     font-size: 10px; cursor: pointer; transition: color 0.2s;
   }
-  .mobile-tab.active { color: var(--gold); }
+  .mobile-tab.active { color: var(--navy); }
   .mobile-tab .micon { font-size: 19px; }
 
   /* Responsive */
@@ -477,19 +498,9 @@
     #topBar { padding: 0 14px; gap: 12px; }
     .tabs { display: none; }
     .mobile-tabs { display: flex; }
-    .tab-content { padding: 16px; }
+    .tab-content { padding: 20px 14px; }
     .form-grid { grid-template-columns: 1fr 1fr; }
-    .form-group.span2 { grid-column: span 2; }
-    .equipment-grid { grid-template-columns: repeat(2,1fr); }
-    .customer-stats { grid-template-columns: 1fr 1fr; }
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .budget-label, .budget-sub { display: none; }
-  }
-  @media (max-width: 480px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.span2 { grid-column: span 1; }
-    .customer-stats { grid-template-columns: 1fr; }
-    .equipment-grid { grid-template-columns: 1fr 1fr; }
+    .equipment-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -497,37 +508,40 @@
 
 <div id="loginOverlay">
   <div class="login-box">
-    <div class="login-logo">LUX<span style="font-weight:300">BUY</span></div>
-    <div class="login-sub">ระบบรับซื้อแบรนด์เนม — กรุณายืนยันตัวตน</div>
-    <input type="password" id="loginPass" placeholder="รหัสผ่าน"
-           onkeydown="if(event.key==='Enter') doLogin()">
+    <div class="login-logo">Farevefarm Buying system</div>
+    <div class="login-sub">ระบบรับซื้อและประเมินสภาพสินค้า</div>
+    <input type="password" id="loginPass" placeholder="ป้อนรหัสผ่านเข้าใช้งาน">
     <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
-    <div class="login-error" id="loginError">รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่</div>
+    <div class="login-error" id="loginErr">❌ รหัสผ่านไม่ถูกต้อง</div>
   </div>
 </div>
 
 <div id="topBar">
-  <div class="logo">LUXBUY<span>BRAND BUYING SYSTEM</span></div>
-
-  <div class="budget-wrap" onclick="refreshBudget()" title="คลิกเพื่อรีเฟรช">
-    <span class="budget-label">วงเงินวันนี้</span>
+  <div class="logo">
+    Farevefarm Buying system
+    <span>REAL-TIME BUYING CONTROL</span>
+  </div>
+  
+  <div class="budget-wrap" onclick="editCustomBudget()">
+    <div class="budget-label">วงเงินวันที่เลือก:</div>
     <div class="budget-bar-outer">
       <div class="budget-bar-inner" id="budgetBar"></div>
     </div>
     <span class="budget-amount" id="budgetAmt">฿0</span>
-    <span class="budget-sub">/ ฿2,000,000</span>
+    <span class="budget-sub" id="budgetMaxLabel">/ ฿2,000,000</span>
+    <span style="color:var(--coarse-wool);font-size:12px;margin-left:4px">✏️</span>
     <span class="budget-alert" id="budgetAlert">⚠ เกินวงเงิน</span>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('appt')">📋 ตารางนัด</button>
-    <button class="tab-btn" onclick="showTab('history')">📊 ประวัติ</button>
-    <button class="tab-btn" onclick="showTab('settings')">⚙️ ตั้งค่า</button>
+    <button class="tab-btn active" id="dtab-appt" onclick="showTab('appt')">📋 ตารางนัด</button>
+    <button class="tab-btn" id="dtab-history" onclick="showTab('history')">📊 ประวัติลูกค้า</button>
+    <button class="tab-btn" id="dtab-settings" onclick="showTab('settings')">⚙️ ตั้งค่าระบบ</button>
   </div>
 </div>
 
 <div class="tab-content active" id="tab-appt">
-
+  
   <div class="form-card">
     <div class="form-card-title">➕ เพิ่มนัดหมายใหม่</div>
     <div class="form-grid">
@@ -547,14 +561,6 @@
         <label>เวลานัด</label>
         <input class="form-control" id="f_time" type="time">
       </div>
-      <div class="form-group span2">
-        <label>ชื่อสินค้า / รุ่น</label>
-        <input class="form-control" id="f_product" placeholder="เช่น Chanel Classic Flap Medium Black Caviar GHW">
-      </div>
-      <div class="form-group">
-        <label>ราคาประมาณ (บาท)</label>
-        <input class="form-control" id="f_price" type="number" min="0" placeholder="เช่น 85000" oninput="checkBudgetLive()">
-      </div>
     </div>
     <div class="form-actions">
       <button class="btn btn-gold" id="addApptBtn" onclick="addAppointment()">
@@ -562,13 +568,15 @@
         บันทึกนัดหมาย
       </button>
       <div class="budget-warning-inline" id="budgetWarnInline">
-        ⛔ ราคาที่กรอกจะทำให้วงเงินวันนี้เกิน 2,000,000 บาท
+        ⛔ ราคาที่กรอกจะทำให้วงเงินของวันที่เลือกเกินงบประมาณที่กำหนดไว้
       </div>
     </div>
   </div>
 
   <div class="section-header">
-    <div class="section-title">ตารางนัด <span>วันนี้</span></div>
+    <div class="section-title">เลือกวันที่ต้องการดูตารางนัด: 
+      <input type="date" id="viewFilterDate" class="form-control" style="display:inline-block; width:170px; padding:4px 10px; margin-left:8px; border-radius:20px; font-family:inherit;" onchange="loadAppointments()">
+    </div>
     <div class="section-date" id="todayDate">—</div>
   </div>
 
@@ -578,20 +586,22 @@
         <tr>
           <th>เวลา</th>
           <th>ลูกค้า</th>
-          <th>สินค้า</th>
-          <th>ราคา</th>
+          <th>สินค้าสรุป (จากใบตรวจ)</th>
+          <th>ราคาประเมินรวม</th>
           <th>สถานะนัด</th>
           <th>สถานะเงิน</th>
           <th>การดำเนินการ</th>
         </tr>
       </thead>
       <tbody id="apptTbody">
-        <tr><td colspan="7">
-          <div class="empty-state">
-            <div class="spinner" style="width:28px;height:28px;margin:0 auto 12px"></div>
-            <p>กำลังโหลดข้อมูล...</p>
-          </div>
-        </td></tr>
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <div class="spinner" style="width:28px;height:28px;margin:0 auto 12px"></div>
+              <p>กำลังโหลดข้อมูล...</p>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -600,24 +610,24 @@
 <div class="tab-content" id="tab-history">
   <div class="stats-row">
     <div class="stat-card">
-      <div class="stat-label">นัดวันนี้</div>
+      <div class="stat-label">นัดหมายวันที่เลือก</div>
       <div class="stat-value" id="stat-appts">—</div>
       <div class="stat-sub">รายการ</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">ยอดรับซื้อวันนี้</div>
+      <div class="stat-label">ยอดรับซื้อวันที่เลือก</div>
       <div class="stat-value" id="stat-spend">—</div>
       <div class="stat-sub">บาท</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">สำเร็จแล้ว</div>
+      <div class="stat-label">สำเร็จแล้ว (วันเลือก)</div>
       <div class="stat-value" id="stat-done">—</div>
       <div class="stat-sub">รายการ</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">ยอดรวมทั้งหมด</div>
+      <div class="stat-label">ยอดรวมทั้งหมดทุกเคส</div>
       <div class="stat-value" id="stat-total">—</div>
-      <div class="stat-sub">บาท (ทุกเคส)</div>
+      <div class="stat-sub">บาท (ทุกช่วงเวลา)</div>
     </div>
   </div>
 
@@ -626,741 +636,989 @@
       <span class="search-icon">🔍</span>
       <input class="search-input" id="searchInput" placeholder="ค้นหาจากชื่อหรือเบอร์โทรลูกค้า..." oninput="searchCustomer()">
     </div>
-    <button class="btn btn-outline" onclick="loadHistory()">รีเฟรช</button>
   </div>
 
-  <div id="historyResults">
-    <div class="empty-state" style="padding:40px 0">
-      <div class="icon">🔍</div>
-      <p>พิมพ์ค้นหาลูกค้า หรือกด รีเฟรช เพื่อดูข้อมูลทั้งหมด</p>
-    </div>
-  </div>
+  <div id="customerListContainer"></div>
 </div>
 
 <div class="tab-content" id="tab-settings">
-  <div class="section-header">
-    <div class="section-title">⚙️ ตั้งค่า <span>ระบบ</span></div>
-  </div>
-
-  <div class="config-note">
-    ✅ <strong>Script URL ถูก Hardcode ไว้แล้ว</strong> — ระบบพร้อมใช้งานทันที ไม่ต้องตั้งค่าเพิ่มเติม<br>
-    URL: <code style="font-size:11px;opacity:0.8">https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec</code>
-  </div>
-
-  <div class="form-card">
-    <div class="form-card-title">🔑 เปลี่ยนรหัสผ่าน</div>
-    <div class="form-group" style="margin-bottom:16px; max-width:320px">
-      <label>รหัสผ่านใหม่</label>
-      <input class="form-control" id="newPass" type="password" placeholder="กรอกรหัสผ่านใหม่">
+  <div class="form-card" style="max-width:600px">
+    <div class="form-card-title">⚙️ ตั้งค่าการเชื่อมต่อฐานข้อมูล (Google Sheets)</div>
+    <div class="config-note">
+      ระบบนี้เชื่อมต่อกับ <strong>Google Apps Script Web App</strong> แบบเสร็จสมบูรณ์<br>
+      ข้อมูลนัดหมายและประวัติจะบันทึกและดึงแบบ Real-time ไปยังคลาวด์โดยตรง
     </div>
-    <button class="btn btn-gold" onclick="savePass()">💾 บันทึกรหัสผ่าน</button>
-  </div>
-
-  <div class="form-card">
-    <div class="form-card-title">📋 วิธีใช้งานเบื้องต้น</div>
-    <div style="font-size:14px; line-height:2; color:var(--text-muted)">
-      <p>1. แท็บ <strong style="color:var(--text)">ตารางนัด</strong> → เพิ่มนัดหมายลูกค้าด้านบน</p>
-      <p>2. เมื่อลูกค้ามาถึง กดปุ่ม <strong style="color:var(--gold)">🔍 ตรวจสินค้า</strong> เพื่อประเมินคะแนน</p>
-      <p>3. เลือกหมวด → กดเลือกคะแนนแต่ละหัวข้อ → ระบบคำนวณเกรดให้อัตโนมัติ</p>
-      <p>4. กด Badge <strong style="color:var(--text)">สถานะนัด / สถานะเงิน</strong> เพื่ออัปเดตได้เลย</p>
-      <p>5. แท็บ <strong style="color:var(--text)">ประวัติ</strong> → ใช้ค้นหาข้อมูลลูกค้าย้อนหลังและดูสถิติรวม</p>
+    <div class="form-group" style="margin-bottom:14px">
+      <label>Google Apps Script Web App URL</label>
+      <input class="form-control" id="cfg_url" placeholder="https://script.google.com/macros/s/.../exec">
     </div>
+    <button class="btn btn-gold" onclick="saveConfig()">💾 บันทึกการตั้งค่า</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="inspectModal">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <div class="modal-title">🔍 ประเมินสภาพสินค้า</div>
+      <div class="modal-title">📝 ตรวจสภาพและประเมินราคาสินค้า</div>
       <button class="modal-close" onclick="closeModal('inspectModal')">✕</button>
     </div>
     <div class="modal-body">
+      
       <div class="info-banner">
-        <div class="bicon">👤</div>
+        <span class="bicon">👤</span>
         <div>
-          <div class="info-name" id="m_custName">—</div>
-          <div class="info-detail" id="m_prodName">—</div>
+          <div class="info-name" id="m_cust_name">—</div>
+          <div class="info-detail" id="m_cust_detail">—</div>
         </div>
       </div>
 
-      <div class="score-display">
-        <div>
-          <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px">คะแนนสุทธิ</div>
-          <div class="score-number" id="m_score">100</div>
+      <div class="items-summary-box">
+        <div class="items-summary-title">📦 รายการสินค้าในเคสนี้</div>
+        <div class="items-summary-list" id="itemsSummaryContainer"></div>
+      </div>
+
+      <div class="items-nav-tabs" id="itemsNavTabs"></div>
+
+      <div class="form-grid" style="margin-bottom:16px">
+        <div class="form-group">
+          <label>ชื่อสินค้า / รุ่นย่อย ของชิ้นนี้</label>
+          <input class="form-control" id="m_item_title" placeholder="เช่น รุ่นหรือข้อมูลเฉพาะชิ้น">
         </div>
-        <div class="score-grade grade-N" id="m_grade">เกรด N (ของใหม่)</div>
+        <div class="form-group">
+          <label>ชื่อพนักงานผู้ตรวจ</label>
+          <input class="form-control" id="m_inspector" placeholder="ชื่อพนักงาน">
+        </div>
+        <div class="form-group">
+          <label>Date Code / ปีผลิต</label>
+          <input class="form-control" id="m_datecode" placeholder="เช่น 2021">
+        </div>
+        <div class="form-group">
+          <label>สภาพตามลูกค้าแจ้ง</label>
+          <select class="form-control" id="m_declaration">
+            <option value="ไม่เคยใช้งาน">ไม่เคยใช้งาน</option>
+            <option value="ผ่านการใช้งาน">ผ่านการใช้งาน</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ราคาประเมินชิ้นนี้ (บาท)</label>
+          <input class="form-control" id="m_item_price" type="number" placeholder="เช่น 45000" oninput="updateCurrentItemPrice()">
+        </div>
       </div>
-
-      <div class="category-tabs">
-        <button class="cat-btn active" id="cat-bag" onclick="setCategory('bag')">👜 กระเป๋า (Bag)</button>
-        <button class="cat-btn" id="cat-watch" onclick="setCategory('watch')">⌚ นาฬิกา (Watch)</button>
-        <button class="cat-btn" id="cat-jewelry" onclick="setCategory('jewelry')">💍 จิวเวลรี่ (Jewelry)</button>
-      </div>
-
-      <div id="criteriaContainer"></div>
 
       <hr class="divider">
-      <div class="form-section-title">📦 อุปกรณ์ที่ได้รับ (Equipment)</div>
-      <div class="equipment-grid" id="equipmentGrid"></div>
+      <div class="form-section-title">ประเภทสินค้า</div>
+      <div class="category-tabs">
+        <button class="cat-btn active" id="cat_shoes" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
+        <button class="cat-btn" id="cat_bag" onclick="selectCategory('bag',this)">👜 กระเป๋า</button>
+        <button class="cat-btn" id="cat_jewelry" onclick="selectCategory('jewelry',this)">💎 Fine jewelry</button>
+        <button class="cat-btn" id="cat_acc" onclick="selectCategory('acc',this)">🧣 acc อื่นๆ</button>
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">อุปกรณ์ที่ได้รับ (แยกตามประเภทสินค้า)</div>
+      <div class="equipment-grid" id="equipmentGridContainer"></div>
+      
+      <div class="form-group" style="margin-bottom:16px">
+        <label>หมายเหตุอุปกรณ์</label>
+        <input class="form-control" id="m_equip_note" placeholder="เช่น ใบเสร็จระบุ Saudi Arabia">
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">ประเมินคะแนนสภาพ</div>
+      
+      <div class="score-display">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">คะแนนรวมชิ้นนี้</div>
+          <div class="score-number" id="scoreNum">0</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px">/ 100 คะแนน</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">เกรดสภาพชิ้นนี้</div>
+          <div class="score-grade grade-B" id="scoreGrade">USED</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="scoreHint">กรอกข้อมูลด้านล่าง</div>
+        </div>
+      </div>
+
+      <div id="inspectCriteria"></div>
 
       <div class="used-warning" id="usedWarning">
-        ⚠️ <strong>หมายเหตุ:</strong> ขาดอุปกรณ์หลัก (กล่อง/ใบรับประกัน) หรือสภาพมีตำหนิชัดเจน ระบบปรับเป็นเกรดสินค้าใช้แล้ว (Used) อัตโนมัติ
+        ⚠️ คะแนนต่ำกว่าเกณฑ์มาตรฐานรับซื้อปกติ! กรุณาตรวจสอบสภาพอย่างละเอียดถี่ถ้วนก่อนทำการยืนยันราคาสุทธิ
       </div>
+
+      <hr class="divider">
+      <div class="form-section-title">ข้อมูลความเสี่ยงเพิ่มเติม</div>
+      <div class="form-group">
+        <label>หมายเหตุ / ข้อมูลเฝ้าระวังลูกค้าเพิ่มเติม</label>
+        <input class="form-control" id="m_risk_note" placeholder="เช่น ประวัติการยกเลิกนัดบ่อย หรือข้อมูลสำคัญอื่นๆ">
+      </div>
+
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('inspectModal')">ยกเลิก</button>
-      <button class="btn btn-gold" onclick="submitInspection()">💾 บันทึกผลการตรวจ</button>
+      <button class="btn btn-gold" id="saveInspectBtn" onclick="saveInspectionForm()">
+        <span class="spinner" id="saveSpinner" style="display:none"></span>
+        🔒 ยืนยันผลตรวจและราคาสุทธิ
+      </button>
     </div>
   </div>
 </div>
 
-<div class="mobile-tabs">
-  <button class="mobile-tab active" id="mtab-appt" onclick="showTab('appt')">
-    <span class="micon">📋</span><span>ตารางนัด</span>
-  </button>
-  <button class="mobile-tab" id="mtab-history" onclick="showTab('history')">
-    <span class="micon">📊</span><span>ประวัติ</span>
-  </button>
-  <button class="mobile-tab" id="mtab-settings" onclick="showTab('settings')">
-    <span class="micon">⚙️</span><span>ตั้งค่า</span>
-  </button>
-</div>
-
 <div class="toast" id="toast">
-  <span id="toastIcon" style="font-size:18px">✅</span>
+  <span id="toastIcon">✅</span>
   <div class="toast-text" id="toastText">ทำรายการสำเร็จ</div>
 </div>
 
+<div class="mobile-tabs">
+  <button class="mobile-tab active" id="mtab-appt" onclick="showTab('appt')">
+    <span class="micon">📋</span>ตารางนัด
+  </button>
+  <button class="mobile-tab" id="mtab-history" onclick="showTab('history')">
+    <span class="micon">📊</span>ประวัติ
+  </button>
+  <button class="mobile-tab" id="mtab-settings" onclick="showTab('settings')">
+    <span class="micon">⚙️</span>ตั้งค่า
+  </button>
+</div>
+
 <script>
-// API Endpoint (Hardcoded)
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec";
+// Global Configurations & States
+let BASE_URL = localStorage.getItem('buy_app_script_url') || "";
+let BUDGET_LIMIT = 2000000; 
+let dailyBudgets = {}; // Object to store custom limits for specific dates, e.g. {'2026-05-19': 2500000}
 
-// Global State
-let currentPassword = "admin";
-let todayAppointments = [];
-let activeApptId = null;
-let currentCategory = 'bag';
+let allAppointments = [];
+let currentSpend = 0;
+let currentApptId = "";
 
-// Evaluation Metrics Mapping
-const CRITERIA_DATA = {
-  bag: [
-    { key: 'exterior', label: 'สภาพภายนอก / ทรง / หนัง', options: [{text:'สมบูรณ์ ไร้รอย',p:0},{text:'ทรงนิ่ม รอยใช้งานเล็กน้อย',p:-5},{text:'หนังยับ ถลอกบางจุด',p:-15},{text:'เสียทรง ถลอกหนัก/ขาด',p:-30}] },
-    { key: 'corners', label: 'มุมกระเป๋า ขอบมุม ทั้ง 4 ด้าน', options: [{text:'กริบ ไม่มีถลอก',p:0},{text:'ยาแนวแมวข่วนจางๆ',p:-5},{text:'ถลอกเห็นเนื้อหนัง',p:-15},{text:'ยาแนวแตก/ขาดชัดเจน',p:-25}] },
-    { key: 'interior', label: 'ภายในกระเป๋า / ช่องซิป', options: [{text:'สะอาดเอี่ยม',p:0},{text:'ฝุ่นเล็กน้อย คราบจาง',p:-3},{text:'เหนียว/ลอก หรือรอยปากกา',p:-12},{text:'ฉีกขาด คราบฝังลึก',p:-20}] },
-    { key: 'hardware', label: 'อะไหล่ / ซิป / ตราปั๊ม', options: [{text:'เงาวับ รอยขนแมวน้อยมาก',p:0},{text:'ขนแมวทั่วไป อะไหล่ซีดลง',p:-5},{text:'ซิปฝืด รอยกระแทก/ลอก',p:-10},{text:'อะไหล่สนิม/หัก ซิปแตก',p:-20}] }
+// Multi-item sub-states within Modal
+let inspectionItems = [];
+let activeItemIndex = 0;
+let currentCategory = 'shoes';
+let scoreState = {};
+let equipState = {};
+
+// Dropdown/Toggle options criteria
+const CRITERIA = {
+  shoes: [
+    { key:'leather', label:'หนังภายนอก/ผ้า', max:20, opts:[['ไม่มีรอย',20],['1-2 จุดบาง',10],['3+ จุดชัด',0]] },
+    { key:'lining',  label:'ซับใน/แผ่นรอง', max:20, opts:[['สะอาดไม่มีขุย',20],['ขุยเล็กน้อย',10],['3+ จุด',0]] },
+    { key:'glue',    label:'กาวซึม', max:20, opts:[['ไม่มี',20],['1-2 จุด',10],['3+ จุด',0]] },
+    { key:'smell',   label:'กลิ่น', max:10, opts:[['ปกติ',10],['ไม่ปกติ',5]] },
+    { key:'gems',    label:'เพชรหลุด', max:10, opts:[['ไม่มี',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'scratch', label:'ถลอก/เฟด/ขีด', max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'sole',    label:'พื้นรองเท้า', max:10, opts:[['ไม่มีรอย',10],['รอยเล็กน้อย',5],['รอยเยอะ',0]] },
   ],
-  watch: [
-    { key: 'case', label: 'ตัวเรือน / ขอบเบเซล (Case & Bezel)', options: [{text:'ไม่มีรอยจิก ขนแมวน้อย',p:0},{text:'รอยขนแมวทั่วไปตามการใช้งาน',p:-5},{text:'รอยจิก/บุบ คราบออกไซด์',p:-15},{text:'กระจกบิ่น ขอบเซรามิกแตก',p:-35}] },
-    { key: 'bracelet', label: 'สายนาฬิกา / บัคเคิล (Bracelet/Strap)', options: [{text:'สายตึง ไม่หย่อน รอยน้อย',p:0},{text:'สายหย่อนเล็กน้อย ขนแมวทั่วไป',p:-5},{text:'สายหย่อนมาก ยางเสื่อม รอยลึก',p:-12},{text:'สายขาด/ชำรุด ข้อไม่ครบ',p:-25}] },
-    { key: 'movement', label: 'ระบบเครื่อง / การทำงาน (Movement)', options: [{text:'เดินตรง กำลังเครื่องดี',p:0},{text:'เดินช้า/เร็ว เกินเกณฑ์เล็กน้อย',p:-5},{text:'ฟังก์ชันบางระบบกดไม่ไป',p:-15},{text:'เครื่องหยุดเดิน ขึ้นลานไม่ได้',p:-40}] }
+  bag: [
+    { key:'leather',  label:'หนังกระเป๋า', max:15, opts:[['หนังแข็งสวย',15],['หนังนิ่มลง',10],['หนังนิ่มย้วย',5]] },
+    { key:'hardware', label:'อะไหล่', max:10, opts:[['ไม่มีรอย',10],['ขนแมวบางๆ',5],['ขนแมวเยอะ',0]] },
+    { key:'smell',    label:'กลิ่น', max:5,  opts:[['ปกติ',5],['ไม่ปกติ',0]] },
+    { key:'corner',   label:'ขอบมุม', max:10, opts:[['ไม่มีรอย',10],['มีรอยบาง',5],['รอยถลอกลึก',0]] },
+    { key:'stain',    label:'รอยปากกา/เครื่องสำอาง', max:10, opts:[['ไม่มีรอย',10],['เล็ก 1-2 จุด',5],['ใหญ่ 3+ จุด',0]] },
+    { key:'scratch',  label:'ถลอก/เหนียว/เล็บ', max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'glue',     label:'กาวซึม', max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'water',    label:'คราบน้ำ', max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'press',    label:'รอยกดทับ', max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'oxidize',  label:'ออกซิไดซ์', max:10, opts:[['ไม่มี',10],['มี',0]] },
   ],
   jewelry: [
-    { key: 'surface', label: 'พื้นผิวทอง/พลอย/เพชร (Surface)', options: [{text:'เงาสวย ไม่มีรอยขีดข่วน',p:0},{text:'รอยขนแมวบางๆ ทั่วไป',p:-5},{text:'มีรอยกระแทก/ขูดขีดลึก',p:-15},{text:'เพชรหลุด/พลอยร้าว สภาพแย่',p:-35}] },
-    { key: 'shape', label: 'รูปทรง / ตัวล็อก / ตราปั๊ม (Shape)', options: [{text:'ทรงตรง ตราปั๊มคมชัด ล็อกแน่น',p:0},{text:'ล็อกหลวมเล็กน้อย ปั๊มจาง',p:-5},{text:'ตัวเรือนเบี้ยว เบี้ยวผิดรูป',p:-15},{text:'หัก ชำรุด ตัวล็อกเสีย',p:-30}] }
+    { key:'body',    label:'ตัวเรือน', max:30, opts:[['ไม่มีรอย',30],['ขนแมวบางๆ',15],['รอยลึก',0]] },
+    { key:'gems',    label:'เพชร/พลอยหลุด', max:30, opts:[['ไม่มีหลุด',30],['หลุด 1 เม็ด',15],['หลุดหลายจุด',0]] },
+    { key:'scratch', label:'รอยขีดข่วนทั่วไป', max:20, opts:[['ไม่มี',20],['เล็กน้อย',10],['เยอะมาก',0]] },
+    { key:'stamp',   label:'ตัวปั๊มแบรนด์', max:20, opts:[['คมชัดมาก',20],['เลือนลาง',10],['ไม่ชัดเจน',0]] },
+  ],
+  acc: [
+    { key:'thread',  label:'เส้นด้ายรัน/ขาด', max:30, opts:[['ไม่มีรอย',30],['1-2 จุด',15],['3+ จุด',0]] },
+    { key:'stain',   label:'คราบสกปรก', max:30, opts:[['ไม่มีคราบ',30],['คราบซักออก',15],['คราบฝังลึก',0]] },
+    { key:'smell',   label:'กลิ่น', max:20, opts:[['ปกติ',20],['ไม่ปกติ',10]] },
+    { key:'fade',    label:'สีเฟด/ด่าง', max:20, opts:[['ไม่มี',20],['บางจุด',10],['ด่างชัดเจน',0]] },
   ]
 };
 
-const EQUIP_DATA = {
-  bag: [ {id:'receipt', label:'ใบเสร็จ (Receipt)'}, {id:'card', label:'การ์ด/บุ๊ค (Card)'}, {id:'box', label:'กล่อง (Box)'}, {id:'dustbag', label:'ถุงผ้า (Dustbag)'}, {id:'paperbag', label:'ถุงกระดาษ (Bag)'} ],
-  watch: [ {id:'receipt', label:'ใบเสร็จ (Receipt)'}, {id:'warranty', label:'ใบรับประกัน (Card)'}, {id:'box', label:'กล่องนอก/ใน (Box)'}, {id:'book', label:'คู่มือ (Manual)'}, {id:'tag', label:'ป้ายแท็ก (Tag)'} ],
-  jewelry: [ {id:'receipt', label:'ใบเสร็จ (Receipt)'}, {id:'cert', label:'ใบรับรอง/การ์ด (Cert)'}, {id:'box', label:'กล่องสินค้า (Box)'}, {id:'pouch', label:'ถุงผ้า/ซอง (Pouch)'} ]
+const EQUIP_OPTIONS = {
+  shoes: ['กล่อง', 'ถุงผ้า', 'ใบเสร็จจริง', 'ใบเสร็จสำเนา', 'การ์ด', 'ป้ายแท็ก', 'เชือกสำรอง'],
+  bag: ['กล่อง', 'ถุงผ้า', 'ใบเสร็จจริง', 'ใบเสร็จสำเนา', 'การ์ด/บุ๊คเล็ต', 'ถุงกระดาษ', 'ริบบิ้น/ดอกคามิเลีย', 'สายสะพาย', 'กุญแจ+ลูกกุญแจ', 'ชุดดันทรง'],
+  jewelry: ['กล่องนอก', 'กล่องใน', 'ใบรับประกัน (Cert)', 'ใบเสร็จจริง', 'ใบเสร็จสำเนา', 'ถุงกระดาษ/ริบบิ้น'],
+  acc: ['กล่อง', 'ถุงผ้า', 'ใบเสร็จจริง', 'ใบเสร็จสำเนา', 'การ์ด', 'ป้ายแท็ก']
 };
 
-// Current evaluation values
-let selectedOptions = {}; 
-let equipmentStatus = {}; 
-
-// Autoload on page load
+// =============================================
+// INITIALIZATION
+// =============================================
 window.addEventListener('DOMContentLoaded', () => {
-  // Load saved password if available
-  const p = localStorage.getItem('luxbuy_pass');
-  if (p) currentPassword = p;
+  // Load saved dynamic limits from localStorage
+  const savedLimits = localStorage.getItem('fareve_daily_budgets');
+  if (savedLimits) {
+    try { dailyBudgets = JSON.parse(savedLimits); } catch(e) {}
+  }
 
-  // Set default form date to today
-  document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+  // Auto set current date into inputs
+  const today = todayStr();
+  document.getElementById('f_date').value = today;
+  document.getElementById('viewFilterDate').value = today;
+  document.getElementById('cfg_url').value = BASE_URL;
+
+  // Bypass authentication completely as requested
+  document.getElementById('loginOverlay').style.display = 'none';
+  
+  loadAppointments();
 });
 
+function todayStr() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const r = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${r}`;
+}
+
+function formatDateThai(str) {
+  if (!str) return "—";
+  const p = str.split('-');
+  if (p.length !== 3) return str;
+  const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+  return `${parseInt(p[2])} ${months[parseInt(p[1])-1]} ${parseInt(p[0])+543}`;
+}
+
 // =============================================
-// AUTHENTICATION
+// AUTHENTICATION BYPASS (STUB FUNCTION)
 // =============================================
 function doLogin() {
-  const input = document.getElementById('loginPass').value;
-  if (input === currentPassword) {
-    document.getElementById('loginOverlay').style.display = 'none';
-    showToast('success', 'เข้าสู่ระบบสำเร็จ');
-    initDashboard();
-  } else {
-    const err = document.getElementById('loginError');
-    err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 3000);
-  }
-}
-
-function savePass() {
-  const np = document.getElementById('newPass').value.trim();
-  if (!np) return showToast('error', 'กรุณากรอกรหัสผ่านใหม่');
-  currentPassword = np;
-  localStorage.setItem('luxbuy_pass', np);
-  showToast('success', 'เปลี่ยนรหัสผ่านใหม่เรียบร้อย');
-  document.getElementById('newPass').value = '';
+  document.getElementById('loginOverlay').style.display = 'none';
 }
 
 // =============================================
-// CORE INITIALIZATION
+// API CONNECTION
 // =============================================
-function initDashboard() {
-  // Set Date label
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('th-TH', options);
-  
-  // Fetch lists
-  refreshAppointments();
-  refreshBudget();
-}
-
-// =============================================
-// BUDGET MANAGEMENT
-// =============================================
-function refreshBudget() {
-  fetch(`${SCRIPT_URL}?action=getBudget`)
-    .then(res => res.json())
-    .then(data => {
-      const spent = data.spent || 0;
-      const limit = 2000000;
-      const pct = Math.min((spent / limit) * 100, 100);
-      
-      const bar = document.getElementById('budgetBar');
-      bar.style.width = pct + '%';
-      
-      if (pct >= 100) bar.style.background = 'var(--red)';
-      else if (pct >= 80) bar.style.background = 'var(--orange)';
-      else bar.style.background = 'var(--green)';
-
-      document.getElementById('budgetAmt').textContent = '฿' + spent.toLocaleString();
-      
-      if (spent > limit) {
-        document.getElementById('budgetAlert').style.display = 'inline-block';
-      } else {
-        document.getElementById('budgetAlert').style.display = 'none';
-      }
-    })
-    .catch(() => showToast('error', 'ไม่สามารถดึงข้อมูลวงเงินได้'));
-}
-
-function checkBudgetLive() {
-  const pVal = parseInt(document.getElementById('f_price').value) || 0;
-  const currentAmtText = document.getElementById('budgetAmt').textContent.replace(/[^0-9]/g, '');
-  const currentSpent = parseInt(currentAmtText) || 0;
-  
-  const warn = document.getElementById('budgetWarnInline');
-  if (currentSpent + pVal > 2000000) {
-    warn.style.display = 'block';
-  } else {
-    warn.style.display = 'none';
-  }
-}
-
-// =============================================
-// DATA FETCH & ACTIONS
-// =============================================
-function refreshAppointments() {
-  const tbody = document.getElementById('apptTbody');
-  tbody.innerHTML = `<tr><td colspan="7">
-    <div class="empty-state">
-      <div class="spinner" style="width:28px;height:28px;margin:0 auto 12px"></div>
-      <p>กำลังโหลดตารางนัดหมาย...</p>
-    </div>
-  </td></tr>`;
-
-  fetch(`${SCRIPT_URL}?action=readToday`)
-    .then(res => res.json())
-    .then(data => {
-      todayAppointments = data;
-      renderAppointments(data);
-    })
-    .catch(() => {
-      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p>❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</p></div></td></tr>`;
+async function apiCall(payload) {
+  if (!BASE_URL) return null;
+  try {
+    const res = await fetch(BASE_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
     });
+    const json = await res.json();
+    if (json && json.status === 'error') {
+      showToast('error', '❌ ' + json.message);
+    }
+    return json;
+  } catch(err) {
+    showToast('error', '❌ เชื่อมต่อ Google Sheets ไม่ได้: ' + err.message);
+    return null;
+  }
 }
 
-function renderAppointments(list) {
-  const tbody = document.getElementById('apptTbody');
-  if (!list || list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">📅</div><p>ไม่มีรายการนัดหมายสำหรับวันนี้</p></div></td></tr>`;
+// =============================================
+// BUDGET CONTROLLER WITH CUSTOM EDIT
+// =============================================
+function getSelectedDateLimit() {
+  const selectedDate = document.getElementById('viewFilterDate').value || todayStr();
+  if (dailyBudgets[selectedDate] !== undefined) {
+    return dailyBudgets[selectedDate];
+  }
+  return 2000000; // Default 2 Million Baht
+}
+
+function editCustomBudget() {
+  const selectedDate = document.getElementById('viewFilterDate').value || todayStr();
+  const currentLimit = getSelectedDateLimit();
+  const input = prompt(`แก้ไขวงเงินเฉพาะกิจสำหรับวันที่ ${formatDateThai(selectedDate)}\n(ป้อนเฉพาะตัวเลข เช่น 2500000):`, currentLimit);
+  
+  if (input !== null) {
+    const newLimit = parseInt(input.trim());
+    if (isNaN(newLimit) || newLimit < 0) {
+      showToast('error', '⚠️ กรุณากรอกตัวเลขจำนวนเงินที่ถูกต้อง');
+      return;
+    }
+    
+    dailyBudgets[selectedDate] = newLimit;
+    localStorage.setItem('fareve_daily_budgets', JSON.stringify(dailyBudgets));
+    showToast('success', `✅ ปรับวงเงินของวันที่ ${formatDateThai(selectedDate)} เป็น ฿${newLimit.toLocaleString('th-TH')} เรียบร้อย`);
+    updateBudgetBar();
+  }
+}
+
+async function refreshBudget() {
+  const data = await apiCall({ action: 'get_dashboard_data' });
+  if (data && data.status === 'success') {
+    allAppointments = data.appointments || [];
+    
+    // Calculate total spend strictly based on the user-selected calendar view date
+    let dynamicTargetSpend = 0;
+    const selectedDate = document.getElementById('viewFilterDate').value || todayStr();
+    
+    allAppointments.forEach(appt => {
+      if (appt.date === selectedDate && appt.appt_status !== 'ยกเลิก') {
+        const saved = localStorage.getItem('inspect_' + appt.appt_id);
+        if (saved) {
+          try {
+            const items = JSON.parse(saved);
+            const totalItemsPrice = items.reduce((s, i) => s + Number(i.price || 0), 0);
+            appt.estimated_price = totalItemsPrice;
+            appt.product_name = items.map(i => i.title || 'ไม่ระบุชื่อ').join(', ');
+          } catch(e) {}
+        } else {
+          appt.estimated_price = 0;
+          appt.product_name = 'รอตรวจสภาพ';
+        }
+        dynamicTargetSpend += Number(appt.estimated_price || 0);
+      }
+    });
+    
+    currentSpend = dynamicTargetSpend;
+    updateBudgetBar();
+    renderTable(allAppointments);
+  }
+}
+
+function updateBudgetBar() {
+  const activeLimit = getSelectedDateLimit();
+  const pct = Math.min((currentSpend / activeLimit) * 100, 100);
+  
+  const bar = document.getElementById('budgetBar');
+  const amt = document.getElementById('budgetAmt');
+  const alert = document.getElementById('budgetAlert');
+  const label = document.getElementById('budgetMaxLabel');
+  
+  bar.style.width = pct + '%';
+  amt.textContent = '฿' + currentSpend.toLocaleString('th-TH');
+  label.textContent = ' / ฿' + activeLimit.toLocaleString('th-TH');
+  
+  if (pct >= 100) {
+    bar.style.background = 'var(--red)';
+    alert.style.display = 'inline-block';
+  } else if (pct >= 90) {
+    bar.style.background = 'var(--red)';
+    alert.style.display = 'none';
+  } else if (pct >= 75) {
+    bar.style.background = 'var(--orange)';
+    alert.style.display = 'none';
+  } else {
+    bar.style.background = 'var(--navy)';
+    alert.style.display = 'none';
+  }
+}
+
+// =============================================
+// APPOINTMENTS CONTROL
+// =============================================
+async function loadAppointments() {
+  setTableLoading();
+  const selectedDate = document.getElementById('viewFilterDate').value || todayStr();
+  document.getElementById('todayDate').textContent = formatDateThai(selectedDate);
+  await refreshBudget();
+}
+
+function setTableLoading() {
+  document.getElementById('apptTbody').innerHTML = `
+    <tr><td colspan="7">
+      <div class="empty-state">
+        <div class="spinner" style="width:28px;height:28px;margin:0 auto 12px"></div>
+        <p>กำลังดึงข้อมูลนัดหมายของวันที่เลือก...</p>
+      </div>
+    </td></tr>`;
+}
+
+function renderTable(list) {
+  const container = document.getElementById('apptTbody');
+  const selectedDate = document.getElementById('viewFilterDate').value || todayStr();
+  
+  // Filter row strictly matching selected view filter calendar date
+  const filtered = list.filter(item => item.date === selectedDate);
+  
+  // Calculate specific stats breakdown based on selected date
+  let doneCount = 0;
+  let dayTotalSpend = 0;
+  filtered.forEach(x => {
+    if (x.appt_status === 'สำเร็จ') doneCount++;
+    dayTotalSpend += Number(x.estimated_price || 0);
+  });
+  
+  document.getElementById('stat-appts').textContent = filtered.length;
+  document.getElementById('stat-spend').textContent = dayTotalSpend.toLocaleString('th-TH');
+  document.getElementById('stat-done').textContent = doneCount;
+  
+  let grandTotalSum = list.reduce((sum, current) => sum + Number(current.estimated_price || 0), 0);
+  document.getElementById('stat-total').textContent = grandTotalSum.toLocaleString('th-TH');
+
+  if (!filtered.length) {
+    container.innerHTML = `
+      <tr><td colspan="7">
+        <div class="empty-state">
+          <div class="icon">📅</div>
+          <p>ไม่มีรายการนัดหมายสำหรับวันที่ ${formatDateThai(selectedDate)}</p>
+        </div>
+      </td></tr>`;
     return;
   }
 
-  // Sort by time
-  list.sort((a,b) => (a.time || '').localeCompare(b.time || ''));
+  filtered.sort((a,b) => a.time_slot.localeCompare(b.time_slot));
 
-  tbody.innerHTML = list.map(item => {
-    const priceStr = item.price ? `฿${parseInt(item.price).toLocaleString()}` : '—';
+  container.innerHTML = filtered.map(item => {
+    const esc = (s) => String(s || '').replace(/"/g, '&quot;');
+    const savedInspect = localStorage.getItem('inspect_' + item.appt_id);
+    let displayPrice = "฿0";
+    let displayProduct = "รอตรวจสภาพ";
     
-    // Status text mapping
-    let statusClass = 'badge-wait';
-    let statusText = 'รอเข้าพบ';
-    if (item.status === 'มาตามนัด') { statusClass = 'badge-arrived'; statusText = 'มาตามนัด'; }
-    if (item.status === 'เสร็จสิ้น') { statusClass = 'badge-done'; statusText = 'เสร็จสิ้น'; }
-    if (item.status === 'ยกเลิก') { statusClass = 'badge-cancel'; statusText = 'ยกเลิก'; }
-
-    let payClass = 'badge-pay-no';
-    let payText = 'ยังไม่จ่าย';
-    if (item.payment === 'กำลังโอน') { payClass = 'badge-pay-sending'; payText = 'กำลังโอน'; }
-    if (item.payment === 'จ่ายแล้ว') { payClass = 'badge-pay-done'; payText = 'จ่ายแล้ว'; }
-
-    const gradeBadge = item.grade ? `<div style="margin-top:4px;"><span class="score-grade grade-${item.grade.charAt(0)}" style="font-size:10px; padding:2px 6px;">เกรด ${item.grade} (${item.score}คะแนน)</span></div>` : '';
+    if (savedInspect) {
+      try {
+        const arr = JSON.parse(savedInspect);
+        const sum = arr.reduce((s,i)=>s+Number(i.price||0), 0);
+        displayPrice = "฿" + sum.toLocaleString('th-TH');
+        displayProduct = arr.map(i=>i.title || 'ไม่ระบุชื่อ').join(', ');
+      } catch(e){}
+    } else if (Number(item.estimated_price) > 0) {
+      displayPrice = "฿" + Number(item.estimated_price).toLocaleString('th-TH');
+      displayProduct = item.product_name || 'ไม่ระบุชื่อ';
+    }
 
     return `
-      <tr id="row-${item.id}">
-        <td class="time-slot">${item.time || '—'}</td>
+      <tr>
+        <td><span class="time-slot">${item.time_slot}</span></td>
         <td>
-          <div class="customer-name">${item.name}</div>
-          <div class="customer-phone">${item.phone || '—'}</div>
+          <div class="customer-name">${esc(item.customer_name)}</div>
+          <div class="customer-phone">${esc(item.customer_phone)}</div>
         </td>
-        <td>
-          <div class="product-text">${item.product || '—'}</div>
-          ${gradeBadge}
-        </td>
-        <td class="price-text" id="price-display-${item.id}">${priceStr}</td>
-        <td>
-          <span class="badge ${statusClass}" onclick="toggleStatus('${item.id}', 'status', '${item.status}')">${statusText}</span>
-        </td>
-        <td>
-          <span class="badge ${payClass}" onclick="toggleStatus('${item.id}', 'payment', '${item.payment}')">${payText}</span>
-        </td>
+        <td><div class="product-text">${esc(displayProduct)}</div></td>
+        <td><span class="price-text">${displayPrice}</span></td>
+        <td>${renderApptDropdown(item.appt_status, item.appt_id)}</td>
+        <td>${renderPayDropdown(item.payment_status, item.appt_id)}</td>
         <td>
           <div class="actions">
-            <button class="btn btn-outline btn-sm" onclick="openInspectModal('${item.id}')">🔍 ตรวจสินค้า</button>
-            <button class="btn btn-outline btn-sm" style="color:var(--red); border-color:rgba(232,90,74,0.2)" onclick="deleteAppt('${item.id}')">✕</button>
+            <button class="btn btn-outline btn-sm" onclick="openInspectModal('${item.appt_id}', '${esc(item.customer_name)}', '${esc(item.customer_phone)}')">
+              🔍 ตรวจสภาพ/ประเมินเพิ่ม
+            </button>
           </div>
         </td>
-      </tr>
-    `;
+      </tr>`;
   }).join('');
 }
 
-function addAppointment() {
+function renderApptDropdown(status, id) {
+  const s = status || 'รอเข้าพบ';
+  let cls = 'badge-select-wait';
+  if (s === 'มาตามนัด') cls = 'badge-select-arrived';
+  if (s === 'สำเร็จ') cls = 'badge-select-done';
+  if (s === 'ยกเลิก') cls = 'badge-select-cancel';
+  return `
+    <select class="badge-select ${cls}" onchange="updateStatus('${id}','appt_status',this.value)">
+      <option value="รอเข้าพบ" ${s==='รอเข้าพบ'?'selected':''}>รอเข้าพบ</option>
+      <option value="มาตามนัด" ${s==='มาตามนัด'?'selected':''}>มาตามนัด</option>
+      <option value="สำเร็จ" ${s==='สำเร็จ'?'selected':''}>สำเร็จ ✓</option>
+      <option value="ยกเลิก" ${s==='ยกเลิก'?'selected':''}>ยกเลิก</option>
+    </select>
+  `;
+}
+
+function renderPayDropdown(status, id) {
+  const s = status || 'ยังไม่จ่าย';
+  let cls = 'badge-select-pay-no';
+  if (s === 'กำลังโอนเงิน') cls = 'badge-select-pay-sending';
+  if (s === 'จ่ายเงินสำเร็จ') cls = 'badge-select-pay-done';
+  return `
+    <select class="badge-select ${cls}" onchange="updateStatus('${id}','payment_status',this.value)">
+      <option value="ยังไม่จ่าย" ${s==='ยังไม่จ่าย'?'selected':''}>ยังไม่จ่าย</option>
+      <option value="กำลังโอนเงิน" ${s==='กำลังโอนเงิน'?'selected':''}>กำลังโอนเงิน</option>
+      <option value="จ่ายเงินสำเร็จ" ${s==='จ่ายเงินสำเร็จ'?'selected':''}>จ่ายแล้ว ✓</option>
+    </select>
+  `;
+}
+
+async function updateStatus(apptId, field, value) {
+  const res = await apiCall({
+    action: 'update_status',
+    appt_id: apptId,
+    field: field,
+    value: value
+  });
+  if (res && res.status === 'success') {
+    showToast('success', 'สถานะถูกปรับปรุงแล้ว');
+    await loadAppointments();
+  }
+}
+
+async function addAppointment() {
   const name = document.getElementById('f_name').value.trim();
   const phone = document.getElementById('f_phone').value.trim();
   const date = document.getElementById('f_date').value;
   const time = document.getElementById('f_time').value;
-  const product = document.getElementById('f_product').value.trim();
-  const price = document.getElementById('f_price').value.trim();
 
-  if (!name || !date || !time) {
-    return showToast('error', 'กรุณากรอกข้อมูลที่จำเป็น (ชื่อลูกค้า, วันที่, เวลา)');
+  if (!name || !phone || !date || !time) {
+    showToast('error','⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    return;
   }
 
-  // Toggle spinner
-  document.getElementById('addSpinner').style.display = 'inline-block';
-  document.getElementById('addApptBtn').disabled = true;
+  const apptId = 'APT-' + date.replace(/-/g,'') + '-' + Date.now().toString().slice(-5);
+  const btn = document.getElementById('addApptBtn');
+  const sp = document.getElementById('addSpinner');
 
-  const payload = { action: 'create', name, phone, date, time, product, price };
+  btn.disabled = true;
+  sp.style.display = 'inline-block';
 
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(() => {
-    showToast('success', 'บันทึกนัดหมายเรียบร้อยแล้ว');
-    // Clear form inputs except date
+  const res = await apiCall({
+    action: 'add_appointment',
+    appt_id: apptId,
+    date,
+    time_slot: time,
+    customer_name: name,
+    customer_phone: phone,
+    product_name: 'รอตรวจสภาพ',
+    estimated_price: 0,
+    appt_status: 'รอเข้าพบ',
+    payment_status: 'ยังไม่จ่าย'
+  });
+
+  btn.disabled = false;
+  sp.style.display = 'none';
+
+  if (res && res.status === 'success') {
+    showToast('success', '✨ เพิ่มรายการนัดหมายใหม่สำเร็จ');
     document.getElementById('f_name').value = '';
     document.getElementById('f_phone').value = '';
-    document.getElementById('f_time').value = '';
-    document.getElementById('f_product').value = '';
-    document.getElementById('f_price').value = '';
-    document.getElementById('budgetWarnInline').style.display = 'none';
-    
-    // Refresh dashboard arrays
-    setTimeout(() => {
-      refreshAppointments();
-      refreshBudget();
-    }, 800);
-  })
-  .catch(() => showToast('error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล'))
-  .finally(() => {
-    document.getElementById('addSpinner').style.display = 'none';
-    document.getElementById('addApptBtn').disabled = false;
-  });
+    // Switch dynamic view date calendar into new appointment date automatically to reveal it
+    document.getElementById('viewFilterDate').value = date;
+    await loadAppointments();
+  }
 }
 
-function toggleStatus(id, type, currentVal) {
-  let nextVal = '';
-  if (type === 'status') {
-    if (!currentVal || currentVal === 'undefined' || currentVal === 'รอเข้าพบ') nextVal = 'มาตามนัด';
-    else if (currentVal === 'มาตามนัด') nextVal = 'เสร็จสิ้น';
-    else if (currentVal === 'เสร็จสิ้น') nextVal = 'ยกเลิก';
-    else nextVal = 'รอเข้าพบ';
+// =============================================
+// MODAL: DYNAMIC INSPECTION LOGIC
+// =============================================
+function openInspectModal(apptId, custName, custPhone) {
+  currentApptId = apptId;
+  document.getElementById('m_cust_name').textContent = custName;
+  document.getElementById('m_cust_detail').textContent = '📞 เบอร์โทร: ' + custPhone + ' | เลขเคส: ' + apptId;
+
+  const saved = localStorage.getItem('inspect_' + apptId);
+  if (saved) {
+    try { inspectionItems = JSON.parse(saved); } catch(e) { inspectionItems = []; }
   } else {
-    if (!currentVal || currentVal === 'undefined' || currentVal === 'ยังไม่จ่าย') nextVal = 'กำลังโอน';
-    else if (currentVal === 'กำลังโอน') nextVal = 'จ่ายแล้ว';
-    else nextVal = 'ยังไม่จ่าย';
+    inspectionItems = [];
   }
 
-  showToast('success', `กำลังอัปเดตสถานะ...`);
-  
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'updateStatus', id, type, value: nextVal })
-  })
-  .then(() => {
-    setTimeout(() => {
-      refreshAppointments();
-      refreshBudget();
-    }, 600);
-  });
-}
-
-function deleteAppt(id) {
-  if (!confirm('คุณต้องการลบรายการนัดหมายนี้ใช่หรือไม่?')) return;
-  showToast('error', 'กำลังลบข้อมูล...');
-  fetch(`${SCRIPT_URL}?action=delete&id=${id}`)
-    .then(() => {
-      setTimeout(() => {
-        refreshAppointments();
-        refreshBudget();
-      }, 500);
-    });
-}
-
-// =============================================
-// EVALUATION / INSPECTION SYSTEM
-// =============================================
-function openInspectModal(id) {
-  activeApptId = id;
-  const item = todayAppointments.find(x => x.id == id);
-  if (!item) return;
-
-  document.getElementById('m_custName').textContent = item.name + (item.phone ? ` (${item.phone})` : '');
-  document.getElementById('m_prodName').textContent = item.product || 'ไม่ได้ระบุชื่อสินค้า';
-
-  // Restore previous evaluation values if existing or build defaults
-  currentCategory = item.cat || 'bag';
-  selectedOptions = {};
-  equipmentStatus = {};
-
-  // Build structure
-  setCategory(currentCategory);
-  
-  // Set saved option data if matching
-  if (item.cat === currentCategory && item.score) {
-     // implementation can go deeper if needed, for simplicity it resets to 100
+  if (!inspectionItems.length) {
+    inspectionItems.push(createNewBlankItem(1));
   }
 
-  openModal('inspectModal');
+  activeItemIndex = 0;
+  document.getElementById('inspectModal').classList.add('open');
+  renderItemNavigationTabs();
+  loadItemData(activeItemIndex);
 }
 
-function setCategory(cat) {
-  currentCategory = cat;
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  const targetBtn = document.getElementById('cat-' + cat);
-  if (targetBtn) targetBtn.classList.add('active');
-
-  // Reset metrics
-  selectedOptions = {};
-  CRITERIA_DATA[cat].forEach(c => { selectedOptions[c.key] = 0; }); // default index 0 = 0 deduction
-
-  // Reset elements
-  equipmentStatus = {};
-  EQUIP_DATA[cat].forEach(e => { equipmentStatus[e.id] = true; }); // default all present
-
-  renderCriteria();
-  renderEquipment();
-  calculateScore();
+function createNewBlankItem(num) {
+  return {
+    title: `สินค้าชิ้นที่ ${num}`,
+    inspector: '',
+    datecode: '',
+    declaration: 'ไม่เคยใช้งาน',
+    price: 0,
+    category: 'shoes',
+    scores: {},
+    equip: {},
+    equipNote: '',
+    riskNote: '',
+    totalScore: 100,
+    grade: 'N'
+  };
 }
 
-function renderCriteria() {
-  const container = document.getElementById('criteriaContainer');
-  const list = CRITERIA_DATA[currentCategory];
+function renderItemNavigationTabs() {
+  const container = document.getElementById('itemsNavTabs');
+  let html = inspectionItems.map((item, idx) => `
+    <button class="item-tab ${idx === activeItemIndex ? 'active' : ''}" onclick="switchActiveItem(${idx})">
+      📦 ${item.title || 'ชิ้นที่ '+(idx+1)}
+    </button>
+  `).join('');
+  
+  html += `<button class="item-tab add-btn" onclick="addNewItemToCase()">➕ เพิ่มสินค้าชิ้นถัดไป</button>`;
+  container.innerHTML = html;
+  updateItemsSummary();
+}
 
-  container.innerHTML = list.map(c => {
-    const optionsHtml = c.options.map((opt, idx) => {
-      const isSelected = selectedOptions[c.key] === idx ? 'selected' : '';
-      return `<button class="opt-btn ${isSelected}" onclick="selectOption('${c.key}', ${idx})">${opt.text} (${opt.p >= 0 ? '+' : ''}${opt.p})</button>`;
-    }).join('');
+function addNewItemToCase() {
+  saveCurrentItemState();
+  const nextNum = inspectionItems.length + 1;
+  inspectionItems.push(createNewBlankItem(nextNum));
+  activeItemIndex = inspectionItems.length - 1;
+  renderItemNavigationTabs();
+  loadItemData(activeItemIndex);
+}
 
+function switchActiveItem(idx) {
+  saveCurrentItemState();
+  activeItemIndex = idx;
+  renderItemNavigationTabs();
+  loadItemData(activeItemIndex);
+}
+
+function updateItemsSummary() {
+  const container = document.getElementById('itemsSummaryContainer');
+  let totalAllItemsPrice = 0;
+  const esc = (s) => String(s || '').replace(/"/g, '&quot;');
+  
+  let html = inspectionItems.map((item, idx) => {
+    totalAllItemsPrice += Number(item.price || 0);
+    const catLabels = {shoes:'รองเท้า', bag:'กระเป๋า', jewelry:'Fine jewelry', acc:'acc อื่นๆ'};
     return `
-      <div class="inspect-group">
-        <label>${c.label}</label>
-        <div class="options">${optionsHtml}</div>
+      <div class="items-summary-item">
+        <span><strong>ชิ้นที่ ${idx+1}:</strong> ${esc(item.title || 'ไม่ระบุชื่อ')} [หมวด: ${catLabels[item.category] || item.category}]</span>
+        <span>สภาพเกรด: <span style="color:var(--navy); font-weight:bold;">${item.grade || 'USED'}</span> (${item.totalScore || 0} คะแนน) | ราคา: ฿${Number(item.price || 0).toLocaleString('th-TH')}</span>
       </div>
     `;
   }).join('');
+
+  html += `
+    <div class="items-summary-item" style="background: var(--navy); color: var(--white); margin-top: 8px; font-weight: bold; padding: 6px 10px;">
+      <span>📋 สรุปรวม: ทั้งหมด ${inspectionItems.length} ชิ้น</span>
+      <span>ยอดรวมประเมินสุทธิ: ฿${totalAllItemsPrice.toLocaleString('th-TH')}</span>
+    </div>
+  `;
+  container.innerHTML = html;
 }
 
-function renderEquipment() {
-  const container = document.getElementById('equipmentGrid');
-  const list = EQUIP_DATA[currentCategory];
+function updateCurrentItemPrice() {
+  if (inspectionItems[activeItemIndex]) {
+    inspectionItems[activeItemIndex].price = Number(document.getElementById('m_item_price').value) || 0;
+    updateItemsSummary();
+  }
+}
 
-  container.innerHTML = list.map(e => {
-    const yesActive = equipmentStatus[e.id] === true ? 'active' : '';
-    const noActive = equipmentStatus[e.id] === false ? 'active' : '';
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
 
+function selectCategory(cat, btn) {
+  saveCurrentItemState();
+  currentCategory = cat;
+  scoreState = {};
+  equipState = {};
+  if (inspectionItems[activeItemIndex]) {
+    inspectionItems[activeItemIndex].category = cat;
+    inspectionItems[activeItemIndex].scores = scoreState;
+    inspectionItems[activeItemIndex].equip = equipState;
+  }
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderEquipmentGrid(cat);
+  renderCriteria(cat);
+  updateScore();
+}
+
+function renderCriteria(cat) {
+  const container = document.getElementById('inspectCriteria');
+  container.innerHTML = CRITERIA[cat].map(item => `
+    <div class="inspect-group">
+      <label>${item.label} <span style="color:var(--text-muted);font-size:11px">(สูงสุด ${item.max} คะแนน)</span></label>
+      <div class="options">
+        ${item.opts.map(opt => `
+          <button class="opt-btn" onclick="selectScore(this,'${item.key}',${opt[1]})">${opt[0]} (${opt[1]})</button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderEquipmentGrid(cat) {
+  const container = document.getElementById('equipmentGridContainer');
+  const opts = EQUIP_OPTIONS[cat] || [];
+  container.innerHTML = opts.map(eq => {
+    const currentVal = equipState[eq] || 'no';
     return `
       <div class="equip-item">
-        <span class="equip-label">${e.label}</span>
+        <span class="equip-label">${eq}</span>
         <div class="toggle-wrap">
-          <button class="toggle-btn yes ${yesActive}" onclick="setEquipment('${e.id}', true)">มี</button>
-          <button class="toggle-btn no ${noActive}" onclick="setEquipment('${e.id}', false)">ไม่มี</button>
+          <button class="toggle-btn yes ${currentVal === 'yes' ? 'active' : ''}" onclick="toggleEquip(this,'${eq}','yes')">มี</button>
+          <button class="toggle-btn no ${currentVal === 'no' ? 'active' : ''}" onclick="toggleEquip(this,'${eq}','no')">ไม่มี</button>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function selectOption(key, idx) {
-  selectedOptions[key] = idx;
-  renderCriteria();
-  calculateScore();
-}
+function loadItemData(index) {
+  const item = inspectionItems[index];
+  document.getElementById('m_item_title').value = item.title || '';
+  document.getElementById('m_inspector').value = item.inspector || '';
+  document.getElementById('m_datecode').value = item.datecode || '';
+  document.getElementById('m_declaration').value = item.declaration || 'ไม่เคยใช้งาน';
+  document.getElementById('m_item_price').value = item.price || 0;
+  document.getElementById('m_equip_note').value = item.equipNote || '';
+  document.getElementById('m_risk_note').value = item.riskNote || '';
 
-function setEquipment(id, status) {
-  equipmentStatus[id] = status;
-  renderEquipment();
-  calculateScore();
-}
+  equipState = item.equip || {};
+  scoreState = item.scores || {};
+  currentCategory = item.category || 'shoes';
 
-function calculateScore() {
-  let score = 100;
-  let isUsedForce = false;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  const catBtn = document.getElementById('cat_' + currentCategory);
+  if (catBtn) catBtn.classList.add('active');
 
-  // Deduct based on parameters
-  const list = CRITERIA_DATA[currentCategory];
-  list.forEach(c => {
-    const selectedIdx = selectedOptions[c.key];
-    const penalty = c.options[selectedIdx].p;
-    score += penalty;
-    if (penalty < 0) isUsedForce = true; // Any defect drops it from brand new N
-  });
+  renderEquipmentGrid(currentCategory);
+  renderCriteria(currentCategory);
 
-  // Deduct based on boxes/receipts missing
-  const equips = EQUIP_DATA[currentCategory];
-  let missingCount = 0;
-  equips.forEach(e => {
-    if (equipmentStatus[e.id] === false) {
-      missingCount++;
-      if (e.id === 'receipt') score -= 3;
-      if (e.id === 'card' || e.id === 'warranty' || e.id === 'cert') score -= 10;
-      if (e.id === 'box') score -= 5;
+  // Set selected visual scores buttons matching internal items sub state
+  const inspectGroups = document.getElementById('inspectCriteria').querySelectorAll('.inspect-group');
+  CRITERIA[currentCategory].forEach((crit, gIdx) => {
+    const savedVal = scoreState[crit.key];
+    if (savedVal !== undefined) {
+      const btns = inspectGroups[gIdx].querySelectorAll('.opt-btn');
+      btns.forEach(b => {
+        if (b.textContent.includes(`(${savedVal})`)) b.classList.add('selected');
+      });
     }
   });
 
-  if (missingCount > 0) isUsedForce = true;
-  if (score < 0) score = 0;
+  updateScore(false);
+}
 
-  // Grade categorization
-  let grade = 'N';
-  let gradeText = 'เกรด N (Brand New ของใหม่มือหนึ่ง)';
-  let gradeClass = 'grade-N';
+function saveCurrentItemState() {
+  if (inspectionItems[activeItemIndex]) {
+    const item = inspectionItems[activeItemIndex];
+    item.title = document.getElementById('m_item_title').value.trim() || `สินค้าชิ้นที่ ${activeItemIndex + 1}`;
+    item.inspector = document.getElementById('m_inspector').value;
+    item.datecode = document.getElementById('m_datecode').value;
+    item.declaration = document.getElementById('m_declaration').value;
+    item.price = Number(document.getElementById('m_item_price').value) || 0;
+    item.equipNote = document.getElementById('m_equip_note').value;
+    item.riskNote = document.getElementById('m_risk_note').value;
+    item.category = currentCategory;
+    item.scores = scoreState;
+    item.equip = equipState;
+    item.totalScore = Number(document.getElementById('scoreNum').textContent) || 0;
+    item.grade = document.getElementById('scoreGrade').textContent;
+  }
+}
 
-  if (score >= 98 && !isUsedForce) {
-    grade = 'N'; gradeText = 'เกรด N (ของใหม่ป้ายแดง)'; gradeClass = 'grade-N';
-    document.getElementById('usedWarning').style.display = 'none';
-  } else {
-    document.getElementById('usedWarning').style.display = isUsedForce ? 'block' : 'none';
-    if (score >= 90) { grade = 'S'; gradeText = 'เกรด S (เหมือนใหม่แกะกล่อง)'; gradeClass = 'grade-S'; }
-    else if (score >= 80) { grade = 'A'; gradeText = 'เกรด A (สภาพสวยงาม มีรอยน้อย)'; gradeClass = 'grade-A'; }
-    else { grade = 'B'; gradeText = 'เกรด B (สภาพใช้งานทั่วไปมีตำหนิ)'; gradeClass = 'grade-B'; }
+function selectScore(btn, key, value) {
+  const p = btn.parentNode;
+  p.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  scoreState[key] = value;
+  updateScore(true);
+}
+
+function toggleEquip(btn, eq, status) {
+  const p = btn.parentNode;
+  p.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  equipState[eq] = status;
+}
+
+function updateScore(syncCurrentState = true) {
+  let total = 0;
+  let maxPossible = 0;
+  CRITERIA[currentCategory].forEach(item => {
+    maxPossible += item.max;
+    if (scoreState[item.key] !== undefined) {
+      total += scoreState[item.key];
+    }
+  });
+
+  // Scale up score relative to 100 max criteria point if config max is lesser
+  if (maxPossible > 0 && maxPossible !== 100) {
+    total = Math.round((total / maxPossible) * 100);
   }
 
-  document.getElementById('m_score').textContent = score;
-  const displayGrade = document.getElementById('m_grade');
-  displayGrade.textContent = gradeText;
-  displayGrade.className = 'score-grade ' + gradeClass;
-}
+  document.getElementById('scoreNum').textContent = total;
+  const gradeEl = document.getElementById('scoreGrade');
+  const hintEl = document.getElementById('scoreHint');
+  const warnEl = document.getElementById('usedWarning');
 
-function submitInspection() {
-  const score = document.getElementById('m_score').textContent;
-  const gradeText = document.getElementById('m_grade').textContent;
-  const grade = gradeText.split(' ')[1]; // Extract character grade string
+  gradeEl.className = 'score-grade ';
+  if (total >= 95) {
+    gradeEl.textContent = 'LIKE NEW / N';
+    gradeEl.classList.add('grade-N');
+    hintEl.textContent = 'สภาพสมบูรณ์เหมือนใหม่';
+    warnEl.style.display = 'none';
+  } else if (total >= 85) {
+    gradeEl.textContent = 'EXCELLENT / S';
+    gradeEl.classList.add('grade-S');
+    hintEl.textContent = 'สภาพดีเลิศ รอยน้อยมาก';
+    warnEl.style.display = 'none';
+  } else if (total >= 70) {
+    gradeEl.textContent = 'VERY GOOD / A';
+    gradeEl.classList.add('grade-A');
+    hintEl.textContent = 'ใช้งานทั่วไป สภาพสวย';
+    warnEl.style.display = 'none';
+  } else {
+    gradeEl.textContent = 'USED / B';
+    gradeEl.classList.add('grade-B');
+    hintEl.textContent = 'ผ่านการใช้งาน มีตำหนิชัดเจน';
+    warnEl.style.display = 'block';
+  }
 
-  showToast('success', 'กำลังบันทึกคะแนนประเมินสภาพ...');
-  
-  const payload = {
-    action: 'saveInspect',
-    id: activeApptId,
-    cat: currentCategory,
-    score: score,
-    grade: grade
-  };
-
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(() => {
-    closeModal('inspectModal');
-    setTimeout(() => { refreshAppointments(); }, 600);
-  });
-}
-
-// =============================================
-// HISTORICAL VIEW / DATA LOOKUP
-// =============================================
-function loadHistory() {
-  const container = document.getElementById('historyResults');
-  container.innerHTML = `<div class="empty-state"><div class="spinner" style="width:24px;height:24px"></div><p>กำลังค้นหาฐานข้อมูล...</p></div>`;
-
-  fetch(`${SCRIPT_URL}?action=readAll`)
-    .then(res => res.json())
-    .then(data => {
-      window.allHistoryData = data;
-      renderHistory(data);
-    })
-    .catch(() => {
-      container.innerHTML = `<div class="empty-state"><p>❌ ไม่สามารถติดต่อเซิร์ฟเวอร์ย้อนหลังได้</p></div>`;
-    });
-}
-
-function renderHistory(list) {
-  const container = document.getElementById('historyResults');
-  
-  // Calculate aggregated top metrics boxes
-  let totalAppts = list.length;
-  let totalSpend = 0;
-  let doneCount = 0;
-  let grossAll = 0;
-
-  list.forEach(x => {
-    const p = parseInt(x.price) || 0;
-    grossAll += p;
-    
-    // Check if matching target criteria
-    if (x.status === 'เสร็จสิ้น') {
-      doneCount++;
-      totalSpend += p;
+  if (syncCurrentState) {
+    if (inspectionItems[activeItemIndex]) {
+      inspectionItems[activeItemIndex].totalScore = total;
+      inspectionItems[activeItemIndex].grade = gradeEl.textContent;
     }
+    updateItemsSummary();
+  }
+}
+
+async function saveInspectionForm() {
+  saveCurrentItemState();
+  
+  let totalAllItemsPrice = 0;
+  inspectionItems.forEach(i => totalAllItemsPrice += Number(i.price || 0));
+
+  const finalMergedCategory = inspectionItems.map(item => item.category).join(', ');
+  const finalMergedGrade = inspectionItems.map((item, idx) => `ชิ้นที่${idx+1}:${item.grade}(${item.totalScore}คะแนน)`).join(' | ');
+  const finalMergedEquipSummary = inspectionItems.map((item, idx) => `ชิ้นที่${idx+1}[${Object.entries(item.equip).map(([k,v]) => `${k}:${v}`).join(',')}]`).join(' | ');
+  const finalMergedProductsText = inspectionItems.map(item => item.title || 'ไม่ระบุชื่อ').join(', ');
+
+  const btn = document.getElementById('saveInspectBtn');
+  const sp = document.getElementById('saveSpinner');
+  btn.disabled = true;
+  sp.style.display = 'inline-block';
+
+  const res = await apiCall({
+    action: 'save_inspection',
+    appt_id: currentApptId,
+    brand: finalMergedCategory,
+    date_code: inspectionItems.map(item => item.datecode || '-').join(', '),
+    declaration: inspectionItems.map(item => item.declaration || '-').join(', '),
+    inspector: inspectionItems[0].inspector || 'ระบบ',
+    equipment_summary: finalMergedEquipSummary,
+    equipment_notes: inspectionItems.map(item => item.equipNote || '-').join(' | '),
+    score_details: { multi_items_summary: finalMergedGrade },
+    total_score: Math.round(inspectionItems.reduce((s, item) => s + item.totalScore, 0) / inspectionItems.length),
+    final_condition: `รวม ${inspectionItems.length} ชิ้น (${finalMergedGrade})`,
+    estimated_price: totalAllItemsPrice,
+    product_name: finalMergedProductsText
   });
 
-  document.getElementById('stat-appts').textContent = totalAppts.toLocaleString();
-  document.getElementById('stat-spend').textContent = totalSpend.toLocaleString();
-  document.getElementById('stat-done').textContent = doneCount.toLocaleString();
-  document.getElementById('stat-total').textContent = grossAll.toLocaleString();
+  btn.disabled = false;
+  sp.style.display = 'none';
 
-  if (!list || list.length === 0) {
-    container.innerHTML = `<div class="empty-state"><p>ไม่มีประวัติธุรกรรมในระบบ</p></div>`;
+  if (res && res.status === 'success') {
+    localStorage.setItem('inspect_' + currentApptId, JSON.stringify(inspectionItems));
+    showToast('success', `✅ บันทึกผลตรวจสำเร็จรวมทั้งสิ้น ${inspectionItems.length} ชิ้น ยอดรวม ฿${totalAllItemsPrice.toLocaleString('th-TH')}`);
+    closeModal('inspectModal');
+    await loadAppointments();
+  }
+}
+
+// =============================================
+// HISTORY AND CUSTOMER SEARCH
+// =============================================
+function searchCustomer() {
+  const val = document.getElementById('searchInput').value.trim().toLowerCase();
+  const container = document.getElementById('customerListContainer');
+  
+  if (!allAppointments.length) return;
+
+  let customerMap = {};
+  allAppointments.forEach(appt => {
+    let phone = appt.customer_phone || 'ไม่ระบุเบอร์';
+    if (!customerMap[phone]) {
+      customerMap[phone] = { name: appt.customer_name, phone: phone, records: [] };
+    }
+    customerMap[phone].records.push(appt);
+  });
+
+  let customers = Object.values(customerMap);
+  if (val) {
+    customers = customers.filter(c => 
+      c.name.toLowerCase().includes(val) || c.phone.toLowerCase().includes(val)
+    );
+  }
+
+  customers.sort((a,b) => {
+    const la = a.records[a.records.length-1]?.date || '';
+    const lb = b.records[b.records.length-1]?.date || '';
+    return lb.localeCompare(la);
+  });
+
+  if (!customers.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>ไม่พบข้อมูลลูกค้า</p></div>`;
     return;
   }
 
-  // Render cards
-  container.innerHTML = list.map(item => {
+  const esc = (s) => String(s || '').replace(/"/g, '&quot;');
+  container.innerHTML = customers.map(c => {
+    const paid = c.records.filter(r => r.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,r) => s + Number(r.estimated_price||0), 0);
+    const cancel = c.records.filter(r => r.appt_status === 'ยกเลิก').length;
     let riskClass = 'risk-low';
-    let riskText = 'ปกติ';
-    if (item.status === 'ยกเลิก') { riskClass = 'risk-mid'; riskText = 'ยกเลิกดีล'; }
-    if (item.status === 'เสร็จสิ้น') { riskClass = 'risk-vip'; riskText = 'ปิดดีลสำเร็จ'; }
+    let riskLabel = 'ประวัติตามนัดปกติ';
+    
+    if (cancel >= 3) { riskClass = 'risk-high'; riskLabel = '⚠️ เสี่ยงสูง ยกเลิกบ่อย'; }
+    else if (cancel >= 1) { riskClass = 'risk-mid'; riskLabel = 'เฝ้าระวัง ยกเลิกบางครั้ง'; }
+    else if (paid >= 500000) { riskClass = 'risk-vip'; riskLabel = '⭐ ลูกค้า VIP ยอดซื้อสูง'; }
 
     return `
       <div class="customer-card">
         <div class="customer-card-header">
           <div>
-            <div class="customer-card-name">${item.name}</div>
-            <div class="customer-card-phone">📞 ${item.phone || 'ไม่ระบุ'} | 📅 วันที่: ${item.date || '—'} ${item.time || ''}</div>
+            <div class="customer-card-name">${esc(c.name)}</div>
+            <div class="customer-card-phone">📱 เบอร์โทร: ${esc(c.phone)}</div>
           </div>
-          <span class="risk-badge ${riskClass}">${riskText}</span>
+          <span class="risk-badge ${riskClass}">${riskLabel}</span>
         </div>
         <div class="customer-stats">
-          <div class="cstat">
-            <div class="cstat-label">สินค้า</div>
-            <div class="cstat-value" style="font-size:12px; color:var(--gold)">${item.product || '—'}</div>
-          </div>
-          <div class="cstat">
-            <div class="cstat-label">ราคาประเมิน</div>
-            <div class="cstat-value">฿${(parseInt(item.price)||0).toLocaleString()}</div>
-          </div>
-          <div class="cstat">
-            <div class="cstat-label">ประเมินสภาพ</div>
-            <div class="cstat-value" style="font-size:12px">${item.grade ? `เกรด ${item.grade} (${item.score}คะแนน)` : 'ยังไม่ตรวจ'}</div>
-          </div>
+          <div class="cstat"><div class="cstat-label">นัดหมายทั้งหมด</div><div class="cstat-value">${c.records.length} ครั้ง</div></div>
+          <div class="cstat"><div class="cstat-label">ขายสำเร็จสุทธิ</div><div class="cstat-value">${c.records.filter(r=>r.appt_status==='สำเร็จ').length} เคส</div></div>
+          <div class="cstat"><div class="cstat-label">ยอดรับซื้อสะสม</div><div class="cstat-value" style="color:var(--green)">฿${paid.toLocaleString('th-TH')}</div></div>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function searchCustomer() {
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
-  if (!window.allHistoryData) return;
-  
-  if (!query) {
-    renderHistory(window.allHistoryData);
-    return;
-  }
-
-  const filtered = window.allHistoryData.filter(x => 
-    (x.name || '').toLowerCase().includes(query) || 
-    (x.phone || '').toLowerCase().includes(query) ||
-    (x.product || '').toLowerCase().includes(query)
-  );
-  
-  renderHistory(filtered);
-}
-
 // =============================================
-// UI WINDOW NAVIGATION
+// GLOBAL TABS NAV & UI LOGIC
 // =============================================
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
 function showTab(tab) {
-  // Tabs management
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
 
-  // Open corresponding tab window
-  const targetForm = document.getElementById('tab-' + tab);
-  if (targetForm) targetForm.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
 
-  // Desktop tab
-  const btnIdx = ['appt', 'history', 'settings'].indexOf(tab);
-  const desktopBtns = document.querySelectorAll('.tabs .tab-btn');
-  const mobileBtn = document.getElementById('mtab-' + tab);
-  if (desktopBtns[btnIdx]) desktopBtns[btnIdx].classList.add('active');
+  const order = ['appt','history','settings'];
+  const idx = order.indexOf(tab);
+  
+  const desktopBtns = document.querySelectorAll('.tab-btn');
+  if (desktopBtns[idx]) desktopBtns[idx].classList.add('active');
 
-  // Mobile tab
-  if (mobileBtn) {
-    mobileBtn.classList.add('active');
-  } else {
-    const mb = document.getElementById('mtab-' + tab);
-    if (mb) mb.classList.add('active');
-  }
+  const mb = document.getElementById('mtab-' + tab);
+  if (mb) mb.classList.add('active');
 
-  if (tab === 'history') loadHistory();
+  if (tab === 'history') searchCustomer();
 }
 
-// =============================================
-// TOAST
-// =============================================
+function saveConfig() {
+  const url = document.getElementById('cfg_url').value.trim();
+  localStorage.setItem('buy_app_script_url', url);
+  BASE_URL = url;
+  showToast('success', '✅ บันทึก URL เรียบร้อย ระบบจะซิงค์ข้อมูลใหม่');
+  loadAppointments();
+}
+
 let toastTimer;
 function showToast(type, msg) {
-  const t    = document.getElementById('toast');
+  const t = document.getElementById('toast');
   const icon = document.getElementById('toastIcon');
   const text = document.getElementById('toastText');
-  t.className    = 'toast toast-' + type + ' show';
+  t.className = 'toast toast-' + type + ' show';
   icon.textContent = type === 'success' ? '✅' : '❌';
   text.textContent = msg;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// =============================================
-// GLOBAL EVENT LISTENERS
-// =============================================
-// Close modal on backdrop click
+// Close modal on background overlay click
 document.getElementById('inspectModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal('inspectModal');
 });
 
-// ESC key closes modal
+// ESC key closes opens overlay modals
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape')
+  if (e.key === 'Escape') {
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
 });
 </script>
 </body>
