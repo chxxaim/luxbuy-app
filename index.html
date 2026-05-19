@@ -25,833 +25,1446 @@
     --radius: 12px;
     --radius-sm: 8px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
-  body { background-color: var(--dark); color: var(--text); padding-bottom: 70px; }
-  .login-screen { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-  .login-box { background: var(--dark2); padding: 40px; border-radius: var(--radius); border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
-  .login-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); margin-bottom: 24px; }
-  .input-group { margin-bottom: 20px; text-align: left; }
-  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-  .input-ctrl { width: 100%; background: var(--dark3); border: 1px solid var(--dark4); border-radius: var(--radius-sm); padding: 12px 16px; color: var(--text); font-size: 1rem; transition: all 0.2s; }
-  .input-ctrl:focus { outline: none; border-color: var(--gold); background: var(--dark4); }
-  .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: var(--radius-sm); padding: 12px 24px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
-  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
-  header { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 20px; position: sticky; top: 0; z-index: 100; }
-  .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-  .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); text-decoration: none; }
-  .desktop-tabs { display: flex; gap: 12px; }
-  .tab-btn { background: transparent; border: none; color: var(--text-muted); padding: 10px 20px; font-size: 0.95rem; font-weight: 500; cursor: pointer; border-radius: var(--radius-sm); transition: all 0.2s; }
-  .tab-btn.active, .tab-btn:hover { color: var(--gold); background: var(--gold-dim); }
-  .main-content { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
-  .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
-  .stat-card { background: var(--dark2); border: 1px solid var(--dark4); border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden; }
-  .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--gold); }
-  .stat-card.budget-safe::before { background: var(--green); }
-  .stat-card.budget-warn::before { background: var(--orange); }
-  .stat-card.budget-danger::before { background: var(--red); }
-  .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
-  .stat-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--text); }
-  .stat-sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; }
-  .budget-bar-bg { width: 100%; height: 6px; background: var(--dark4); border-radius: 3px; margin-top: 12px; overflow: hidden; }
-  .budget-bar-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.5s ease; }
-  .panel { background: var(--dark2); border: 1px solid var(--dark4); border-radius: var(--radius); padding: 30px; margin-bottom: 30px; display: none; }
-  .panel.active { display: block; }
-  .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--dark4); padding-bottom: 15px; }
-  .panel-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .desktop-tabs { display: none; } }
-  .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; }
-  table { width: 100%; border-collapse: collapse; text-align: left; }
-  th { padding: 14px 16px; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); background: var(--dark3); border-bottom: 1px solid var(--dark4); }
-  td { padding: 16px; font-size: 0.95rem; border-bottom: 1px solid var(--dark4); color: var(--text); vertical-align: middle; }
-  tr:hover td { background: rgba(255,255,255,0.01); }
-  .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-  .badge-pending { background: rgba(232,148,58,0.15); color: var(--orange); }
-  .badge-success { background: rgba(76,175,122,0.15); color: var(--green); }
-  .badge-danger { background: rgba(232,90,74,0.15); color: var(--red); }
-  .badge-info { background: rgba(74,143,232,0.15); color: var(--blue); }
-  .action-btn { background: var(--dark3); border: 1px solid var(--dark4); color: var(--text); padding: 6px 12px; font-size: 0.85rem; border-radius: var(--radius-sm); cursor: pointer; margin-right: 4px; transition: all 0.2s; }
-  .action-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .action-btn.btn-primary { background: var(--gold); color: var(--dark); border: none; font-weight: 500; }
-  .action-btn.btn-primary:hover { background: var(--gold-light); }
-  .action-btn.btn-edit { border-color: var(--blue); color: var(--blue); }
-  .action-btn.btn-edit:hover { background: rgba(74,143,232,0.1); }
-  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; }
-  .modal.show { opacity: 1; pointer-events: auto; }
-  .modal-content { background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--dark4); padding-bottom: 12px; }
-  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); }
-  .close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
-  .close-modal:hover { color: var(--text); }
-  .form-section { background: var(--dark3); border: 1px solid var(--dark4); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 20px; }
-  .form-section-title { font-size: 0.95rem; font-weight: 600; color: var(--gold); margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .radio-group { display: flex; gap: 16px; margin-top: 8px; }
-  .radio-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.95rem; }
-  .radio-label input { accent-color: var(--gold); width: 16px; height: 16px; }
-  .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-  .check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); }
-  .check-label input { accent-color: var(--gold); width: 16px; height: 16px; }
-  .score-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-  .score-select { background: var(--dark2); border: 1px solid var(--dark4); color: var(--text); padding: 6px 10px; border-radius: var(--radius-sm); outline: none; font-size: 0.9rem; }
-  .live-grade-box { background: var(--gold-dim); border: 1px dashed var(--gold); border-radius: var(--radius); padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; }
-  .live-grade-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-  .live-grade-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold-light); }
-  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--dark2); border: 1px solid var(--border); padding: 12px 24px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px; z-index: 10000; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast-success { border-color: var(--green); }
-  .toast-error { border-color: var(--red); }
-  .mobile-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark2); border-top: 1px solid var(--dark4); display: flex; justify-content: space-around; padding: 10px 0; z-index: 99; }
-  .mobile-nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.7rem; cursor: pointer; width: 20%; }
-  .mobile-nav-btn.active { color: var(--gold); }
-  .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
-  .loading-overlay.show { display: flex; }
-  .spinner { width: 40px; height: 40px; border: 4px solid rgba(201,168,76,0.1); border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  .brand-other-group { display: none; margin-top: 12px; }
-  .brand-other-group.show { display: block; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === LOGIN OVERLAY === */
+  #loginOverlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--dark);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+  }
+  .login-box {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: 360px;
+    text-align: center;
+  }
+  .login-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+  .login-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 32px; }
+  .login-box input {
+    width: 100%; padding: 14px 18px;
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    text-align: center; letter-spacing: 4px;
+    outline: none; margin-bottom: 16px;
+  }
+  .login-box input::placeholder { letter-spacing: 1px; color: var(--text-dim); }
+  .login-btn {
+    width: 100%; padding: 14px;
+    background: var(--gold); border: none;
+    border-radius: var(--radius-sm); color: var(--dark);
+    font-family: 'DM Sans', sans-serif; font-weight: 600;
+    font-size: 15px; cursor: pointer; transition: all 0.2s;
+  }
+  .login-btn:hover { background: var(--gold-light); }
+  .login-error { color: var(--red); font-size: 13px; margin-top: 10px; display: none; }
+
+  /* === TOP BAR === */
+  #topBar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; gap: 24px; height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--gold);
+    letter-spacing: 3px; white-space: nowrap;
+  }
+  .logo span { font-size: 11px; display: block; color: var(--text-muted); letter-spacing: 2px; margin-top: -2px; }
+
+  /* Budget Bar */
+  .budget-wrap {
+    flex: 1; display: flex; align-items: center; gap: 12px;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: 30px; padding: 8px 16px;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .budget-wrap:hover { border-color: var(--gold); }
+  .budget-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .budget-bar-outer {
+    flex: 1; height: 6px; background: var(--dark4);
+    border-radius: 4px; overflow: hidden;
+  }
+  .budget-bar-inner {
+    height: 100%; border-radius: 4px;
+    background: var(--green);
+    transition: width 0.6s ease, background 0.4s;
+  }
+  .budget-amount {
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+    color: var(--gold);
+  }
+  .budget-sub { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+  .budget-alert {
+    background: var(--red); color: white;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+    display: none; white-space: nowrap;
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-left: auto; }
+  .tab-btn {
+    padding: 8px 20px; border-radius: 30px;
+    background: transparent; border: 1px solid transparent;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); border-color: var(--border); }
+  .tab-btn.active {
+    background: var(--gold-dim); border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* === MAIN CONTENT === */
+  .tab-content { display: none; padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* === SECTION HEADERS === */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--text);
+  }
+  .section-title span { color: var(--gold); }
+  .section-date {
+    font-size: 12px; color: var(--text-muted);
+    background: var(--dark2); border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 20px;
+  }
+
+  /* === BUTTONS === */
+  .btn {
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    border: none; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-gold { background: var(--gold); color: var(--dark); }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-outline {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn-danger { background: rgba(232,90,74,0.15); color: var(--red); border: 1px solid rgba(232,90,74,0.3); }
+  .btn-danger:hover { background: var(--red); color: white; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* === APPOINTMENT TABLE === */
+  .appt-table-wrap {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .appt-table { width: 100%; border-collapse: collapse; }
+  .appt-table th {
+    padding: 14px 20px; text-align: left;
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+    background: var(--dark3); border-bottom: 1px solid var(--border);
+  }
+  .appt-table td {
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px; vertical-align: middle;
+  }
+  .appt-table tr:last-child td { border-bottom: none; }
+  .appt-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .time-slot {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; color: var(--gold);
+  }
+  .customer-name { font-weight: 500; }
+  .customer-phone { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .product-text { font-size: 13px; color: var(--text-muted); }
+  .price-text { font-weight: 600; color: var(--text); }
+
+  /* Status Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+  .badge-wait { background: rgba(90,85,80,0.3); color: var(--text-muted); border: 1px solid var(--dark4); }
+  .badge-wait::before { background: var(--text-dim); }
+  .badge-arrived { background: rgba(74,143,232,0.15); color: var(--blue); border: 1px solid rgba(74,143,232,0.3); }
+  .badge-arrived::before { background: var(--blue); }
+  .badge-done { background: rgba(76,175,122,0.15); color: var(--green); border: 1px solid rgba(76,175,122,0.3); }
+  .badge-done::before { background: var(--green); }
+  .badge-cancel { background: rgba(232,90,74,0.15); color: var(--red); border: 1px solid rgba(232,90,74,0.3); }
+  .badge-cancel::before { background: var(--red); }
+  .badge-pay-no { background: rgba(90,85,80,0.3); color: var(--text-muted); border: 1px solid var(--dark4); }
+  .badge-pay-no::before { background: var(--text-dim); }
+  .badge-pay-sending { background: rgba(232,148,58,0.15); color: var(--orange); border: 1px solid rgba(232,148,58,0.3); }
+  .badge-pay-sending::before { background: var(--orange); }
+  .badge-pay-done { background: rgba(76,175,122,0.15); color: var(--green); border: 1px solid rgba(76,175,122,0.3); }
+  .badge-pay-done::before { background: var(--green); }
+
+  .actions { display: flex; gap: 6px; align-items: center; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center; padding: 64px 20px;
+    color: var(--text-dim);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+  .empty-state p { font-size: 14px; }
+
+  /* === ADD APPOINTMENT FORM === */
+  .form-card {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+    margin-bottom: 28px;
+  }
+  .form-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; color: var(--gold);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+  .form-control {
+    padding: 12px 14px;
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-control:focus { border-color: var(--gold); }
+  .form-control option { background: var(--dark3); }
+  .form-actions { display: flex; gap: 12px; margin-top: 20px; align-items: center; }
+  .budget-warning-inline {
+    color: var(--red); font-size: 13px; display: none;
+    background: rgba(232,90,74,0.1); border: 1px solid rgba(232,90,74,0.3);
+    padding: 8px 14px; border-radius: var(--radius-sm); flex: 1;
+  }
+
+  /* === MODAL === */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 680px;
+    max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--gold);
+  }
+  .modal-close {
+    background: var(--dark3); border: 1px solid var(--border);
+    color: var(--text-muted); width: 32px; height: 32px;
+    border-radius: 50%; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--gold); }
+  .modal-body { padding: 24px 28px; }
+  .modal-footer {
+    padding: 20px 28px; border-top: 1px solid var(--border);
+    display: flex; gap: 12px; align-items: center; justify-content: space-between;
+  }
+
+  /* Score display in modal */
+  .score-display {
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .score-number { font-family: 'Playfair Display', serif; font-size: 48px; color: var(--gold); }
+  .score-grade {
+    font-size: 13px; font-weight: 600; padding: 6px 16px;
+    border-radius: 20px; text-align: center;
+  }
+  .grade-N { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid var(--gold); }
+  .grade-S { background: rgba(74,143,232,0.2); color: var(--blue); border: 1px solid var(--blue); }
+  .grade-A { background: rgba(76,175,122,0.2); color: var(--green); border: 1px solid var(--green); }
+  .grade-B { background: rgba(232,148,58,0.2); color: var(--orange); border: 1px solid var(--orange); }
+
+  /* Category selector */
+  .category-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .cat-btn {
+    padding: 8px 16px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; cursor: pointer; transition: all 0.2s;
+  }
+  .cat-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .cat-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+  .inspect-group { margin-bottom: 14px; }
+  .inspect-group label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+  .inspect-group .options { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt-btn {
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-muted); font-size: 12px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .opt-btn:hover { border-color: var(--gold-light); color: var(--text); }
+  .opt-btn.selected { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+  .equipment-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-bottom: 16px;
+  }
+  .equip-item {
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .equip-label { font-size: 13px; }
+  .toggle-wrap { display: flex; gap: 6px; }
+  .toggle-btn {
+    padding: 3px 10px; border-radius: 12px; font-size: 11px;
+    border: 1px solid transparent; cursor: pointer; transition: all 0.2s;
+    background: transparent;
+  }
+  .toggle-btn.yes { border-color: var(--green); color: var(--green); }
+  .toggle-btn.yes.active { background: var(--green); color: var(--dark); }
+  .toggle-btn.no { border-color: var(--red); color: var(--red); }
+  .toggle-btn.no.active { background: var(--red); color: white; }
+
+  /* Info banner in inspect */
+  .info-banner {
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    display: flex; gap: 12px; margin-bottom: 20px;
+    align-items: flex-start; font-size: 13px;
+  }
+  .info-banner .icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .info-banner .info-name { font-weight: 600; color: var(--text); }
+  .info-banner .info-detail { color: var(--text-muted); font-size: 12px; }
+
+  .used-warning {
+    background: rgba(232,90,74,0.1); border: 1px solid rgba(232,90,74,0.3);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    color: var(--red); font-size: 13px; margin-top: 16px; display: none;
+  }
+
+  /* Divider */
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+  .form-section-title {
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+  }
+
+  /* === DASHBOARD / HISTORY === */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--gold); }
+  .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .search-bar {
+    display: flex; gap: 12px; margin-bottom: 24px; align-items: center;
+  }
+  .search-input-wrap { position: relative; flex: 1; }
+  .search-input-wrap .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); font-size: 16px; pointer-events: none;
+  }
+  .search-input {
+    width: 100%; padding: 12px 14px 12px 42px;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+
+  .customer-card {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    margin-bottom: 16px; transition: border-color 0.2s;
+  }
+  .customer-card:hover { border-color: var(--gold); }
+  .customer-card-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .customer-card-name { font-weight: 600; font-size: 16px; }
+  .customer-card-phone { font-size: 13px; color: var(--text-muted); }
+  .risk-badge {
+    padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .risk-vip { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid var(--gold); }
+  .risk-low { background: rgba(76,175,122,0.2); color: var(--green); border: 1px solid var(--green); }
+  .risk-mid { background: rgba(232,148,58,0.2); color: var(--orange); border: 1px solid var(--orange); }
+  .risk-high { background: rgba(232,90,74,0.2); color: var(--red); border: 1px solid var(--red); }
+  .customer-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .cstat { background: var(--dark3); border-radius: var(--radius-sm); padding: 12px 16px; }
+  .cstat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .cstat-value { font-weight: 600; font-size: 15px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9000;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    max-width: 360px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s ease; pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 20px; }
+  .toast-text { font-size: 14px; }
+  .toast-success { border-color: rgba(76,175,122,0.5); }
+  .toast-error { border-color: rgba(232,90,74,0.5); }
+
+  /* Loading spinner */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(201,168,76,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #topBar { padding: 0 16px; }
+    .tabs { display: none; }
+    .tab-content { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .equipment-grid { grid-template-columns: repeat(2,1fr); }
+    .customer-stats { grid-template-columns: 1fr 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Mobile bottom tabs */
+  .mobile-tabs {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: var(--dark2); border-top: 1px solid var(--border);
+    padding: 8px 0;
+  }
+  @media (max-width: 768px) { .mobile-tabs { display: flex; } }
+  .mobile-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 8px; border: none; background: transparent;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; cursor: pointer; transition: color 0.2s;
+  }
+  .mobile-tab.active { color: var(--gold); }
+  .mobile-tab .icon { font-size: 20px; }
+
+  .config-note {
+    background: rgba(74,143,232,0.1); border: 1px solid rgba(74,143,232,0.3);
+    border-radius: var(--radius-sm); padding: 14px 18px;
+    font-size: 13px; color: var(--blue); margin-bottom: 24px;
+  }
+  .config-note strong { color: var(--text); }
 </style>
 </head>
 <body>
 
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="spinner"></div>
-  <p id="loadingText" style="color: var(--gold-light); font-size: 0.95rem;">กำลังโหลดข้อมูล...</p>
-</div>
-
-<div id="loginScreen" class="login-screen">
+<div id="loginOverlay">
   <div class="login-box">
-    <div class="login-title">LuxBuy Admin</div>
-    <div class="input-group">
-      <label>รหัสผ่านเข้าสู่ระบบ</label>
-      <input type="password" id="passInput" class="input-ctrl" placeholder="••••••••" autofocus>
-    </div>
-    <button class="btn-gold" onclick="attemptLogin()">เข้าสู่ระบบ</button>
+    <div class="login-logo">LUX<span style="font-weight:300">BUY</span></div>
+    <div class="login-sub">ระบบรับซื้อแบรนด์เนม — กรุณายืนยันตัวตน</div>
+    <input type="password" id="loginPass" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">เข้าสู่ระบบ</button>
+    <div class="login-error" id="loginError">รหัสผ่านไม่ถูกต้อง</div>
   </div>
 </div>
 
-<header>
-  <div class="nav-container">
-    <a href="#" class="logo">LuxBuy</a>
-    <nav class="desktop-tabs">
-      <button class="tab-btn active" onclick="switchTab('appt')">ตารางงานประจำวัน</button>
-      <button class="tab-btn" onclick="switchTab('history')">ประวัติย้อนหลัง</button>
-      <button class="tab-btn" onclick="switchTab('settings')">ตั้งค่า</button>
-    </nav>
-  </div>
-</header>
+<div id="topBar">
+  <div class="logo">LUXBUY<span>BRAND BUYING SYSTEM</span></div>
 
-<main class="main-content">
-  <div class="dashboard-grid">
-    <div id="cardSpend" class="stat-card">
-      <div class="stat-label">ยอดรับซื้อวันนี้ (จ่ายสำเร็จ/กำลังโอน)</div>
-      <div id="statTodaySpend" class="stat-val">0 ฿</div>
-      <div id="statBudgetLeft" class="stat-sub">คงเหลือโควตาประจำวัน: 2,000,000 ฿</div>
-      <div class="budget-bar-bg">
-        <div id="budgetBar" class="budget-bar-fill"></div>
+  <div class="budget-wrap" onclick="loadDashboard()" title="คลิกเพื่อรีเฟรชยอดงบ">
+    <span class="budget-label">วงเงินวันนี้</span>
+    <div class="budget-bar-outer">
+      <div class="budget-bar-inner" id="budgetBar" style="width:0%"></div>
+    </div>
+    <span class="budget-amount" id="budgetAmt">฿0</span>
+    <span class="budget-sub">/ ฿2,000,000</span>
+    <span class="budget-alert" id="budgetAlert">⚠ เกินวงเงิน</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('appt')">📋 ตารางนัด</button>
+    <button class="tab-btn" onclick="showTab('history')">📊 ประวัติ</button>
+    <button class="tab-btn" onclick="showTab('settings')">⚙️ ตั้งค่า</button>
+  </div>
+</div>
+
+<div class="tab-content active" id="tab-appt">
+
+  <div class="form-card" id="apptFormCard">
+    <div class="form-card-title" id="formActionTitle">➕ เพิ่มนัดหมายใหม่</div>
+    <div class="form-grid">
+      <input type="hidden" id="f_appt_id_edit">
+      <div class="form-group">
+        <label>ชื่อลูกค้า</label>
+        <input class="form-control" id="f_name" placeholder="เช่น คุณสมชาย">
       </div>
+      <div class="form-group">
+        <label>เบอร์โทร</label>
+        <input class="form-control" id="f_phone" placeholder="0812345678">
+      </div>
+      <div class="form-group">
+        <label>วันที่นัด</label>
+        <input class="form-control" id="f_date" type="date">
+      </div>
+      <div class="form-group">
+        <label>เวลานัด</label>
+        <input class="form-control" id="f_time" type="time">
+      </div>
+      <div class="form-group" style="grid-column: span 2">
+        <label>ชื่อสินค้า / รุ่น</label>
+        <input class="form-control" id="f_product" placeholder="เช่น Chanel Classic Flap Medium">
+      </div>
+      <div class="form-group">
+        <label>ราคาประมาณ (บาท)</label>
+        <input class="form-control" id="f_price" type="number" placeholder="เช่น 85000" oninput="checkBudgetLive()">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-gold" id="addApptBtn" onclick="saveAppointmentForm()">
+        <span class="spinner" id="addSpinner" style="display:none"></span>
+        <span id="addBtnLabel">บันทึกนัดหมาย</span>
+      </button>
+      <button class="btn btn-outline" id="cancelEditBtn" style="display:none" onclick="resetApptForm()">
+        ยกเลิกการแก้ไข
+      </button>
+      <div class="budget-warning-inline" id="budgetWarnInline">
+        ⛔ ราคาที่กรอกจะทำให้วงเงินวันนี้เกิน 2,000,000 บาท
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">ตารางนัด <span id="todayLabel">วันนี้</span></div>
+    <div class="section-date" id="todayDate">—</div>
+  </div>
+
+  <div class="appt-table-wrap">
+    <table class="appt-table">
+      <thead>
+        <tr>
+          <th>เวลา</th>
+          <th>ลูกค้า</th>
+          <th>สินค้า</th>
+          <th>ราคา</th>
+          <th>สถานะนัด</th>
+          <th>สถานะเงิน</th>
+          <th>การดำเนินการ</th>
+        </tr>
+      </thead>
+      <tbody id="apptTbody">
+        <tr><td colspan="7"><div class="empty-state"><div class="spinner"></div><p style="margin-top:12px">กำลังโหลดข้อมูล...</p></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-history">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card">
+      <div class="stat-label">นัดวันนี้</div>
+      <div class="stat-value" id="stat-appts">—</div>
+      <div class="stat-sub">รายการ</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">งานตรวจทั้งหมดในระบบ</div>
-      <div id="stat-appts" class="stat-val">0</div>
-      <div class="stat-sub">คิวนัดหมายที่ลงทะเบียนไว้</div>
+      <div class="stat-label">ยอดรับซื้อวันนี้</div>
+      <div class="stat-value" id="stat-spend">—</div>
+      <div class="stat-sub">บาท</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">สำเร็จแล้ว</div>
+      <div class="stat-value" id="stat-done">—</div>
+      <div class="stat-sub">รายการ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ยอดรวมทั้งหมด</div>
+      <div class="stat-value" id="stat-total">—</div>
+      <div class="stat-sub">บาท (ทุกเคส)</div>
     </div>
   </div>
 
-  <div id="panel-appt" class="panel active">
-    <div class="panel-header">
-      <div class="panel-title">ตารางการนัดรับซื้อและตรวจรับสินค้า</div>
-      <button class="action-btn btn-primary" onclick="openAddApptModal()">＋ เพิ่มคิวนัดหมาย</button>
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" placeholder="ค้นหาจากชื่อหรือเบอร์โทรลูกค้า..." oninput="searchCustomer()">
     </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>วันที่ / เวลา</th>
-            <th>รหัสงาน</th>
-            <th>ลูกค้า / เบอร์ติดต่อ</th>
-            <th>รายการสินค้า (จำนวน)</th>
-            <th>ระยะทาง</th>
-            <th>ประมาณราคาทั้งหมด</th>
-            <th>สถานะงาน</th>
-            <th>การชำระเงิน</th>
-            <th>การจัดการ</th>
-          </tr>
-        </thead>
-        <tbody id="apptTableBody">
-          <tr><td colspan="9" style="text-align:center; color:var(--text-muted);">กำลังเชื่อมต่อฐานข้อมูล...</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <button class="btn btn-outline" onclick="loadHistory()">
+      รีเฟรช
+    </button>
   </div>
 
-  <div id="panel-history" class="panel">
-    <div class="panel-header">
-      <div class="panel-title">ประวัติการรับซื้อสินค้าและตรวจสภาพย้อนหลัง</div>
+  <div id="historyResults">
+    <div class="empty-state" style="padding:40px 0">
+      <div class="icon">🔍</div>
+      <p>พิมพ์ค้นหาลูกค้า หรือกด รีเฟรช เพื่อดูข้อมูลทั้งหมด</p>
     </div>
-    <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
-      <input type="text" id="searchHistory" class="input-ctrl" placeholder="🔍 ค้นหาด้วย ชื่อลูกค้า, แบรนด์ หรือรหัสงาน..." style="max-width: 400px;" oninput="filterHistoryTable()">
-    </div>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>วันที่ตรวจ</th>
-            <th>รหัสงาน</th>
-            <th>แบรนด์</th>
-            <th>คะแนนสุทธิ</th>
-            <th>สรุปเกรดสภาพ</th>
-            <th>ผู้ตรวจ</th>
-            <th>รายละเอียดอุปกรณ์</th>
-          </tr>
-        </thead>
-        <tbody id="historyTableBody">
-          <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">ไม่พบข้อมูลประวัติย้อนหลัง</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="panel-settings" class="panel">
-    <div class="panel-header">
-      <div class="panel-title">การตั้งค่าระบบ</div>
-    </div>
-    <div style="max-width: 500px; background: var(--dark3); padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--dark4);">
-      <div class="input-group">
-        <label>Google Web App URL</label>
-        <input type="text" id="settingUrlInput" class="input-ctrl" readonly style="opacity: 0.7;">
-      </div>
-      <button class="action-btn" onclick="localStorage.removeItem('luxbuy_logged'); window.location.reload();" style="background: var(--red); color: white; border: none; padding: 10px 16px; font-weight: 500; width: 100%;">🔴 ออกจากระบบ</button>
-    </div>
-  </div>
-</main>
-
-<div class="mobile-nav">
-  <button class="mobile-nav-btn active" id="mbtn-appt" onclick="switchTab('appt')"><span>📅</span>ตารางงาน</button>
-  <button class="mobile-nav-btn" id="mbtn-history" onclick="switchTab('history')"><span>📜</span>ประวัติ</button>
-  <button class="mobile-nav-btn" id="mbtn-settings" onclick="switchTab('settings')"><span>⚙️</span>ตั้งค่า</button>
-</div>
-
-<div id="addApptModal" class="modal">
-  <div class="modal-content" style="max-width: 550px;">
-    <div class="modal-header">
-      <div class="modal-title" id="apptModalTitle">ลงทะเบียนนัดหมายลูกค้าใหม่</div>
-      <button class="close-modal" onclick="closeModal('addApptModal')">&times;</button>
-    </div>
-    <form id="addApptForm" onsubmit="submitAppointment(event)">
-      <input type="hidden" id="editApptId" value="">
-      <div class="grid-2">
-        <div class="input-group">
-          <label>วันที่นัดหมาย</label>
-          <input type="date" id="newDate" class="input-ctrl" required>
-        </div>
-        <div class="input-group">
-          <label>เวลานัดหมาย</label>
-          <select id="newTime" class="input-ctrl" required>
-            <option value="09:00">09:00 น.</option>
-            <option value="10:00">10:00 น.</option>
-            <option value="11:00">11:00 น.</option>
-            <option value="12:00">12:00 น. (ช่วงเที่ยง)</option>
-            <option value="13:00">13:00 น.</option>
-            <option value="14:00">14:00 น.</option>
-            <option value="15:00">15:00 น.</option>
-            <option value="16:00">16:00 น.</option>
-            <option value="17:00">17:00 น.</option>
-            <option value="18:00">18:00 น.</option>
-            <option value="19:00">19:00 น.</option>
-            <option value="20:00">20:00 น.</option>
-            <option value="21:00">21:00 น.</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>ชื่อลูกค้าผู้ขาย</label>
-          <input type="text" id="newName" class="input-ctrl" placeholder="เช่น คุณเอ" required>
-        </div>
-        <div class="input-group">
-          <label>เบอร์ติดต่อลูกค้า</label>
-          <input type="tel" id="newPhone" class="input-ctrl" placeholder="เช่น 0812345678" required>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>รายละเอียดสินค้า</label>
-          <input type="text" id="newProduct" class="input-ctrl" placeholder="เช่น กระเป๋าสตางค์ chanel" required>
-        </div>
-        <div class="input-group">
-          <label>จำนวนชิ้นโดยประมาณ</label>
-          <input type="number" id="newQuantity" class="input-ctrl" min="1" placeholder="1" required>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>ประมาณราคาทั้งหมด (บาท)</label>
-          <input type="number" id="newPrice" class="input-ctrl" placeholder="เช่น 50000" required>
-        </div>
-        <div class="input-group">
-          <label>ที่อยู่เข้ารับสินค้า (ระยะทาง)</label>
-          <select id="newDistance" class="input-ctrl" required>
-            <option value="ระยะใกล้">📍 ระยะใกล้</option>
-            <option value="ระยะกลาง">🚗 ระยะกลาง</option>
-            <option value="ระยะไกล">✈️ ระยะไกล</option>
-          </select>
-        </div>
-      </div>
-      <button type="submit" class="btn-gold" id="apptSubmitBtn">💾 บันทึกการนัดหมาย</button>
-    </form>
   </div>
 </div>
 
-<div id="inspectModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div class="modal-title" id="inspectTitle">ใบตรวจรับและประเมินสภาพสินค้า</div>
-      <button class="close-modal" onclick="closeModal('inspectModal')">&times;</button>
+<div class="tab-content" id="tab-settings">
+  <div class="section-header">
+    <div class="section-title">⚙️ ตั้งค่า <span>ระบบ</span></div>
+  </div>
+
+  <div class="config-note">
+    📌 <strong>ขั้นตอนแรก:</strong> ใส่ URL ของ Google Apps Script ที่ Deploy แล้วด้านล่าง แล้วกด "บันทึก" — ระบบจะเชื่อมต่อกับ Google Sheets ทันที
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-title">🔗 เชื่อมต่อ Google Apps Script</div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>Google Apps Script Web App URL</label>
+      <input class="form-control" id="scriptUrl" placeholder="https://script.google.com/macros/s/XXXX/exec">
     </div>
-    <form id="inspectForm" onsubmit="submitInspection(event)">
-      <input type="hidden" id="inspectApptId">
-      <input type="hidden" id="inspectEstPrice">
-      
-      <div class="grid-2">
-        <div class="input-group">
-          <label>หมวดหมู่สินค้า</label>
-          <select id="insCategory" class="input-ctrl" onchange="renderInspectionFields()" required>
-            <option value="footwear">👟 รองเท้า (Footwear)</option>
-            <option value="handbag" selected>👜 กระเป๋า (Handbag)</option>
-            <option value="jewelry">💎 Fine Jewelry</option>
-            <option value="acc">🧣 Accessories อื่นๆ</option>
-          </select>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>รหัสผ่านเข้าระบบ (เปลี่ยนได้)</label>
+      <input class="form-control" id="newPass" type="password" placeholder="กรอกรหัสผ่านใหม่">
+    </div>
+    <button class="btn btn-gold" onclick="saveSettings()">💾 บันทึกการตั้งค่า</button>
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-title">📋 คำแนะนำการใช้งาน</div>
+    <div style="font-size:14px; line-height:1.8; color:var(--text-muted)">
+      <p><strong style="color:var(--text)">วิธีใช้งานเบื้องต้น:</strong></p>
+      <p>1. ตั้งค่า URL ของ Google Apps Script ในหน้านี้ก่อน</p>
+      <p>2. เพิ่มนัดหมายลูกค้าในแท็บ "ตารางนัด"</p>
+      <p>3. เมื่อลูกค้ามา กดปุ่ม "🔍 ตรวจสินค้า" เพื่อเปิดฟอร์มประเมินคะแนน</p>
+      <p>4. เลือกหมวดสินค้า กรอกคะแนนแต่ละหัวข้อ → ระบบคำนวณเกรดให้อัตโนมัติ</p>
+      <p>5. อัปเดตสถานะนัดและสถานะเงินได้จากปุ่มในตาราง</p>
+      <p style="margin-top:12px"><strong style="color:var(--text)">วงเงิน:</strong> ระบบจะ lock ปุ่มบันทึกอัตโนมัติเมื่อยอดรวมจะเกิน 2,000,000 บาท/วัน</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inspectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="inspectModalTitle">🔍 ตรวจสภาพสินค้า</div>
+      <button class="modal-close" onclick="closeModal('inspectModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-banner">
+        <div class="icon">👤</div>
+        <div>
+          <div class="info-name" id="modal_custName">—</div>
+          <div class="info-detail" id="modal_custDetail">—</div>
         </div>
-        <div class="input-group">
-          <label>แบรนด์สินค้า</label>
-          <select id="insBrand" class="input-ctrl" onchange="toggleBrandOtherField()" required>
-            <option value="Chanel">Chanel</option>
-            <option value="Hermes">Hermes</option>
-            <option value="Louis Vuitton">Louis Vuitton</option>
-            <option value="Loro Piana">Loro Piana</option>
-            <option value="Bvlgari">Bvlgari</option>
-            <option value="Alaia">Alaia</option>
-            <option value="Dior">Dior</option>
-            <option value="Cartier">Cartier</option>
-            <option value="Gucci">Gucci</option>
-            <option value="อื่นๆ">อื่นๆ</option>
-          </select>
-          <div id="brandOtherGroup" class="brand-other-group">
-            <input type="text" id="insBrandOther" class="input-ctrl" placeholder="โปรดระบุแบรนด์สินค้าอื่นๆ...">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>ชื่อพนักงานผู้ตรวจ</label>
+        <input class="form-control" id="m_inspector" placeholder="ชื่อพนักงาน">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Date Code / ปีผลิต</label>
+        <input class="form-control" id="m_datecode" placeholder="เช่น 2021, 30XXXXXX">
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>สภาพตามลูกค้าแจ้ง</label>
+        <select class="form-control" id="m_declaration">
+          <option value="ไม่เคยใช้งาน">ไม่เคยใช้งาน</option>
+          <option value="ผ่านการใช้งาน">ผ่านการใช้งาน</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">อุปกรณ์ที่ได้รับ</div>
+
+      <div class="equipment-grid">
+        <div class="equip-item">
+          <span class="equip-label">ใบเสร็จ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" data-equip="receipt" data-val="yes" onclick="toggleEquip(this,'receipt','yes')">มี</button>
+            <button class="toggle-btn no" data-equip="receipt" data-val="no" onclick="toggleEquip(this,'receipt','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">กล่อง</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" data-equip="box" data-val="yes" onclick="toggleEquip(this,'box','yes')">มี</button>
+            <button class="toggle-btn no" data-equip="box" data-val="no" onclick="toggleEquip(this,'box','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">ถุงผ้า</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" data-equip="dustbag" data-val="yes" onclick="toggleEquip(this,'dustbag','yes')">มี</button>
+            <button class="toggle-btn no" data-equip="dustbag" data-val="no" onclick="toggleEquip(this,'dustbag','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">การ์ด</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" data-equip="card" data-val="yes" onclick="toggleEquip(this,'card','yes')">มี</button>
+            <button class="toggle-btn no" data-equip="card" data-val="no" onclick="toggleEquip(this,'card','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">คู่มือ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" data-equip="manual" data-val="yes" onclick="toggleEquip(this,'manual','yes')">มี</button>
+            <button class="toggle-btn no" data-equip="manual" data-val="no" onclick="toggleEquip(this,'manual','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">ล็อคกุญแจ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" data-equip="lock" data-val="yes" onclick="toggleEquip(this,'lock','yes')">มี</button>
+            <button class="toggle-btn no" data-equip="lock" data-val="no" onclick="toggleEquip(this,'lock','no')">ไม่มี</button>
           </div>
         </div>
       </div>
 
-      <div class="grid-2">
-        <div class="input-group">
-          <label>ปีที่ผลิต / Date Code</label>
-          <input type="text" id="insDateCode" class="input-ctrl" placeholder="เช่น 2023 / DC24B" required>
-        </div>
-        <div class="input-group">
-          <label>ผู้ทำการตรวจรับ</label>
-          <input type="text" id="insInspector" class="input-ctrl" placeholder="ชื่อพนักงาน" required>
-        </div>
+      <div class="form-group" style="margin-bottom:16px">
+        <label>หมายเหตุอุปกรณ์</label>
+        <input class="form-control" id="m_equip_note" placeholder="เช่น ใบเสร็จระบุ Saudi Arabia">
       </div>
 
-      <div class="input-group">
-        <label>ข้อมูลการใช้งานจากลูกค้า</label>
-        <div class="radio-group">
-          <label class="radio-label"><input type="radio" name="insDeclaration" value="ไม่เคยใช้งาน" checked> ไม่เคยใช้งาน</label>
-          <label class="radio-label"><input type="radio" name="insDeclaration" value="ผ่านการใช้งาน"> ผ่านการใช้งาน</label>
-        </div>
+      <hr class="divider">
+      <div class="form-section-title">ประเมินคะแนนสภาพ</div>
+
+      <div class="category-tabs">
+        <button class="cat-btn active" id="cat-btn-shoes" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
+        <button class="cat-btn" id="cat-btn-bag" onclick="selectCategory('bag',this)">👜 กระเป๋า</button>
+        <button class="cat-btn" id="cat-btn-jewelry" onclick="selectCategory('jewelry',this)">💎 เครื่องประดับ</button>
       </div>
 
-      <div class="form-section">
-        <div class="form-section-title">📦 อุปกรณ์ที่มาพร้อมสินค้า</div>
-        <div class="checkbox-grid" id="equipmentCheckboxes"></div>
-        <div class="input-group" style="margin-top: 15px; margin-bottom:0;">
-          <label>หมายเหตุอุปกรณ์เพิ่มเติม / ประเทศที่ซื้อ</label>
-          <input type="text" id="insEquipmentNotes" class="input-ctrl" placeholder="เช่น ใบเสร็จช็อปฝรั่งเศส, อุปกรณ์ครบ">
-        </div>
-      </div>
-
-      <div class="form-section">
-        <div class="form-section-title">🔍 เกณฑ์คะแนนตรวจเช็คสภาพเครื่องและการหักแต้ม</div>
-        <div id="scoreDeductionRows"></div>
-      </div>
-
-      <div class="input-group">
-        <label>หมายเหตุ/ตำหนิเพิ่มเติม (ถ้าเกรด USED จำเป็นต้องระบุ)</label>
-        <input type="text" id="insGeneralNotes" class="input-ctrl" placeholder="ระบุตำหนิที่ตรวจพบอย่างละเอียด">
-      </div>
-
-      <div class="live-grade-box">
+      <div class="score-display">
         <div>
-          <div class="live-grade-title">📊 สรุปคะแนนประเมินรวม</div>
-          <div id="liveScore" class="live-grade-val">100</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">คะแนนรวม</div>
+          <div class="score-number" id="scoreNum">0</div>
+          <div style="font-size:12px;color:var(--text-muted)">/ 100 คะแนน</div>
         </div>
-        <div>
-          <div class="live-grade-title">✨ สรุปสภาพผลลัพธ์สุดท้าย</div>
-          <div id="liveCondition" class="live-grade-val">NEW</div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">เกรดสภาพ</div>
+          <div class="score-grade grade-B" id="scoreGrade">USED</div>
         </div>
       </div>
 
-      <button type="submit" id="saveInspectBtn" class="btn-gold" style="width: 100%;">🔒 บันทึกใบประเมินและปิดเคส</button>
-    </form>
+      <div id="inspectCriteria"></div>
+
+      <div class="used-warning" id="usedWarning">
+        ⚠️ สินค้าได้คะแนนต่ำกว่า 75 — กรุณาระบุรายละเอียดเพิ่มเติมและความเสี่ยงด้านราคา
+        <textarea class="form-control" style="margin-top:8px;min-height:60px" id="m_risk_note" placeholder="ระบุเหตุผล / ความเสี่ยง..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inspectModal')">ยกเลิก</button>
+      <button class="btn btn-gold" id="saveInspectBtn" onclick="saveInspection()">
+        <span class="spinner" id="saveSpinner" style="display:none"></span>
+        💾 บันทึกผลตรวจ
+      </button>
+    </div>
   </div>
 </div>
 
-<div id="toast" class="toast">
-  <span id="toastIcon"></span>
-  <span id="toastText"></span>
+<div class="mobile-tabs">
+  <button class="mobile-tab active" onclick="showTab('appt',this)">
+    <span class="icon">📋</span>ตารางนัด
+  </button>
+  <button class="mobile-tab" onclick="showTab('history',this)">
+    <span class="icon">📊</span>ประวัติ
+  </button>
+  <button class="mobile-tab" onclick="showTab('settings',this)">
+    <span class="icon">⚙️</span>ตั้งค่า
+  </button>
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span class="toast-text" id="toastText"></span>
 </div>
 
 <script>
-// ฝังลิ้งค์ Web App Script คลาวด์ตรงตามที่คุณระบุเรียบร้อยครับ
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec";
+// =============================================
+// CONFIG
+// =============================================
+const DEFAULT_PASS = "luxbuy2025";
+const BUDGET_LIMIT = 2000000;
 
-const SCHEMA = {
-  footwear: {
-    equip: ['ใบเสร็จช็อปจริง', 'ถุงผ้า', 'กล่องสินค้า', 'การ์ดรับรอง', 'ถุงกระดา'],
-    deductions: [
-      { id: 'shape', label: 'ทรงรองเท้า', options: [{t:'ปกติ',p:20}, {t:'ไม่ปกติ/เบี้ยว',p:10}] },
-      { id: 'oxidize', label: 'อะไหล่ออกซิไดซ์/สนิม', options: [{t:'ไม่มีรอย',p:20}, {t:'มี 1-2 จุด',p:10}] },
-      { id: 'glue', label: 'คราบกาวซึมรอบข้อ', options: [{t:'ไม่มีรอยกาว',p:20}, {t:'คราบ 1-2 จุด',p:10}] },
-      { id: 'smell', label: 'กลิ่นอับชื้นภายใน', options: [{t:'ปกติ',p:10}, {t:'มีกลิ่นไม่ปกติ',p:5}] },
-      { id: 'scratch', label: 'รอยถลอก/สีเฟด', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยเล็ก 1-2 จุด',p:5}] },
-      { id: 'sole', label: 'พื้นรองเท้าด้านล่าง', options: [{t:'ไม่มีรอยเดิน',p:10}, {t:'รอยเดินเล็กน้อย',p:5}] }
-    ]
-  },
-  handbag: {
-    equip: ['ใบเสร็จตัวจริง', 'ใบเสร็จสำเนา', 'การ์ดรับรอง', 'ถุงผ้า', 'กล่อง', 'ถุงกระดาษ', 'ริบบิ้น'],
-    deductions: [
-      { id: 'leather', label: 'สภาพหนังและโครงสร้างทรง', options: [{t:'หนังแข็งสวยทรงเป๊ะ',p:15}, {t:'หนังนิ่มลงเล็กน้อย',p:10}, {t:'หนังย้วยเสียทรง',p:5}] },
-      { id: 'hardware', label: 'อะไหล่โลหะและตราปั๊ม', options: [{t:'ไม่มีรอย',p:10}, {t:'ขนแมวบางๆ',p:5}] },
-      { id: 'smell', label: 'กลิ่นกระเป๋าภายใน', options: [{t:'ปกติ/กลิ่นหนังหอม',p:5}, {t:'กลิ่นอับ',p:0}] },
-      { id: 'corner', label: 'ขอบมุมกระเป๋าทั้ง 4 มุม', options: [{t:'ไม่มีรอยถลอก',p:10}, {t:'มีรอยบางๆ',p:5}] },
-      { id: 'scratch', label: 'รอยเล็บ/รอยขีดข่วน', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยบาง 1-2 จุด',p:5}] },
-      { id: 'glue', label: 'ยาแนวหลุด/คราบกาวซึม', options: [{t:'ปกติเรียบร้อย',p:10}, {t:'เหนียว/ซึม',p:5}] },
-      { id: 'water', label: 'คราบน้ำ/คราบด่าง', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยจางๆ',p:5}] },
-      { id: 'press', label: 'รอยกดทับจากการจัดเก็บ', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยตื้นๆ',p:5}] },
-      { id: 'oxidize', label: 'โลหะขึ้นสนิมเขียว/อะไหล่เฟด', options: [{t:'ไม่มีสนิม',p:10}, {t:'มีสนิม',p:0}] }
-    ]
-  },
-  jewelry: {
-    equip: ['Certificate/ใบรับรอง', 'ใบเสร็จตัวจริง', 'กล่องใน', 'กล่องนอก', 'ถุงผ้า'],
-    deductions: [
-      { id: 'shape', label: 'รูปทรงความสมมาตร', options: [{t:'ทรงปกติเป๊ะ',p:10}, {t:'เบี้ยว/บิดงอ',p:0}] },
-      { id: 'hardware', label: 'รอยขนแมวบนพื้นผิว', options: [{t:'เงาสวยไม่มีรอย',p:20}, {t:'ขนแมวบางๆ',p:10}] },
-      { id: 'scratch', label: 'รอยกระแทก/รอยบิ่นลึก', options: [{t:'ไม่มีรอย',p:20}, {t:'บิ่นเล็ก 1-2 จุด',p:10}] },
-      { id: 'dirty', label: 'คราบสกปรกฝังลึก', options: [{t:'สะอาดเงางาม',p:20}, {t:'มีคราบเล็กน้อย',p:10}] },
-      { id: 'oxidize', label: 'การเปลี่ยนสีของโลหะ', options: [{t:'สีสว่างสดใส',p:30}, {t:'สีคล้ำชำรุด',p:0}] }
-    ]
-  },
-  acc: {
-    equip: ['ใบเสร็จตัวจริง', 'ถุงผ้า', 'กล่องสินค้า', 'การ์ดข้อมูล', 'ถุงกระดาษ'],
-    deductions: [
-      { id: 'shape', label: 'โครงทรงวัสดุผ้า/หนัง', options: [{t:'ทรงปกติ',p:10}, {t:'เสียทรง',p:0}] },
-      { id: 'hardware', label: 'รอยถลอกบนอะไหล่', options: [{t:'ไม่มีรอยขูดขีด',p:20}, {t:'ขนแมวบางๆ',p:10}] },
-      { id: 'scratch', label: 'ด้ายรุ่ย/เนื้อผ้าขาด', options: [{t:'สมบูรณ์ 100%',p:20}, {t:'รุ่ยเล็กน้อย',p:10}] },
-      { id: 'dirty', label: 'คราบเปื้อน/คราบเหลือง', options: [{t:'สะอาดไม่มีคราบ',p:20}, {t:'คราบจางๆ',p:10}] },
-      { id: 'oxidize', label: 'วัสดุเปลี่ยนสี/ขึ้นสนิม', options: [{t:'ปกติเงางาม',p:30}, {t:'โลหะคล้ำหมอง',p:0}] }
-    ]
-  }
+// =============================================
+// STATE
+// =============================================
+let SCRIPT_URL = localStorage.getItem('scriptUrl') || '';
+let currentApptId = null;
+let currentSpend = 0;
+let allAppointments = [];
+let equipState = {};
+let scoreState = {};
+let currentCategory = 'shoes';
+
+const CRITERIA = {
+  shoes: [
+    { key:'shape',    label:'ทรงรองเท้า',           max:20, opts:[['ปกติ',20],['ไม่ปกติ',10]] },
+    { key:'oxidize',  label:'อะไหล่ออกซิไดซ์/สนิม', max:20, opts:[['ไม่มี',20],['1-2 จุด',10],['3+ จุด',0]] },
+    { key:'glue',     label:'กาวซึม',               max:20, opts:[['ไม่มี',20],['1-2 จุด',10],['3+ จุด',0]] },
+    { key:'smell',    label:'กลิ่น',                max:10, opts:[['ปกติ',10],['ไม่ปกติ',5]] },
+    { key:'gems',     label:'เพชรหลุด',             max:10, opts:[['ไม่มี',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'scratch',  label:'ถลอก/เฟด/ขีด',         max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'sole',     label:'พื้นรองเท้า',           max:10, opts:[['ไม่มีรอย',10],['รอยเล็กน้อย',5],['รอยเยอะ',0]] },
+  ],
+  bag: [
+    { key:'leather',  label:'หนังกระเป๋า',           max:15, opts:[['หนังแข็งสวย',15],['หนังนิ่มลง',10],['หนังนิ่มย้วย',5]] },
+    { key:'hardware', label:'อะไหล่',               max:10, opts:[['ไม่มีรอย',10],['ขนแมวบางๆ',5],['ขนแมวเยอะ',0]] },
+    { key:'smell',    label:'กลิ่น',                max:5,  opts:[['ปกติ',5],['ไม่ปกติ',0]] },
+    { key:'corner',   label:'ขอบมุม',               max:10, opts:[['ไม่มีรอย',10],['มีรอยบาง',5],['รอยถลอกลึก',0]] },
+    { key:'stain',    label:'รอยปากกา/เครื่องสำอาง', max:10, opts:[['ไม่มีรอย',10],['เล็ก 1-2 จุด',5],['ใหญ่ 3+ จุด',0]] },
+    { key:'scratch',  label:'ถลอก/เหนียว/เล็บ',     max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'glue',     label:'กาวซึม',               max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'water',    label:'คราบน้ำ',              max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'press',    label:'รอยกดทับ',             max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'oxidize',  label:'ออกซิไดซ์',            max:10, opts:[['ไม่มี',10],['มี',0]] },
+  ],
+  jewelry: [
+    { key:'shape',    label:'ทรง',                  max:10, opts:[['ปกติ',10],['ไม่ปกติ',0]] },
+    { key:'hardware', label:'อะไหล่',               max:20, opts:[['ไม่มีรอย',20],['ขนแมวบางๆ',10],['ขนแมวเยอะ',5]] },
+    { key:'scratch',  label:'ถลอก/ขาด/ขีด',         max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุด',5]] },
+    { key:'stain',    label:'รอยเปื้อน',            max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุด',5]] },
+    { key:'glue',     label:'กาวซึม',               max:10, opts:[['ไม่มีรอย',10],['1-2 จุด',5],['3+ จุด',0]] },
+    { key:'oxidize',  label:'ออกซิไดซ์',            max:20, opts:[['ไม่มี',20],['มี',0]] },
+  ]
 };
 
-let cachedData = null;
-let currentTodaySpend = 0;
-let toastTimer;
-
-function checkAuth() {
-  if (localStorage.getItem('luxbuy_logged') === 'true') {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('settingUrlInput').value = SCRIPT_URL;
-    fetchDashboardData();
-  }
-}
-
-function attemptLogin() {
-  if (document.getElementById('passInput').value === '2569') {
-    localStorage.setItem('luxbuy_logged', 'true');
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('settingUrlInput').value = SCRIPT_URL;
-    fetchDashboardData();
-    showToast('success', 'เข้าสู่ระบบ LuxBuy เรียบร้อยแล้ว');
+// =============================================
+// LOGIN
+// =============================================
+function login() {
+  const pass = document.getElementById('loginPass').value;
+  const savedPass = localStorage.getItem('appPass') || DEFAULT_PASS;
+  if (pass === savedPass) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    init();
   } else {
-    showToast('error', 'รหัสผ่านผิดพลาด');
+    document.getElementById('loginError').style.display = 'block';
+    setTimeout(() => document.getElementById('loginError').style.display = 'none', 2000);
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('newDate').value = new Date().toISOString().split('T')[0];
-  checkAuth();
-});
-
-function showLoading(text) {
-  document.getElementById('loadingText').textContent = text || 'กำลังประมวลผล...';
-  document.getElementById('loadingOverlay').classList.add('show');
-}
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.remove('show');
-}
-
-function fetchDashboardData() {
-  showLoading('กำลังอัพเดทข้อมูล...');
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify({ action: 'get_all_data' })
-  })
-  .then(res => res.json())
-  .then(res => {
-    if (res.status === 'success') {
-      cachedData = res;
-      calculateEffectiveSpend();
-      renderDashboard();
-    } else {
-      showToast('error', 'เกิดข้อผิดพลาด: ' + res.message);
-    }
-  })
-  .catch(() => showToast('error', 'ไม่สามารถเชื่อมต่อคลาวด์ได้'))
-  .finally(hideLoading);
+// =============================================
+// INIT
+// =============================================
+function init() {
+  const today = new Date();
+  document.getElementById('todayDate').textContent = today.toLocaleDateString('th-TH', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('f_date').value = today.toISOString().split('T')[0];
+  document.getElementById('f_time').value = '10:00';
+  document.getElementById('scriptUrl').value = SCRIPT_URL;
+  loadAppointments();
 }
 
-function calculateEffectiveSpend() {
-  const appts = cachedData.appointments || [];
-  const todayStr = new Date().toISOString().split('T')[0];
-  let total = 0;
-  
-  appts.forEach(a => {
-    const apptDate = a.date ? a.date.split('T')[0] : "";
-    if (apptDate === todayStr && a.appt_status !== 'ยกเลิก') {
-      if (a.payment_status === 'จ่ายเงินสำเร็จ' || a.payment_status === 'กำลังโอนเงิน' || a.appt_status === 'สำเร็จ') {
-        total += Number(a.estimated_price) || 0;
-      }
-    }
-  });
-  currentTodaySpend = total;
+// =============================================
+// API CALL
+// =============================================
+async function apiCall(data) {
+  if (!SCRIPT_URL) {
+    showToast('error', '⚠️ กรุณาตั้งค่า URL ของ Google Apps Script ในหน้า ⚙️ ตั้งค่า ก่อน');
+    return null;
+  }
+  try {
+    const resp = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return await resp.json();
+  } catch(e) {
+    showToast('error', '❌ ไม่สามารถเชื่อมต่อ Google Sheets ได้: ' + e.message);
+    return null;
+  }
 }
 
-function renderDashboard() {
-  document.getElementById('statTodaySpend').textContent = currentTodaySpend.toLocaleString() + ' ฿';
-  const leftBudget = 2000000 - currentTodaySpend;
-  document.getElementById('statBudgetLeft').textContent = `คงเหลือโควตาประจำวัน: ${leftBudget.toLocaleString()} ฿`;
-  
-  const pct = Math.min((currentTodaySpend / 2000000) * 100, 100);
+// =============================================
+// BUDGET
+// =============================================
+async function loadDashboard() {
+  const data = await apiCall({ action: 'get_dashboard_data' });
+  if (data && data.status === 'success') {
+    currentSpend = data.today_spend || 0;
+    updateBudgetBar();
+    updateStats(data);
+    allAppointments = data.appointments || [];
+    renderTable(allAppointments);
+  }
+}
+
+function updateBudgetBar() {
+  const pct = Math.min((currentSpend / BUDGET_LIMIT) * 100, 100);
   const bar = document.getElementById('budgetBar');
+  const amt = document.getElementById('budgetAmt');
+  const alert = document.getElementById('budgetAlert');
   bar.style.width = pct + '%';
-  
-  const card = document.getElementById('cardSpend');
-  card.className = 'stat-card';
-  if (currentTodaySpend >= 2000000) card.classList.add('budget-danger');
-  else if (currentTodaySpend >= 1500000) card.classList.add('budget-warn');
-  else card.classList.add('budget-safe');
+  amt.textContent = '฿' + currentSpend.toLocaleString('th-TH');
+  if (pct >= 100) { bar.style.background = 'var(--red)'; alert.style.display = 'block'; }
+  else if (pct >= 90) { bar.style.background = 'var(--red)'; alert.style.display = 'none'; }
+  else if (pct >= 75) { bar.style.background = 'var(--orange)'; alert.style.display = 'none'; }
+  else { bar.style.background = 'var(--green)'; alert.style.display = 'none'; }
+}
 
-  const appts = cachedData.appointments || [];
-  document.getElementById('stat-appts').textContent = appts.length;
-
-  const apptTable = document.getElementById('apptTableBody');
-  apptTable.innerHTML = '';
-
-  if (appts.length === 0) {
-    apptTable.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">ไม่มีรายการนัดหมายในระบบ</td></tr>`;
+function checkBudgetLive() {
+  const price = Number(document.getElementById('f_price').value) || 0;
+  const btn = document.getElementById('addApptBtn');
+  const warn = document.getElementById('budgetWarnInline');
+  const today = document.getElementById('f_date').value === new Date().toISOString().split('T')[0];
+  if (today && currentSpend + price > BUDGET_LIMIT) {
+    btn.disabled = true;
+    warn.style.display = 'block';
   } else {
-    appts.forEach(a => {
-      const isInspected = cachedData.inspections && cachedData.inspections.some(i => i.appt_id === a.appt_id);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><span style="font-size:0.85rem; color:var(--text-muted);">${a.date ? a.date.split('T')[0] : ''}</span><br><strong style="color:var(--gold-light);">${a.time_slot} น.</strong></td>
-        <td style="font-size:0.85rem; font-family:monospace; color:var(--text-muted);">${a.appt_id}</td>
-        <td><strong>${a.customer_name}</strong><br><span style="color:var(--text-muted); font-size:0.85rem;">📱 ${a.customer_phone}</span></td>
-        <td>${a.product_name} <span style="color:var(--gold); font-weight:600;">(${a.quantity || 1} ชิ้น)</span></td>
-        <td><span class="badge badge-info">${a.distance || 'ระยะใกล้'}</span></td>
-        <td style="font-weight:600; color:var(--gold-light);">${Number(a.estimated_price).toLocaleString()} ฿</td>
-        <td>
-          <select class="status-select-inline" onchange="changeStatus('${a.appt_id}', 'appt_status', this.value)">
-            <option value="รอเข้าพบ" ${a.appt_status === 'รอเข้าพบ' ? 'selected' : ''}>⏳ รอเข้าพบ</option>
-            <option value="มาตามนัด" ${a.appt_status === 'มาตามนัด' ? 'selected' : ''}>🏃 มาตามนัด</option>
-            <option value="สำเร็จ" ${a.appt_status === 'สำเร็จ' ? 'selected' : ''}>✅ สำเร็จ</option>
-            <option value="ยกเลิก" ${a.appt_status === 'ยกเลิก' ? 'selected' : ''}>❌ ยกเลิก</option>
-          </select>
-        </td>
-        <td>
-          <select class="status-select-inline" onchange="changeStatus('${a.appt_id}', 'payment_status', this.value)">
-            <option value="ยังไม่จ่าย" ${a.payment_status === 'ยังไม่จ่าย' ? 'selected' : ''}>🔴 ยังไม่จ่าย</option>
-            <option value="กำลังโอนเงิน" ${a.payment_status === 'กำลังโอนเงิน' ? 'selected' : ''}>🔵 กำลังโอนเงิน</option>
-            <option value="จ่ายเงินสำเร็จ" ${a.payment_status === 'จ่ายเงินสำเร็จ' ? 'selected' : ''}>🟢 จ่ายเงินสำเร็จ</option>
-          </select>
-        </td>
-        <td>
-          <div style="display: flex; gap: 4px;">
-            <button class="action-btn btn-edit" onclick="openEditApptModal('${a.appt_id}')">✏️ แก้ไข</button>
-            ${isInspected 
-              ? `<span class="badge badge-success" style="padding: 6px 12px;">✓ ตรวจแล้ว</span>`
-              : `<button class="action-btn btn-primary" onclick="openInspectModal('${a.appt_id}', '${a.customer_name}', '${a.product_name}', ${a.estimated_price})">🔍 ตรวจสภาพ</button>`
-            }
-          </div>
-        </td>
-      `;
-      apptTable.appendChild(tr);
-    });
-  }
-
-  const histTable = document.getElementById('historyTableBody');
-  histTable.innerHTML = '';
-  const inspects = cachedData.inspections || [];
-
-  if (inspects.length === 0) {
-    histTable.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">ไม่พบประวัติใบประเมินในระบบ</td></tr>`;
-  } else {
-    inspects.forEach(i => {
-      const tr = document.createElement('tr');
-      let gradeClass = 'badge-info';
-      if (i.final_condition === 'NEW') gradeClass = 'badge-success';
-      if (i.final_condition === 'LIKE NEW') gradeClass = 'badge-pending';
-      if (i.final_condition === 'USED') gradeClass = 'badge-danger';
-      
-      tr.innerHTML = `
-        <td style="color:var(--text-muted); font-size:0.9rem;">${i.inspection_date ? i.inspection_date.split('T')[0] : ''}</td>
-        <td style="font-family:monospace; font-size:0.85rem;">${i.appt_id}</td>
-        <td><strong>${i.brand}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">DC: ${i.date_code_year || '-'}</span></td>
-        <td style="font-weight:600; color:var(--gold-light);">${i.total_score} คะแนน</td>
-        <td><span class="badge ${gradeClass}">${i.final_condition}</span></td>
-        <td>👤 ${i.inspector_name}</td>
-        <td style="font-size:0.85rem; color:var(--text-muted); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.equipment_summary}</td>
-      `;
-      histTable.appendChild(tr);
-    });
+    btn.disabled = false;
+    warn.style.display = 'none';
   }
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
-  
-  document.getElementById('panel-' + tab).classList.add('active');
-  const btns = document.querySelectorAll('.tab-btn');
-  const order = ['appt', 'history', 'settings'];
-  const idx = order.indexOf(tab);
-  if (btns[idx]) btns[idx].classList.add('active');
-  if (document.getElementById('mbtn-' + tab)) document.getElementById('mbtn-' + tab).classList.add('active');
+// =============================================
+// APPOINTMENTS
+// =============================================
+async function loadAppointments() {
+  await loadDashboard();
 }
 
-function openAddApptModal() {
-  document.getElementById('editApptId').value = "";
-  document.getElementById('apptModalTitle').textContent = "ลงทะเบียนนัดหมายลูกค้าใหม่";
-  document.getElementById('addApptForm').reset();
-  document.getElementById('newDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('addApptModal').classList.add('show');
+function renderTable(appts) {
+  const tbody = document.getElementById('apptTbody');
+  if (!appts || appts.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <div class="icon">📋</div><p>ไม่มีนัดหมายสำหรับวันนี้</p>
+    </div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = appts.map(a => {
+    // เช็กสถานะว่าเคยตรวจสินค้าแล้วหรือยัง จากฟิลด์ total_score หรือ final_condition
+    const isInspected = (a.total_score !== undefined && a.total_score !== null && a.total_score !== '') || a.final_condition;
+    const inspectBtnLabel = isInspected ? '✏️ แก้ไขผลตรวจ' : '🔍 ตรวจสินค้า';
+
+    return `
+    <tr>
+      <td><div class="time-slot">${a.time_slot || '—'}</div></td>
+      <td>
+        <div class="customer-name">${a.customer_name || '—'}</div>
+        <div class="customer-phone">${a.customer_phone || ''}</div>
+      </td>
+      <td><div class="product-text">${a.product_name || '—'}</div></td>
+      <td><div class="price-text">฿${Number(a.estimated_price||0).toLocaleString('th-TH')}</div></td>
+      <td>${renderApptBadge(a.appt_status, a.appt_id)}</td>
+      <td>${renderPayBadge(a.payment_status, a.appt_id)}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-outline btn-sm" onclick="openInspect('${a.appt_id}','${a.customer_name}','${a.customer_phone}','${a.product_name}')">
+            ${inspectBtnLabel}
+          </button>
+          <button class="btn btn-outline btn-sm" title="แก้ไขข้อมูลนัด" onclick="editAppointmentClick('${a.appt_id}')">
+            ✏️ แก้ไขนัด
+          </button>
+          <button class="btn btn-danger btn-sm" title="ลบนัดหมาย" onclick="deleteAppointmentClick('${a.appt_id}')">
+            🗑️ ลบ
+          </button>
+        </div>
+      </td>
+    </tr>
+  `}).join('');
 }
 
-function openEditApptModal(apptId) {
-  const appt = cachedData.appointments.find(a => a.appt_id === apptId);
+function renderApptBadge(status, id) {
+  const map = {
+    'รอเข้าพบ': ['badge-wait','รอเข้าพบ','มาตามนัด'],
+    'มาตามนัด': ['badge-arrived','มาตามนัด','สำเร็จ'],
+    'สำเร็จ': ['badge-done','สำเร็จ',null],
+    'ยกเลิก': ['badge-cancel','ยกเลิก',null],
+  };
+  const s = status || 'รอเข้าพบ';
+  const [cls, label, next] = map[s] || ['badge-wait','รอเข้าพบ','มาตามนัด'];
+  const click = next ? `onclick="updateStatus('${id}','appt_status','${next}')"` : '';
+  const title = next ? `title="กดเพื่อเปลี่ยนเป็น: ${next}"` : '';
+  return `<span class="badge ${cls}" ${click} ${title}>${label}${next?'  →':''}</span>`;
+}
+
+function renderPayBadge(status, id) {
+  const map = {
+    'ยังไม่จ่าย': ['badge-pay-no','ยังไม่จ่าย','กำลังโอนเงิน'],
+    'กำลังโอนเงิน': ['badge-pay-sending','กำลังโอนเงิน','จ่ายเงินสำเร็จ'],
+    'จ่ายเงินสำเร็จ': ['badge-pay-done','จ่ายเงินสำเร็จ',null],
+  };
+  const s = status || 'ยังไม่จ่าย';
+  const [cls, label, next] = map[s] || ['badge-pay-no','ยังไม่จ่าย','กำลังโอนเงิน'];
+  const click = next ? `onclick="updateStatus('${id}','payment_status','${next}')"` : '';
+  const title = next ? `title="กดเพื่อเปลี่ยนเป็น: ${next}"` : '';
+  return `<span class="badge ${cls}" ${click} ${title}>${label}${next?'  →':''}</span>`;
+}
+
+// รวมฟังก์ชันการบันทึกฟอร์มนัดหมาย (ทั้งเพิ่มใหม่และแก้ไข)
+async function saveAppointmentForm() {
+  const editId = document.getElementById('f_appt_id_edit').value;
+  const name = document.getElementById('f_name').value.trim();
+  const phone = document.getElementById('f_phone').value.trim();
+  const date = document.getElementById('f_date').value;
+  const time = document.getElementById('f_time').value;
+  const product = document.getElementById('f_product').value.trim();
+  const price = Number(document.getElementById('f_price').value) || 0;
+
+  if (!name || !phone || !date || !time || !product || !price) {
+    showToast('error', '⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    return;
+  }
+
+  const btn = document.getElementById('addApptBtn');
+  const spinner = document.getElementById('addSpinner');
+  btn.disabled = true; spinner.style.display = 'inline-block';
+
+  if (editId) {
+    // ส่วนแก้ไขรายการนัดหมายเดิม
+    const res = await apiCall({
+      action: 'edit_appointment',
+      appt_id: editId,
+      date, time_slot: time,
+      customer_name: name,
+      customer_phone: phone,
+      product_name: product,
+      estimated_price: price
+    });
+    btn.disabled = false; spinner.style.display = 'none';
+    if (res && res.status === 'success') {
+      showToast('success', '✅ แก้ไขข้อมูลนัดหมายเรียบร้อยแล้ว!');
+      resetApptForm();
+      await loadAppointments();
+    }
+  } else {
+    // ส่วนเพิ่มนัดหมายใหม่
+    const apptId = 'APT-' + date.replace(/-/g,'') + '-' + Date.now().toString().slice(-4);
+    const res = await apiCall({
+      action: 'add_appointment',
+      appt_id: apptId,
+      date, time_slot: time,
+      customer_name: name,
+      customer_phone: phone,
+      product_name: product,
+      estimated_price: price,
+      appt_status: 'รอเข้าพบ',
+      payment_status: 'ยังไม่จ่าย'
+    });
+    btn.disabled = false; spinner.style.display = 'none';
+    if (res && res.status === 'success') {
+      showToast('success', '✅ เพิ่มนัดหมายเรียบร้อยแล้ว!');
+      resetApptForm();
+      await loadAppointments();
+    }
+  }
+}
+
+// กดแก้ไขนัดหมาย -> ดึงข้อมูลขึ้นฟอร์มด้านบน
+function editAppointmentClick(id) {
+  const appt = allAppointments.find(a => a.appt_id === id);
   if (!appt) return;
-  document.getElementById('editApptId').value = apptId;
-  document.getElementById('apptModalTitle').textContent = `✏️ แก้ไขข้อมูลนัดหมายคิว [${apptId}]`;
+
+  document.getElementById('f_appt_id_edit').value = appt.appt_id;
+  document.getElementById('f_name').value = appt.customer_name || '';
+  document.getElementById('f_phone').value = appt.customer_phone || '';
+  document.getElementById('f_date').value = appt.date || '';
+  document.getElementById('f_time').value = appt.time_slot || '';
+  document.getElementById('f_product').value = appt.product_name || '';
+  document.getElementById('f_price').value = appt.estimated_price || '';
+
+  document.getElementById('formActionTitle').textContent = '✏️ แก้ไขข้อมูลนัดหมาย';
+  document.getElementById('addBtnLabel').textContent = 'บันทึกการแก้ไข';
+  document.getElementById('cancelEditBtn').style.display = 'inline-block';
   
-  document.getElementById('newDate').value = appt.date ? appt.date.split('T')[0] : "";
-  document.getElementById('newTime').value = appt.time_slot;
-  document.getElementById('newName').value = appt.customer_name;
-  document.getElementById('newPhone').value = appt.customer_phone;
-  document.getElementById('newProduct').value = appt.product_name;
-  document.getElementById('newQuantity').value = appt.quantity || 1;
-  document.getElementById('newPrice').value = appt.estimated_price;
-  document.getElementById('newDistance').value = appt.distance || "ระยะใกล้";
+  // เลื่อนหน้าจอขึ้นไปที่ฟอร์ม
+  document.getElementById('apptFormCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ล้างฟอร์มกลับเป็นโหมด "เพิ่มนัดหมายใหม่"
+function resetApptForm() {
+  document.getElementById('f_appt_id_edit').value = '';
+  document.getElementById('f_name').value = '';
+  document.getElementById('f_phone').value = '';
+  const today = new Date();
+  document.getElementById('f_date').value = today.toISOString().split('T')[0];
+  document.getElementById('f_time').value = '10:00';
+  document.getElementById('f_product').value = '';
+  document.getElementById('f_price').value = '';
+
+  document.getElementById('formActionTitle').textContent = '➕ เพิ่มนัดหมายใหม่';
+  document.getElementById('addBtnLabel').textContent = 'บันทึกนัดหมาย';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('addApptBtn').disabled = false;
+  document.getElementById('budgetWarnInline').style.display = 'none';
+}
+
+// กดลบนัดหมาย
+async function deleteAppointmentClick(id) {
+  if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบรายการนัดหมายนี้?')) return;
   
-  document.getElementById('addApptModal').classList.add('show');
+  const res = await apiCall({ action: 'delete_appointment', appt_id: id });
+  if (res && res.status === 'success') {
+    showToast('success', '🗑️ ลบข้อมูลนัดหมายสำเร็จ');
+    await loadAppointments();
+  }
+}
+
+async function updateStatus(id, field, value) {
+  const res = await apiCall({ action: 'update_status', appt_id: id, field, value });
+  if (res && res.status === 'success') {
+    showToast('success', `✅ อัปเดตสถานะเป็น "${value}" แล้ว`);
+    await loadAppointments();
+  }
+}
+
+// =============================================
+// INSPECT MODAL (CHECKLIST)
+// =============================================
+function openInspect(id, name, phone, product) {
+  currentApptId = id;
+  equipState = {};
+  scoreState = {};
+  
+  document.getElementById('modal_custName').textContent = name;
+  document.getElementById('modal_custDetail').textContent = `${phone} · ${product} (ID: ${id})`;
+  
+  // ค้นหาว่าเคยมีการตรวจสภาพบันทึกไว้ในระบบแล้วหรือยัง (เพื่อเปิดโหมดแก้ไขผลตรวจ)
+  const existing = allAppointments.find(a => a.appt_id === id);
+  
+  if (existing && ((existing.total_score !== undefined && existing.total_score !== null && existing.total_score !== '') || existing.final_condition)) {
+    // --- โหมดแก้ไขผลตรวจเก่า ---
+    document.getElementById('inspectModalTitle').textContent = '✏️ แก้ไขผลตรวจสภาพสินค้า';
+    document.getElementById('m_inspector').value = existing.inspector || '';
+    document.getElementById('m_datecode').value = existing.date_code || '';
+    document.getElementById('m_declaration').value = existing.declaration || 'ไม่เคยใช้งาน';
+    document.getElementById('m_equip_note').value = existing.equipment_notes || '';
+    document.getElementById('m_risk_note').value = existing.risk_notes || '';
+
+    // ฟื้นฟูสภาพของอุปกรณ์ที่ได้รับ
+    if (existing.equipment_summary) {
+      // ตัวอย่างข้อมูล "receipt:yes, box:no"
+      existing.equipment_summary.split(',').forEach(part => {
+        const [k, v] = part.trim().split(':');
+        if (k && v) {
+          equipState[k] = v;
+          const btn = document.querySelector(`.toggle-btn[data-equip="${k}"][data-val="${v}"]`);
+          if (btn) {
+            btn.closest('.toggle-wrap').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          }
+        }
+      });
+    } else {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    }
+
+    // ฟื้นฟูหมวดหมู่และคะแนนสภาพ
+    // หมายเหตุ: ถ้าระบบฝั่งชีตไม่ได้แยกส่ง score_details กลับมาตรงๆ จะอนุมานประเภทและให้เลือกคะแนนใหม่
+    let category = 'shoes';
+    if (existing.product_name && (existing.product_name.toLowerCase().includes('bag') || existing.product_name.includes('กระเป๋า'))) category = 'bag';
+    if (existing.product_name && (existing.product_name.toLowerCase().includes('jewelry') || existing.product_name.includes('แหวน') || existing.product_name.includes('สร้อย'))) category = 'jewelry';
+    
+    // หากฝั่งชีตส่งตัวแปร score_details แบบ object มา
+    if (existing.score_details) {
+      try {
+        scoreState = typeof existing.score_details === 'string' ? JSON.parse(existing.score_details) : existing.score_details;
+      } catch(e) { scoreState = {}; }
+    } else {
+      scoreState = {};
+    }
+
+    const catBtn = document.getElementById('cat-btn-' + category);
+    selectCategory(category, catBtn);
+
+  } else {
+    // --- โหมดตรวจใหม่หมด (Checklist ว่าง) ---
+    document.getElementById('inspectModalTitle').textContent = '🔍 ตรวจสภาพสินค้า';
+    document.getElementById('m_inspector').value = '';
+    document.getElementById('m_datecode').value = '';
+    document.getElementById('m_equip_note').value = '';
+    document.getElementById('m_risk_note').value = '';
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    
+    selectCategory('shoes', document.querySelector('.cat-btn'));
+  }
+
+  updateScore();
+  document.getElementById('inspectModal').classList.add('open');
 }
 
 function closeModal(id) {
-  document.getElementById(id).classList.remove('show');
+  document.getElementById(id).classList.remove('open');
 }
 
-function submitAppointment(e) {
-  e.preventDefault();
-  const editId = document.getElementById('editApptId').value;
-  const data = {
-    action: editId ? 'edit_appointment' : 'add_appointment',
-    appt_id: editId || undefined,
-    date: document.getElementById('newDate').value,
-    time_slot: document.getElementById('newTime').value,
-    customer_name: document.getElementById('newName').value,
-    customer_phone: document.getElementById('newPhone').value,
-    product_name: document.getElementById('newProduct').value,
-    quantity: Number(document.getElementById('newQuantity').value),
-    estimated_price: Number(document.getElementById('newPrice').value),
-    distance: document.getElementById('newDistance').value
-  };
+function selectCategory(cat, btn) {
+  currentCategory = cat;
+  // ถ้าไม่ใช่การดึงคะแนนเก่ามาแสดง ให้ล้างคะแนนใหม่
+  if (Object.keys(scoreState).length === 0) {
+    scoreState = {};
+  }
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCriteria(cat);
+  updateScore();
+}
+
+function renderCriteria(cat) {
+  const container = document.getElementById('inspectCriteria');
+  const items = CRITERIA[cat];
+  container.innerHTML = items.map(item => `
+    <div class="inspect-group">
+      <label>${item.label} <span style="color:var(--gold)">(${item.max} คะแนน)</span></label>
+      <div class="options">
+        ${item.opts.map(([label, val]) => {
+          const isSelected = scoreState[item.key] === val;
+          return `
+          <button class="opt-btn ${isSelected ? 'selected' : ''}" onclick="selectScore('${item.key}',${val},this)">
+            ${label} <span style="color:var(--text-dim)">(${val})</span>
+          </button>
+        `}).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectScore(key, val, btn) {
+  scoreState[key] = val;
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateScore();
+}
+
+function updateScore() {
+  const total = Object.values(scoreState).reduce((s,v) => s+v, 0);
+  document.getElementById('scoreNum').textContent = total;
+  let grade = 'USED', cls = 'grade-B';
+  if (total >= 95) { grade = 'NEW'; cls = 'grade-N'; }
+  else if (total >= 85) { grade = 'KEPT UNUSED'; cls = 'grade-S'; }
+  else if (total >= 75) { grade = 'LIKE NEW'; cls = 'grade-A'; }
+  const g = document.getElementById('scoreGrade');
+  g.textContent = grade;
+  g.className = 'score-grade ' + cls;
+  document.getElementById('usedWarning').style.display = total < 75 ? 'block' : 'none';
+}
+
+function toggleEquip(btn, key, val) {
+  equipState[key] = val;
+  const wrap = btn.closest('.toggle-wrap');
+  wrap.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function saveInspection() {
+  const inspector = document.getElementById('m_inspector').value.trim();
+  if (!inspector) { showToast('error', '⚠️ กรุณาระบุชื่อพนักงานผู้ตรวจ'); return; }
+  const total = Object.values(scoreState).reduce((s,v) => s+v, 0);
+  let grade = 'USED';
+  if (total >= 95) grade = 'NEW';
+  else if (total >= 85) grade = 'KEPT UNUSED';
+  else if (total >= 75) grade = 'LIKE NEW';
+
+  const equipSummary = Object.entries(equipState).map(([k,v]) => `${k}:${v}`).join(', ');
+  const btn = document.getElementById('saveInspectBtn');
+  const spinner = document.getElementById('saveSpinner');
+  btn.disabled = true; spinner.style.display = 'inline-block';
+
+  const res = await apiCall({
+    action: 'save_inspection',
+    appt_id: currentApptId,
+    brand: document.getElementById('modal_custDetail').textContent.split('·')[1]?.trim() || '',
+    date_code: document.getElementById('m_datecode').value,
+    declaration: document.getElementById('m_declaration').value,
+    inspector: inspector,
+    equipment_summary: equipSummary,
+    equipment_notes: document.getElementById('m_equip_note').value,
+    score_details: JSON.stringify(scoreState), // แปลงก้อนคะแนนส่งกลับไปเก็บในชีตด้วย
+    total_score: total,
+    final_condition: grade,
+    risk_notes: document.getElementById('m_risk_note').value,
+    estimated_price: allAppointments.find(a => a.appt_id === currentApptId)?.estimated_price || 0
+  });
   
-  showLoading('กำลังบันทึกข้อมูลเข้าสู่ระบบคลาวด์...');
-  fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
-  .then(res => res.json())
-  .then(res => {
-    if (res.status === 'success') {
-      showToast('success', editId ? 'แก้ไขข้อมูลนัดหมายเรียบร้อย!' : 'ลงทะเบียนนัดหมายลูกค้าเรียบร้อยแล้ว');
-      closeModal('addApptModal');
-      fetchDashboardData();
-    } else {
-      showToast('error', res.message);
-    }
-  })
-  .catch(() => showToast('error', 'ระบบขัดข้อง'))
-  .finally(hideLoading);
-}
-
-function changeStatus(apptId, field, val) {
-  showLoading('กำลังอัปเดตสถานะ...');
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify({ action: 'update_status', appt_id: apptId, field: field, value: val })
-  })
-  .then(res => res.json())
-  .then(res => {
-    if (res.status === 'success') {
-      showToast('success', 'เปลี่ยนสถานะเรียบร้อย');
-      fetchDashboardData();
-    } else {
-      showToast('error', res.message);
-    }
-  })
-  .catch(() => showToast('error', 'การสื่อสารระบบคลาวด์ขัดข้อง'))
-  .finally(hideLoading);
-}
-
-function openInspectModal(apptId, custName, prodName, estPrice) {
-  document.getElementById('inspectApptId').value = apptId;
-  document.getElementById('inspectEstPrice').value = estPrice;
-  document.getElementById('inspectTitle').textContent = `ใบตรวจสภาพสินค้าของลูกค้า: คุณ ${custName} | สินค้า: ${prodName}`;
-  
-  document.getElementById('insCategory').value = 'handbag';
-  document.getElementById('insBrand').value = 'Chanel';
-  toggleBrandOtherField();
-  renderInspectionFields();
-  document.getElementById('inspectModal').classList.add('show');
-}
-
-function toggleBrandOtherField() {
-  const brandVal = document.getElementById('insBrand').value;
-  const otherGroup = document.getElementById('brandOtherGroup');
-  if (brandVal === 'อื่นๆ') {
-    otherGroup.classList.add('show');
-    document.getElementById('insBrandOther').required = true;
-  } else {
-    otherGroup.classList.remove('show');
-    document.getElementById('insBrandOther').required = false;
+  btn.disabled = false; spinner.style.display = 'none';
+  if (res && res.status === 'success') {
+    showToast('success', `✅ บันทึกผลตรวจสำเร็จ — เกรด: ${grade} (${total} คะแนน)`);
+    closeModal('inspectModal');
+    await loadAppointments();
+  } else if (res && res.status === 'error') {
+    showToast('error', '❌ ' + res.message);
   }
 }
 
-function renderInspectionFields() {
-  const cat = document.getElementById('insCategory').value;
-  const schema = SCHEMA[cat];
-  
-  const equipBox = document.getElementById('equipmentCheckboxes');
-  equipBox.innerHTML = '';
-  schema.equip.forEach(eq => {
-    const lbl = document.createElement('label');
-    lbl.className = 'check-label';
-    lbl.innerHTML = `<input type="checkbox" name="insEquip" value="${eq}"> ${eq}`;
-    equipBox.appendChild(lbl);
-  });
-  
-  const scoreRows = document.getElementById('scoreDeductionRows');
-  scoreRows.innerHTML = '';
-  schema.deductions.forEach(d => {
-    const row = document.createElement('div');
-    row.className = 'score-row';
-    let optHtml = '';
-    d.options.forEach(opt => { optHtml += `<option value="${opt.p}">${opt.t} (${opt.p} แต้ม)</option>`; });
-    row.innerHTML = `
-      <div class="score-name">${d.label}</div>
-      <select class="score-select" name="insDeduct" data-id="${d.id}" onchange="calculateLiveGrade()">
-        ${optHtml}
-      </select>
-    `;
-    scoreRows.appendChild(row);
-  });
-  calculateLiveGrade();
+// =============================================
+// HISTORY
+// =============================================
+async function loadHistory() {
+  const res = await apiCall({ action: 'get_all_data' });
+  if (!res || res.status !== 'success') return;
+  const appts = res.appointments || [];
+  const today = new Date().toISOString().split('T')[0];
+
+  const todayAppts = appts.filter(a => a.date === today);
+  const todaySpend = todayAppts.filter(a => a.appt_status !== 'ยกเลิก').reduce((s,a) => s + Number(a.estimated_price||0), 0);
+  const doneCnt = todayAppts.filter(a => a.appt_status === 'สำเร็จ').length;
+  const totalAll = appts.filter(a => a.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,a) => s + Number(a.estimated_price||0), 0);
+
+  document.getElementById('stat-appts').textContent = todayAppts.length;
+  document.getElementById('stat-spend').textContent = '฿' + todaySpend.toLocaleString('th-TH');
+  document.getElementById('stat-done').textContent = doneCnt;
+  document.getElementById('stat-total').textContent = '฿' + totalAll.toLocaleString('th-TH');
+
+  renderCustomerCards(appts, '');
 }
 
-function calculateLiveGrade() {
-  const selects = document.querySelectorAll('select[name="insDeduct"]');
-  let total = 0;
-  selects.forEach(s => { total += Number(s.value); });
-  
-  let cond = 'USED';
-  if (total >= 95) cond = 'NEW';
-  else if (total >= 85) cond = 'KEPT UNUSED';
-  else if (total >= 75) cond = 'LIKE NEW';
-  
-  document.getElementById('liveScore').textContent = total;
-  document.getElementById('liveCondition').textContent = cond;
-  document.getElementById('liveCondition').style.color = (cond === 'USED') ? 'var(--red)' : 'var(--gold-light)';
+function searchCustomer() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  renderCustomerCards(allAppointments, q);
 }
 
-function submitInspection(e) {
-  e.preventDefault();
-  const score = Number(document.getElementById('liveScore').textContent);
-  const cond = document.getElementById('liveCondition').textContent;
-  const notes = document.getElementById('insGeneralNotes').value;
-  
-  if (cond === 'USED' && !notes.trim()) {
-    showToast('error', 'เกรด USED จำเป็นต้องระบุตำหนิเพิ่มเติม');
+function renderCustomerCards(appts, q) {
+  const container = document.getElementById('historyResults');
+  const map = {};
+  appts.forEach(a => {
+    const key = a.customer_phone || a.customer_name;
+    if (!map[key]) map[key] = { name: a.customer_name, phone: a.customer_phone, records: [] };
+    map[key].records.push(a);
+  });
+  let customers = Object.values(map);
+  if (q) customers = customers.filter(c => (c.name||'').toLowerCase().includes(q) || (c.phone||'').includes(q));
+  if (!customers.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>ไม่พบข้อมูลลูกค้า</p></div>`;
     return;
   }
-  
-  let finalBrand = document.getElementById('insBrand').value;
-  if (finalBrand === 'อื่นๆ') finalBrand = document.getElementById('insBrandOther').value;
-  
-  const selectedEquip = [];
-  document.querySelectorAll('input[name="insEquip"]:checked').forEach(c => { selectedEquip.push(c.value); });
-  
-  const scoreDetails = {};
-  document.querySelectorAll('select[name="insDeduct"]').forEach(s => {
-    scoreDetails[s.getAttribute('data-id')] = Number(s.value);
-  });
-
-  const data = {
-    action: 'save_inspection',
-    appt_id: document.getElementById('inspectApptId').value,
-    estimated_price: Number(document.getElementById('inspectEstPrice').value),
-    brand: finalBrand,
-    date_code: document.getElementById('insDateCode').value,
-    declaration: document.querySelector('input[name="insDeclaration"]:checked').value,
-    inspector: document.getElementById('insInspector').value,
-    equipment_summary: selectedEquip.join(', ') || 'ไม่มีอุปกรณ์เสริม',
-    equipment_notes: document.getElementById('insEquipmentNotes').value,
-    score_details: scoreDetails,
-    total_score: score,
-    final_condition: cond,
-    general_notes: notes
-  };
-
-  showLoading('กำลังบันทึกใบตรวจสภาพ...');
-  fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
-  .then(res => res.json())
-  .then(res => {
-    if (res.status === 'success') {
-      showToast('success', 'บันทึกใบตรวจสภาพและปิดเคสเรียบร้อย!');
-      closeModal('inspectModal');
-      fetchDashboardData();
-    } else {
-      showToast('error', res.message);
-    }
-  })
-  .catch(() => showToast('error', 'บันทึกข้อมูลขัดข้อง'))
-  .finally(hideLoading);
+  container.innerHTML = customers.map(c => {
+    const total = c.records.filter(r => r.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,r) => s + Number(r.estimated_price||0), 0);
+    const cancelCnt = c.records.filter(r => r.appt_status === 'ยกเลิก').length;
+    const risk = cancelCnt >= 3 ? 'high' : cancelCnt >= 1 ? 'mid' : total >= 500000 ? 'vip' : 'low';
+    const riskLabel = { high:'ความเสี่ยงสูง', mid:'ความเสี่ยงกลาง', low:'ความเสี่ยงต่ำ', vip:'VIP' }[risk];
+    const riskCls = { high:'risk-high', mid:'risk-mid', low:'risk-low', vip:'risk-vip' }[risk];
+    return `
+      <div class="customer-card">
+        <div class="customer-card-header">
+          <div>
+            <div class="customer-card-name">${c.name}</div>
+            <div class="customer-card-phone">📞 ${c.phone}</div>
+          </div>
+          <span class="risk-badge ${riskCls}">${riskLabel}</span>
+        </div>
+        <div class="customer-stats">
+          <div class="cstat">
+            <div class="cstat-label">จำนวนครั้งที่มา</div>
+            <div class="cstat-value">${c.records.length} ครั้ง</div>
+          </div>
+          <div class="cstat">
+            <div class="cstat-label">ยอดรับซื้อรวม</div>
+            <div class="cstat-value" style="color:var(--gold)">฿${total.toLocaleString('th-TH')}</div>
+          </div>
+          <div class="cstat">
+            <div class="cstat-label">ยกเลิก</div>
+            <div class="cstat-value" style="color:${cancelCnt>0?'var(--red)':'var(--green)'}">${cancelCnt} ครั้ง</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
-function filterHistoryTable() {
-  const query = document.getElementById('searchHistory').value.toLowerCase();
-  const rows = document.querySelectorAll('#historyTableBody tr');
-  rows.forEach(r => {
-    if (r.children.length < 2) return;
-    r.style.display = r.textContent.toLowerCase().includes(query) ? '' : 'none';
-  });
+// =============================================
+// SETTINGS
+// =============================================
+function saveSettings() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  const pass = document.getElementById('newPass').value.trim();
+  if (url) { SCRIPT_URL = url; localStorage.setItem('scriptUrl', url); }
+  if (pass) { localStorage.setItem('appPass', pass); }
+  showToast('success', '✅ บันทึกการตั้งค่าเรียบร้อยแล้ว!');
+  if (url) loadAppointments();
 }
 
+// =============================================
+// UI HELPERS
+// =============================================
+function showTab(tab, mobileBtn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  const desktopBtns = document.querySelectorAll('.tab-btn');
+  const tabOrder = ['appt','history','settings'];
+  const idx = tabOrder.indexOf(tab);
+  if (desktopBtns[idx]) desktopBtns[idx].classList.add('active');
+  if (mobileBtn) mobileBtn.classList.add('active');
+  if (tab === 'history') loadHistory();
+}
+
+function updateStats(data) {
+  if (!data) return;
+  const appts = data.appointments || [];
+  const today = new Date().toISOString().split('T')[0];
+  const todayAppts = appts.filter(a => a.date === today);
+  document.getElementById('stat-appts').textContent = todayAppts.length;
+}
+
+let toastTimer;
 function showToast(type, msg) {
   const t = document.getElementById('toast');
-  document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
-  document.getElementById('toastText').textContent = msg;
+  const icon = document.getElementById('toastIcon');
+  const text = document.getElementById('toastText');
   t.className = 'toast toast-' + type + ' show';
+  icon.textContent = type === 'success' ? '✅' : '❌';
+  text.textContent = msg;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 }
+
+document.getElementById('inspectModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('inspectModal');
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
 </script>
 </body>
 </html>
