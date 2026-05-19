@@ -1,40 +1,116 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuxBuy — ระบบรับซื้อแบรนด์เนม</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --gold-dim: rgba(201,168,76,0.15);
-    --dark: #0D0D0D;
-    --dark2: #161616;
-    --dark3: #1F1F1F;
-    --dark4: #2A2A2A;
-    --text: #F0EDE8;
-    --text-muted: #8A8480;
-    --text-dim: #5A5550;
-    --green: #4CAF7A;
-    --orange: #E8943A;
-    --red: #E85A4A;
-    --blue: #4A8FE8;
-    --border: rgba(201,168,76,0.2);
-    --radius: 12px;
-    --radius-sm: 8px;
+// เพิ่มฟังก์ชันตรวจรับนี้ในไฟล์ Apps Script หลังบ้านของคุณ
+function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetAppt = ss.getSheetByName("Daily_Appointments");
+  var sheetInspect = ss.getSheetByName("Inspection_Records");
+  
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var action = data.action;
+    
+    // ดึงข้อมูลทั้งหมดส่งให้หน้าเว็บ
+    if (action === "get_all_data") {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        appointments: getRowsData(sheetAppt),
+        inspections: getRowsData(sheetInspect)
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // บันทึกนัดหมายคิวงานใหม่
+    if (action === "add_appointment") {
+      var newId = "APT-" + new Date().getTime(); // สร้าง ID เฉพาะ
+      sheetAppt.appendRow([
+        newId,
+        data.date,
+        data.time_slot,
+        data.customer_name,
+        data.customer_phone,
+        data.product_name,
+        data.estimated_price,
+        "รอเข้าพบ",
+        "ยังไม่จ่าย",
+        data.quantity || 1,
+        data.distance || "ระยะใกล้"
+      ]);
+      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // รองรับคำสั่งแก้ไขข้อมูลนัดหมาย (ตามข้อ 1)
+    if (action === "edit_appointment") {
+      var apptRows = sheetAppt.getDataRange().getValues();
+      for (var i = 1; i < apptRows.length; i++) {
+        if (apptRows[i][0] === data.appt_id) {
+          sheetAppt.getRange(i + 1, 2, 1, 6).setValues([[
+            data.date,
+            data.time_slot,
+            data.customer_name,
+            data.customer_phone,
+            data.product_name,
+            data.estimated_price
+          ]]);
+          sheetAppt.getRange(i + 1, 10, 1, 2).setValues([[
+            data.quantity,
+            data.distance
+          ]]);
+          break;
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // อัปเดตสถานะการเงิน/งานประจำแถว
+    if (action === "update_status") {
+      var apptRows = sheetAppt.getDataRange().getValues();
+      var colIdx = (data.field === "appt_status") ? 8 : 9;
+      for (var i = 1; i < apptRows.length; i++) {
+        if (apptRows[i][0] === data.appt_id) {
+          sheetAppt.getRange(i + 1, colIdx).setValue(data.value);
+          break;
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // บันทึกใบตรวจรับสภาพ
+    if (action === "save_inspection") {
+      sheetInspect.appendRow([
+        data.appt_id,
+        data.brand,
+        data.date_code,
+        data.declaration,
+        data.inspector,
+        new Date().toISOString().split('T')[0],
+        data.equipment_summary,
+        data.equipment_notes,
+        JSON.stringify(data.score_details),
+        data.total_score,
+        data.final_condition,
+        data.general_notes
+      ]);
+      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()})).setMimeType(ContentService.MimeType.JSON);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
-  body { background-color: var(--dark); color: var(--text); padding-bottom: 70px; }
-  .login-screen { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-  .login-box { background: var(--dark2); padding: 40px; border-radius: var(--radius); border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
-  .login-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); margin-bottom: 24px; }
-  .input-group { margin-bottom: 20px; text-align: left; }
-  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-  .input-ctrl { width: 100%; background: var(--dark3); border: 1px solid var(--dark4); border-radius: var(--radius-sm); padding: 12px 16px; color: var(--text); font-size: 1rem; transition: all 0.2s; }
-  .input-ctrl:focus { outline: none; border-color: var(--gold); background: var(--dark4); }
-  .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: var(--radius-sm); padding: 12px 24px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
+}
+
+// ฟังก์ชันแปลงข้อมูลในชีตให้เป็นก้อน Array Object ส่งกลับมาหน้าบ้าน
+function getRowsData(sheet) {
+  var rows = sheet.getDataRange().getValues();
+  if (rows.length <= 1) return [];
+  var headers = rows[0];
+  var result = [];
+  for (var i = 1; i < rows.length; i++) {
+    var obj = {};
+    for (var j = 0; j < headers.length; j++) {
+      obj[headers[j]] = rows[i][j];
+    }
+    result.push(obj);
+  }
+  return result;
+}  .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: var(--radius-sm); padding: 12px 24px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
   .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
   .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
   header { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 20px; sticky: top; top: 0; z-index: 100; }
