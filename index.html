@@ -34,7 +34,1166 @@
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
+    padding-bottom: 70px; /* เผื่อพื้นที่ให้โมบายแท็บด้านล่าง */
   }
+
+  /* === TOP BAR === */
+  #topBar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; align-items: center; gap: 24px; height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--gold);
+    letter-spacing: 3px; white-space: nowrap;
+  }
+  .logo span { font-size: 11px; display: block; color: var(--text-muted); letter-spacing: 2px; margin-top: -2px; }
+
+  /* Budget Bar */
+  .budget-wrap {
+    flex: 1; display: flex; align-items: center; gap: 12px;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: 30px; padding: 8px 16px;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .budget-wrap:hover { border-color: var(--gold); }
+  .budget-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .budget-bar-outer {
+    flex: 1; height: 6px; background: var(--dark4);
+    border-radius: 4px; overflow: hidden;
+  }
+  .budget-bar-inner {
+    height: 100%; border-radius: 4px;
+    background: var(--green);
+    transition: width 0.6s ease, background 0.4s;
+  }
+  .budget-amount {
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+    color: var(--gold);
+  }
+  .budget-sub { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+  .budget-alert {
+    background: var(--red); color: white;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px;
+    display: none; white-space: nowrap;
+  }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-left: auto; }
+  .tab-btn {
+    padding: 8px 20px; border-radius: 30px;
+    background: transparent; border: 1px solid transparent;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); border-color: var(--border); }
+  .tab-btn.active {
+    background: var(--gold-dim); border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* === MAIN CONTENT === */
+  .tab-content { display: none; padding: 32px; max-width: 1400px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  /* === SECTION HEADERS === */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--text);
+  }
+  .section-title span { color: var(--gold); }
+  .section-date {
+    font-size: 12px; color: var(--text-muted);
+    background: var(--dark2); border: 1px solid var(--border);
+    padding: 6px 14px; border-radius: 20px;
+  }
+
+  /* === BUTTONS === */
+  .btn {
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    border: none; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-gold { background: var(--gold); color: var(--dark); }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-outline {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* === APPOINTMENT TABLE === */
+  .appt-table-wrap {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .appt-table { width: 100%; border-collapse: collapse; }
+  .appt-table th {
+    padding: 14px 20px; text-align: left;
+    font-size: 11px; font-weight: 600;
+    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+    background: var(--dark3); border-bottom: 1px solid var(--border);
+  }
+  .appt-table td {
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px; vertical-align: middle;
+  }
+  .appt-table tr:last-child td { border-bottom: none; }
+  .appt-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .time-slot {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; color: var(--gold);
+  }
+  .customer-name { font-weight: 500; }
+  .customer-phone { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .product-text { font-size: 13px; color: var(--text-muted); }
+  .price-text { font-weight: 600; color: var(--text); }
+
+  /* Status Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+  .badge-wait { background: rgba(90,85,80,0.3); color: var(--text-muted); border: 1px solid var(--dark4); }
+  .badge-wait::before { background: var(--text-dim); }
+  .badge-arrived { background: rgba(74,143,232,0.15); color: var(--blue); border: 1px solid rgba(74,143,232,0.3); }
+  .badge-arrived::before { background: var(--blue); }
+  .badge-done { background: rgba(76,175,122,0.15); color: var(--green); border: 1px solid rgba(76,175,122,0.3); }
+  .badge-done::before { background: var(--green); }
+  .badge-cancel { background: rgba(232,90,74,0.15); color: var(--red); border: 1px solid rgba(232,90,74,0.3); }
+  .badge-cancel::before { background: var(--red); }
+  .badge-pay-no { background: rgba(90,85,80,0.3); color: var(--text-muted); border: 1px solid var(--dark4); }
+  .badge-pay-no::before { background: var(--text-dim); }
+  .badge-pay-sending { background: rgba(232,148,58,0.15); color: var(--orange); border: 1px solid rgba(232,148,58,0.3); }
+  .badge-pay-sending::before { background: var(--orange); }
+  .badge-pay-done { background: rgba(76,175,122,0.15); color: var(--green); border: 1px solid rgba(76,175,122,0.3); }
+  .badge-pay-done::before { background: var(--green); }
+
+  .actions { display: flex; gap: 8px; align-items: center; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center; padding: 64px 20px;
+    color: var(--text-dim);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+  .empty-state p { font-size: 14px; }
+
+  /* === ADD APPOINTMENT FORM === */
+  .form-card {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+    margin-bottom: 28px;
+  }
+  .form-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; color: var(--gold);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+  .form-control {
+    padding: 12px 14px;
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-control:focus { border-color: var(--gold); }
+  .form-control option { background: var(--dark3); }
+  .form-actions { display: flex; gap: 12px; margin-top: 20px; align-items: center; }
+  .budget-warning-inline {
+    color: var(--red); font-size: 13px; display: none;
+    background: rgba(232,90,74,0.1); border: 1px solid rgba(232,90,74,0.3);
+    padding: 8px 14px; border-radius: var(--radius-sm); flex: 1;
+  }
+
+  /* === MODAL === */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: 20px; width: 100%; max-width: 680px;
+    max-height: 90vh; overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; color: var(--gold);
+  }
+  .modal-close {
+    background: var(--dark3); border: 1px solid var(--border);
+    color: var(--text-muted); width: 32px; height: 32px;
+    border-radius: 50%; cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--gold); }
+  .modal-body { padding: 24px 28px; }
+  .modal-footer {
+    padding: 20px 28px; border-top: 1px solid var(--border);
+    display: flex; gap: 12px; align-items: center; justify-content: space-between;
+  }
+
+  /* Score display in modal */
+  .score-display {
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .score-number { font-family: 'Playfair Display', serif; font-size: 48px; color: var(--gold); }
+  .score-grade {
+    font-size: 13px; font-weight: 600; padding: 6px 16px;
+    border-radius: 20px; text-align: center;
+  }
+  .grade-N { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid var(--gold); }
+  .grade-S { background: rgba(74,143,232,0.2); color: var(--blue); border: 1px solid var(--blue); }
+  .grade-A { background: rgba(76,175,122,0.2); color: var(--green); border: 1px solid var(--green); }
+  .grade-B { background: rgba(232,148,58,0.2); color: var(--orange); border: 1px solid var(--orange); }
+
+  .inspect-group { margin-bottom: 14px; }
+  .inspect-group label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+  .inspect-group .options { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt-btn {
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--text-muted); font-size: 12px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .opt-btn:hover { border-color: var(--gold-light); color: var(--text); }
+  .opt-btn.selected { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+  .equipment-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-bottom: 16px;
+  }
+  .equip-item {
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .equip-label { font-size: 13px; }
+  .toggle-wrap { display: flex; gap: 6px; }
+  .toggle-btn {
+    padding: 3px 10px; border-radius: 12px; font-size: 11px;
+    border: 1px solid transparent; cursor: pointer; transition: all 0.2s;
+    background: transparent;
+  }
+  .toggle-btn.yes { border-color: var(--green); color: var(--green); }
+  .toggle-btn.yes.active { background: var(--green); color: var(--dark); }
+  .toggle-btn.no { border-color: var(--red); color: var(--red); }
+  .toggle-btn.no.active { background: var(--red); color: white; }
+
+  /* Info banner in inspect */
+  .info-banner {
+    background: var(--dark3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    display: flex; gap: 12px; margin-bottom: 20px;
+    align-items: flex-start; font-size: 13px;
+  }
+  .info-banner .icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .info-banner .info-name { font-weight: 600; color: var(--text); }
+  .info-banner .info-detail { color: var(--text-muted); font-size: 12px; }
+
+  .used-warning {
+    background: rgba(232,90,74,0.1); border: 1px solid rgba(232,90,74,0.3);
+    border-radius: var(--radius-sm); padding: 12px 16px;
+    color: var(--red); font-size: 13px; margin-top: 16px; display: none;
+  }
+
+  /* Divider */
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+  .form-section-title {
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+  }
+
+  /* === DASHBOARD / HISTORY === */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--gold); }
+  .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .search-bar {
+    display: flex; gap: 12px; margin-bottom: 24px; align-items: center;
+  }
+  .search-input-wrap { position: relative; flex: 1; }
+  .search-input-wrap .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); font-size: 16px; pointer-events: none;
+  }
+  .search-input {
+    width: 100%; padding: 12px 14px 12px 42px;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+
+  .customer-card {
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px;
+    margin-bottom: 16px; transition: border-color 0.2s;
+  }
+  .customer-card:hover { border-color: var(--gold); }
+  .customer-card-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .customer-card-name { font-weight: 600; font-size: 16px; }
+  .customer-card-phone { font-size: 13px; color: var(--text-muted); }
+  .risk-badge {
+    padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  }
+  .risk-vip { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid var(--gold); }
+  .risk-low { background: rgba(76,175,122,0.2); color: var(--green); border: 1px solid var(--green); }
+  .risk-mid { background: rgba(232,148,58,0.2); color: var(--orange); border: 1px solid var(--orange); }
+  .risk-high { background: rgba(232,90,74,0.2); color: var(--red); border: 1px solid var(--red); }
+  .customer-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .cstat { background: var(--dark3); border-radius: var(--radius-sm); padding: 12px 16px; }
+  .cstat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .cstat-value { font-weight: 600; font-size: 15px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9000;
+    background: var(--dark2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 20px;
+    display: flex; align-items: center; gap: 12px;
+    max-width: 360px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s ease; pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 20px; }
+  .toast-text { font-size: 14px; }
+  .toast-success { border-color: rgba(76,175,122,0.5); }
+  .toast-error { border-color: rgba(232,90,74,0.5); }
+
+  /* Loading spinner */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(201,168,76,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #topBar { padding: 0 16px; }
+    .tabs { display: none; }
+    .tab-content { padding: 16px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .equipment-grid { grid-template-columns: repeat(2,1fr); }
+    .customer-stats { grid-template-columns: 1fr 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Mobile bottom tabs */
+  .mobile-tabs {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: var(--dark2); border-top: 1px solid var(--border);
+    padding: 8px 0;
+  }
+  @media (max-width: 768px) { .mobile-tabs { display: flex; } }
+  .mobile-tab {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 8px; border: none; background: transparent;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; cursor: pointer; transition: color 0.2s;
+  }
+  .mobile-tab.active { color: var(--gold); }
+  .mobile-tab .icon { font-size: 20px; }
+
+  .config-note {
+    background: rgba(74,143,232,0.1); border: 1px solid rgba(74,143,232,0.3);
+    border-radius: var(--radius-sm); padding: 14px 18px;
+    font-size: 13px; color: var(--blue); margin-bottom: 24px;
+  }
+  .config-note strong { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div id="topBar">
+  <div class="logo">LUXBUY<span>BRAND BUYING SYSTEM</span></div>
+
+  <div class="budget-wrap" onclick="loadDashboard()" title="คลิกเพื่อรีเฟรชยอดงบ">
+    <span class="budget-label">วงเงินวันนี้</span>
+    <div class="budget-bar-outer">
+      <div class="budget-bar-inner" id="budgetBar" style="width:0%"></div>
+    </div>
+    <span class="budget-amount" id="budgetAmt">฿0</span>
+    <span class="budget-sub">/ ฿2,000,000</span>
+    <span class="budget-alert" id="budgetAlert">⚠ เกินวงเงิน</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('appt')">📋 ตารางนัด</button>
+    <button class="tab-btn" onclick="showTab('history')">📊 ประวัติ</button>
+    <button class="tab-btn" onclick="showTab('settings')">⚙️ ตั้งค่า</button>
+  </div>
+</div>
+
+<div class="tab-content active" id="tab-appt">
+
+  <div class="form-card">
+    <div class="form-card-title">➕ เพิ่มนัดหมายใหม่</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>ชื่อลูกค้า</label>
+        <input class="form-control" id="f_name" placeholder="เช่น คุณสมชาย">
+      </div>
+      <div class="form-group">
+        <label>เบอร์โทร</label>
+        <input class="form-control" id="f_phone" placeholder="0812345678">
+      </div>
+      <div class="form-group">
+        <label>วันที่นัด</label>
+        <input class="form-control" id="f_date" type="date">
+      </div>
+      <div class="form-group">
+        <label>เวลานัด</label>
+        <input class="form-control" id="f_time" type="time">
+      </div>
+      <div class="form-group" style="grid-column: span 2">
+        <label>ชื่อสินค้า / รุ่น</label>
+        <input class="form-control" id="f_product" placeholder="เช่น Chanel Classic Flap Medium">
+      </div>
+      <div class="form-group">
+        <label>ราคาประมาณ (บาท)</label>
+        <input class="form-control" id="f_price" type="number" placeholder="เช่น 85000" oninput="checkBudgetLive()">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-gold" id="addApptBtn" onclick="addAppointment()">
+        <span class="spinner" id="addSpinner" style="display:none"></span>
+        บันทึกนัดหมาย
+      </button>
+      <div class="budget-warning-inline" id="budgetWarnInline">
+        ⛔ ราคาที่กรอกจะทำให้วงเงินวันนี้เกิน 2,000,000 บาท
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">ตารางนัด <span>วันนี้</span></div>
+    <div class="section-date" id="todayDate">—</div>
+  </div>
+
+  <div class="appt-table-wrap">
+    <table class="appt-table">
+      <thead>
+        <tr>
+          <th>เวลา</th>
+          <th>ลูกค้า</th>
+          <th>สินค้า</th>
+          <th>ราคา</th>
+          <th>สถานะนัด</th>
+          <th>สถานะเงิน</th>
+          <th>การดำเนินการ</th>
+        </tr>
+      </thead>
+      <tbody id="apptTbody">
+        <tr><td colspan="7"><div class="empty-state"><div class="spinner"></div><p style="margin-top:12px">กำลังโหลดข้อมูล...</p></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-history">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card">
+      <div class="stat-label">นัดวันนี้</div>
+      <div class="stat-value" id="stat-appts">—</div>
+      <div class="stat-sub">รายการ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ยอดรับซื้อวันนี้</div>
+      <div class="stat-value" id="stat-spend">—</div>
+      <div class="stat-sub">บาท</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">สำเร็จแล้ว</div>
+      <div class="stat-value" id="stat-done">—</div>
+      <div class="stat-sub">รายการ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ยอดรวมทั้งหมด</div>
+      <div class="stat-value" id="stat-total">—</div>
+      <div class="stat-sub">บาท (ทุกเคส)</div>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" placeholder="ค้นหาจากชื่อหรือเบอร์โทรลูกค้า..." oninput="searchCustomer()">
+    </div>
+    <button class="btn btn-outline" onclick="loadHistory()">รีเฟรช</button>
+  </div>
+
+  <div id="historyResults">
+    <div class="empty-state" style="padding:40px 0">
+      <div class="icon">🔍</div>
+      <p>พิมพ์ค้นหาลูกค้า หรือกด รีเฟรช เพื่อดูข้อมูลทั้งหมด</p>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-settings">
+  <div class="section-header">
+    <div class="section-title">⚙️ ตั้งค่า <span>ระบบ</span></div>
+  </div>
+
+  <div class="config-note">
+    📌 <strong>ขั้นตอนแรก:</strong> ใส่ URL ของ Google Apps Script ที่ Deploy แล้วด้านล่าง แล้วกด "บันทึก" — ระบบจะเชื่อมต่อกับ Google Sheets ทันที
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-title">🔗 เชื่อมต่อ Google Apps Script</div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label>Google Apps Script Web App URL</label>
+      <input class="form-control" id="scriptUrl" placeholder="https://script.google.com/macros/s/XXXX/exec">
+    </div>
+    <button class="btn btn-gold" onclick="saveSettings()">💾 บันทึกการตั้งค่า</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inspectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🔍 ตรวจสภาพสินค้า</div>
+      <button class="modal-close" onclick="closeModal('inspectModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-banner">
+        <div class="icon">👤</div>
+        <div>
+          <div class="info-name" id="modal_custName">—</div>
+          <div class="info-detail" id="modal_custDetail">—</div>
+        </div>
+      </div>
+
+      <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom:16px;">
+        <div class="form-group">
+          <label>ชื่อพนักงานผู้ตรวจ</label>
+          <input class="form-control" id="m_inspector" placeholder="ชื่อพนักงาน">
+        </div>
+        <div class="form-group">
+          <label>Date Code / ปีผลิต</label>
+          <input class="form-control" id="m_datecode" placeholder="เช่น 2021, 30XXXXXX">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>สภาพตามลูกค้าแจ้ง</label>
+        <select class="form-control" id="m_declaration">
+          <option value="ไม่เคยใช้งาน">ไม่เคยใช้งาน</option>
+          <option value="ผ่านการใช้งาน">ผ่านการใช้งาน</option>
+        </select>
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">อุปกรณ์ที่ได้รับ</div>
+
+      <div class="equipment-grid">
+        <div class="equip-item">
+          <span class="equip-label">ใบเสร็จ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'receipt','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'receipt','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">กล่อง</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'box','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'box','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">ถุงผ้า</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'dustbag','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'dustbag','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">การ์ด</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'card','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'card','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">คู่มือ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'manual','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'manual','no')">ไม่มี</button>
+          </div>
+        </div>
+        <div class="equip-item">
+          <span class="equip-label">ล็อคกุญแจ</span>
+          <div class="toggle-wrap">
+            <button class="toggle-btn yes" onclick="toggleEquip(this,'lock','yes')">มี</button>
+            <button class="toggle-btn no" onclick="toggleEquip(this,'lock','no')">ไม่มี</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>หมายเหตุอุปกรณ์</label>
+        <input class="form-control" id="m_equip_note" placeholder="เช่น ใบเสร็จระบุ Saudi Arabia">
+      </div>
+
+      <hr class="divider">
+      <div class="form-section-title">ประเมินคะแนนสภาพ</div>
+
+      <div class="score-display">
+        <div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">คะแนนรวม</div>
+          <div class="score-number" id="scoreNum">0</div>
+          <div style="font-size:12px;color:var(--text-muted)">/ 100 คะแนน</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">เกรดสภาพ</div>
+          <div class="score-grade grade-B" id="scoreGrade">USED</div>
+        </div>
+      </div>
+
+      <div id="inspectCriteria"></div>
+
+      <div class="used-warning" id="usedWarning">
+        ⚠️ สินค้าได้คะแนนต่ำกว่า 75 — กรุณาระบุรายละเอียดเพิ่มเติมและความเสี่ยงด้านราคา
+        <textarea class="form-control" style="margin-top:8px;min-height:60px" id="m_risk_note" placeholder="ระบุเหตุผล / ความเสี่ยง..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('inspectModal')">ยกเลิก</button>
+      <button class="btn btn-gold" id="saveInspectBtn" onclick="saveInspection()">
+        <span class="spinner" id="saveSpinner" style="display:none"></span>
+        💾 บันทึกผลตรวจ
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-tabs">
+  <button class="mobile-tab active" id="m-tab-appt" onclick="showTab('appt', this)">
+    <span class="icon">📋</span>ตารางนัด
+  </button>
+  <button class="mobile-tab" id="m-tab-history" onclick="showTab('history', this)">
+    <span class="icon">📊</span>ประวัติ
+  </button>
+  <button class="mobile-tab" id="m-tab-settings" onclick="showTab('settings', this)">
+    <span class="icon">⚙️</span>ตั้งค่า
+  </button>
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span class="toast-text" id="toastText"></span>
+</div>
+
+<script>
+const BUDGET_LIMIT = 2000000;
+
+// =============================================
+// STATE & CRITERIA (ใช้ Checklist เดิมตามรูปภาพ)
+// =============================================
+let SCRIPT_URL = localStorage.getItem('scriptUrl') || '';
+let currentApptId = null;
+let currentSpend = 0;
+let allAppointments = [];
+let equipState = {};
+let scoreState = {}; // จะเก็บรูปแบบ { smell: { label: 'ปกติ', score: 5 } }
+
+const ORIGINAL_CRITERIA = [
+  { key:'smell',    label:'กลิ่น',                  max:5,  opts:[['ปกติ',5], ['ไม่ปกติ',0]] },
+  { key:'corner',   label:'ขอบมุม',                max:15, opts:[['ไม่มีรอย',15], ['ขนแมวบางๆ',10], ['ถลอก/เล็บ',5]] },
+  { key:'stain',    label:'รอยเปื้อน (ปากกา/คราบน้ำ)',max:15, opts:[['ไม่มีรอย',15], ['เล็ก 1-2 จุด',10], ['ใหญ่ 3+ จุด',5]] },
+  { key:'scratch',  label:'ถลอก/เหนียว',            max:15, opts:[['ไม่มีรอย',15], ['1-2 จุด',10], ['3+ จุด',5]] },
+  { key:'glue',     label:'กาวซึม',                max:10, opts:[['ไม่มีรอย',10], ['1-2 จุด',5], ['3+ จุด',0]] },
+  { key:'press',    label:'รอยกดทับ',               max:15, opts:[['ไม่มีรอย',15], ['1-2 จุด',10], ['3+ จุด',5]] },
+  { key:'oxidize',  label:'ออกซิไดซ์',              max:15, opts:[['ไม่มีรอย',15], ['มี',5]] }
+];
+
+window.onload = function() {
+  const today = new Date();
+  document.getElementById('todayDate').textContent = today.toLocaleDateString('th-TH', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  document.getElementById('f_date').value = today.toISOString().split('T')[0];
+  document.getElementById('f_time').value = '10:00';
+  document.getElementById('scriptUrl').value = SCRIPT_URL;
+  
+  loadAppointments();
+};
+
+async function apiCall(data) {
+  if (!SCRIPT_URL) {
+    showToast('error', '⚠️ กรุณาตั้งค่า URL ของ Google Apps Script ในหน้า ⚙️ ตั้งค่า ก่อน');
+    return null;
+  }
+  try {
+    const resp = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return await resp.json();
+  } catch(e) {
+    showToast('error', '❌ ไม่สามารถเชื่อมต่อ Google Sheets ได้: ' + e.message);
+    return null;
+  }
+}
+
+async function loadDashboard() {
+  const data = await apiCall({ action: 'get_dashboard_data' });
+  if (data && data.status === 'success') {
+    currentSpend = data.today_spend || 0;
+    updateBudgetBar();
+    allAppointments = data.appointments || [];
+    renderTable(allAppointments);
+  }
+}
+
+function updateBudgetBar() {
+  const pct = Math.min((currentSpend / BUDGET_LIMIT) * 100, 100);
+  const bar = document.getElementById('budgetBar');
+  const amt = document.getElementById('budgetAmt');
+  const alert = document.getElementById('budgetAlert');
+  bar.style.width = pct + '%';
+  amt.textContent = '฿' + currentSpend.toLocaleString('th-TH');
+  if (pct >= 100) { bar.style.background = 'var(--red)'; alert.style.display = 'block'; }
+  else if (pct >= 90) { bar.style.background = 'var(--red)'; alert.style.display = 'none'; }
+  else if (pct >= 75) { bar.style.background = 'var(--orange)'; alert.style.display = 'none'; }
+  else { bar.style.background = 'var(--green)'; alert.style.display = 'none'; }
+}
+
+function checkBudgetLive() {
+  const price = Number(document.getElementById('f_price').value) || 0;
+  const btn = document.getElementById('addApptBtn');
+  const warn = document.getElementById('budgetWarnInline');
+  const today = document.getElementById('f_date').value === new Date().toISOString().split('T')[0];
+  if (today && currentSpend + price > BUDGET_LIMIT) {
+    btn.disabled = true;
+    warn.style.display = 'block';
+  } else {
+    btn.disabled = false;
+    warn.style.display = 'none';
+  }
+}
+
+async function loadAppointments() {
+  await loadDashboard();
+}
+
+function renderTable(appts) {
+  const tbody = document.getElementById('apptTbody');
+  if (!appts || appts.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <div class="icon">📋</div><p>ไม่มีนัดหมายสำหรับวันนี้</p>
+    </div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = appts.map(a => `
+    <tr>
+      <td><div class="time-slot">${a.time_slot || '—'}</div></td>
+      <td>
+        <div class="customer-name">${a.customer_name || '—'}</div>
+        <div class="customer-phone">${a.customer_phone || ''}</div>
+      </td>
+      <td><div class="product-text">${a.product_name || '—'}</div></td>
+      <td><div class="price-text">฿${Number(a.estimated_price||0).toLocaleString('th-TH')}</div></td>
+      <td>${renderApptBadge(a.appt_status, a.appt_id)}</td>
+      <td>${renderPayBadge(a.payment_status, a.appt_id)}</td>
+      <td>
+        <div class="actions">
+          <button class="btn btn-outline btn-sm" onclick="openInspect('${a.appt_id}','${a.customer_name}','${a.customer_phone}','${a.product_name}')">
+            🔍 ตรวจสินค้า
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderApptBadge(status, id) {
+  const map = {
+    'รอเข้าพบ': ['badge-wait','รอเข้าพบ','มาตามนัด'],
+    'มาตามนัด': ['badge-arrived','มาตามนัด','สำเร็จ'],
+    'สำเร็จ': ['badge-done','สำเร็จ',null],
+    'ยกเลิก': ['badge-cancel','ยกเลิก',null],
+  };
+  const s = status || 'รอเข้าพบ';
+  const [cls, label, next] = map[s] || ['badge-wait','รอเข้าพบ','มาตามนัด'];
+  const click = next ? `onclick="updateStatus('${id}','appt_status','${next}')"` : '';
+  const title = next ? `title="กดเพื่อเปลี่ยนเป็น: ${next}"` : '';
+  return `<span class="badge ${cls}" ${click} ${title}>${label}${next?'  →':''}</span>`;
+}
+
+function renderPayBadge(status, id) {
+  const map = {
+    'ยังไม่จ่าย': ['badge-pay-no','ยังไม่จ่าย','กำลังโอนเงิน'],
+    'กำลังโอนเงิน': ['badge-pay-sending','กำลังโอนเงิน','จ่ายเงินสำเร็จ'],
+    'จ่ายเงินสำเร็จ': ['badge-pay-done','จ่ายเงินสำเร็จ',null],
+  };
+  const s = status || 'ยังไม่จ่าย';
+  const [cls, label, next] = map[s] || ['badge-pay-no','ยังไม่จ่าย','กำลังโอนเงิน'];
+  const click = next ? `onclick="updateStatus('${id}','payment_status','${next}')"` : '';
+  const title = next ? `title="กดเพื่อเปลี่ยนเป็น: ${next}"` : '';
+  return `<span class="badge ${cls}" ${click} ${title}>${label}${next?'  →':''}</span>`;
+}
+
+async function addAppointment() {
+  const name = document.getElementById('f_name').value.trim();
+  const phone = document.getElementById('f_phone').value.trim();
+  const date = document.getElementById('f_date').value;
+  const time = document.getElementById('f_time').value;
+  const product = document.getElementById('f_product').value.trim();
+  const price = Number(document.getElementById('f_price').value) || 0;
+  if (!name || !phone || !date || !time || !product || !price) {
+    showToast('error', '⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    return;
+  }
+  const apptId = 'APT-' + date.replace(/-/g,'') + '-' + Date.now().toString().slice(-4);
+  const btn = document.getElementById('addApptBtn');
+  const spinner = document.getElementById('addSpinner');
+  btn.disabled = true; spinner.style.display = 'inline-block';
+  const res = await apiCall({
+    action: 'add_appointment',
+    appt_id: apptId,
+    date, time_slot: time,
+    customer_name: name,
+    customer_phone: phone,
+    product_name: product,
+    estimated_price: price,
+    appt_status: 'รอเข้าพบ',
+    payment_status: 'ยังไม่จ่าย'
+  });
+  btn.disabled = false; spinner.style.display = 'none';
+  if (res && res.status === 'success') {
+    showToast('success', '✅ เพิ่มนัดหมายเรียบร้อยแล้ว!');
+    document.getElementById('f_name').value = '';
+    document.getElementById('f_phone').value = '';
+    document.getElementById('f_product').value = '';
+    document.getElementById('f_price').value = '';
+    await loadAppointments();
+  }
+}
+
+async function updateStatus(id, field, value) {
+  const res = await apiCall({ action: 'update_status', appt_id: id, field, value });
+  if (res && res.status === 'success') {
+    showToast('success', `✅ อัปเดตสถานะเป็น "${value}" แล้ว`);
+    await loadAppointments();
+  }
+}
+
+// =============================================
+// INSPECT MODAL
+// =============================================
+function openInspect(id, name, phone, product) {
+  currentApptId = id;
+  equipState = { receipt:'no', box:'no', dustbag:'no', card:'no', manual:'no', lock:'no' };
+  scoreState = {};
+  
+  // ตั้งค่าเริ่มต้นคะแนนเต็มทุกลักษณะงานก่อน
+  ORIGINAL_CRITERIA.forEach(item => {
+    scoreState[item.key] = { label: item.opts[0][0], score: item.opts[0][1] };
+  });
+
+  document.getElementById('modal_custName').textContent = name;
+  document.getElementById('modal_custDetail').textContent = `${phone} · ${product} (ID: ${id})`;
+  document.getElementById('m_inspector').value = '';
+  document.getElementById('m_datecode').value = '';
+  document.getElementById('m_equip_note').value = '';
+  document.getElementById('m_risk_note').value = '';
+  
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.toggle-btn.no').forEach(b => b.classList.add('active'));
+  
+  renderCriteria();
+  updateScore();
+  document.getElementById('inspectModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function renderCriteria() {
+  const container = document.getElementById('inspectCriteria');
+  container.innerHTML = ORIGINAL_CRITERIA.map(item => `
+    <div class="inspect-group">
+      <label>${item.label} <span style="color:var(--gold)">(${item.max} คะแนน)</span></label>
+      <div class="options">
+        ${item.opts.map(([optLabel, val]) => {
+          const isSelected = scoreState[item.key] && scoreState[item.key].score === val;
+          return `
+            <button class="opt-btn ${isSelected ? 'selected' : ''}" onclick="selectScore('${item.key}','${optLabel}',${val},this)">
+              ${optLabel} <span style="color:var(--text-dim)">(${val})</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectScore(key, optLabel, val, btn) {
+  scoreState[key] = { label: optLabel, score: val };
+  btn.closest('.options').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateScore();
+}
+
+function updateScore() {
+  const total = Object.values(scoreState).reduce((s,v) => s + v.score, 0);
+  document.getElementById('scoreNum').textContent = total;
+  let grade = 'USED', cls = 'grade-B';
+  if (total >= 95) { grade = 'NEW'; cls = 'grade-N'; }
+  else if (total >= 85) { grade = 'KEPT UNUSED'; cls = 'grade-S'; }
+  else if (total >= 75) { grade = 'LIKE NEW'; cls = 'grade-A'; }
+  
+  const g = document.getElementById('scoreGrade');
+  g.textContent = grade;
+  g.className = 'score-grade ' + cls;
+  document.getElementById('usedWarning').style.display = total < 75 ? 'block' : 'none';
+}
+
+function toggleEquip(btn, key, val) {
+  equipState[key] = val;
+  const wrap = btn.closest('.toggle-wrap');
+  wrap.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function saveInspection() {
+  const inspector = document.getElementById('m_inspector').value.trim();
+  if (!inspector) { showToast('error', '⚠️ กรุณาระบุชื่อพนักงานผู้ตรวจ'); return; }
+  
+  const total = Object.values(scoreState).reduce((s,v) => s + v.score, 0);
+  let grade = 'USED';
+  if (total >= 95) grade = 'NEW';
+  else if (total >= 85) grade = 'KEPT UNUSED';
+  else if (total >= 75) grade = 'LIKE NEW';
+
+  const equipSummary = Object.entries(equipState).map(([k,v]) => `${k}:${v}`).join(', ');
+  
+  // แปลงโครงสร้างคะแนนส่งหา Apps Script ในแบบที่ต้องการ { smell: 5, corner: 10 }
+  const backendScoreDetails = {};
+  Object.keys(scoreState).forEach(k => {
+    backendScoreDetails[k] = scoreState[k].score;
+  });
+
+  const btn = document.getElementById('saveInspectBtn');
+  const spinner = document.getElementById('saveSpinner');
+  btn.disabled = true; spinner.style.display = 'inline-block';
+
+  const currentAppt = allAppointments.find(a => a.appt_id === currentApptId);
+
+  const res = await apiCall({
+    action: 'save_inspection',
+    appt_id: currentApptId,
+    brand: currentAppt ? currentAppt.product_name : '',
+    date_code: document.getElementById('m_datecode').value,
+    declaration: document.getElementById('m_declaration').value,
+    inspector: inspector,
+    equipment_summary: equipSummary,
+    equipment_notes: document.getElementById('m_equip_note').value,
+    score_details: backendScoreDetails,
+    total_score: total,
+    final_condition: grade,
+    estimated_price: currentAppt ? currentAppt.estimated_price : 0
+  });
+  
+  btn.disabled = false; spinner.style.display = 'none';
+  if (res && res.status === 'success') {
+    showToast('success', `✅ บันทึกผลตรวจสำเร็จ — เกรด: ${grade} (${total} คะแนน)`);
+    closeModal('inspectModal');
+    await loadAppointments();
+  } else if (res && res.status === 'error') {
+    showToast('error', '❌ ' + res.message);
+  }
+}
+
+// =============================================
+// HISTORY
+// =============================================
+async function loadHistory() {
+  const res = await apiCall({ action: 'get_all_data' });
+  if (!res || res.status !== 'success') return;
+  const appts = res.appointments || [];
+  const today = new Date().toISOString().split('T')[0];
+
+  const todayAppts = appts.filter(a => a.date === today);
+  const todaySpend = todayAppts.filter(a => a.appt_status !== 'ยกเลิก').reduce((s,a) => s + Number(a.estimated_price||0), 0);
+  const doneCnt = todayAppts.filter(a => a.appt_status === 'สำเร็จ').length;
+  const totalAll = appts.filter(a => a.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,a) => s + Number(a.estimated_price||0), 0);
+
+  // ทำการเช็คก่อนว่า Element ปลายทางมีอยู่จริงไหม (เพื่อไม่ให้เกิด Bug ค้าง)
+  if(document.getElementById('stat-appts')) document.getElementById('stat-appts').textContent = todayAppts.length;
+  if(document.getElementById('stat-spend')) document.getElementById('stat-spend').textContent = '฿' + todaySpend.toLocaleString('th-TH');
+  if(document.getElementById('stat-done')) document.getElementById('stat-done').textContent = doneCnt;
+  if(document.getElementById('stat-total')) document.getElementById('stat-total').textContent = '฿' + totalAll.toLocaleString('th-TH');
+
+  renderCustomerCards(appts, '');
+}
+
+function searchCustomer() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  renderCustomerCards(allAppointments, q);
+}
+
+function renderCustomerCards(appts, q) {
+  const container = document.getElementById('historyResults');
+  if(!container) return;
+  
+  const map = {};
+  appts.forEach(a => {
+    const key = a.customer_phone || a.customer_name;
+    if (!map[key]) map[key] = { name: a.customer_name, phone: a.customer_phone, records: [] };
+    map[key].records.push(a);
+  });
+  let customers = Object.values(map);
+  if (q) customers = customers.filter(c => (c.name||'').toLowerCase().includes(q) || (c.phone||'').includes(q));
+  if (!customers.length) {
+    container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>ไม่พบข้อมูลลูกค้า</p></div>`;
+    return;
+  }
+  container.innerHTML = customers.map(c => {
+    const total = c.records.filter(r => r.payment_status === 'จ่ายเงินสำเร็จ').reduce((s,r) => s + Number(r.estimated_price||0), 0);
+    const cancelCnt = c.records.filter(r => r.appt_status === 'ยกเลิก').length;
+    const risk = cancelCnt >= 3 ? 'high' : cancelCnt >= 1 ? 'mid' : total >= 500000 ? 'vip' : 'low';
+    const riskLabel = { high:'ความเสี่ยงสูง', mid:'ความเสี่ยงกลาง', low:'ความเสี่ยงต่ำ', vip:'VIP' }[risk];
+    const riskCls = { high:'risk-high', mid:'risk-mid', low:'risk-low', vip:'risk-vip' }[risk];
+    return `
+      <div class="customer-card">
+        <div class="customer-card-header">
+          <div>
+            <div class="customer-card-name">${c.name}</div>
+            <div class="customer-card-phone">📞 ${c.phone}</div>
+          </div>
+          <span class="risk-badge ${riskCls}">${riskLabel}</span>
+        </div>
+        <div class="customer-stats">
+          <div class="cstat">
+            <div class="cstat-label">จำนวนครั้งที่มา</div>
+            <div class="cstat-value">${c.records.length} ครั้ง</div>
+          </div>
+          <div class="cstat">
+            <div class="cstat-label">ยอดรับซื้อรวม</div>
+            <div class="cstat-value" style="color:var(--gold)">฿${total.toLocaleString('th-TH')}</div>
+          </div>
+          <div class="cstat">
+            <div class="cstat-label">ยกเลิก</div>
+            <div class="cstat-value" style="color:${cancelCnt>0?'var(--red)':'var(--green)'}">${cancelCnt} ครั้ง</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// =============================================
+// SETTINGS
+// =============================================
+function saveSettings() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  if (url) { SCRIPT_URL = url; localStorage.setItem('scriptUrl', url); }
+  showToast('success', '✅ บันทึกการตั้งค่าเรียบร้อยแล้ว!');
+  if (url) loadAppointments();
+}
+
+// =============================================
+// UI HELPERS
+// =============================================
+function showTab(tab, mobileBtn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.mobile-tab').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById('tab-' + tab).classList.add('active');
+  
+  // จัดการแท็บ Desktop
+  const desktopBtns = document.querySelectorAll('.tab-btn');
+  const tabOrder = ['appt','history','settings'];
+  const idx = tabOrder.indexOf(tab);
+  if (desktopBtns[idx]) desktopBtns[idx].classList.add('active');
+  
+  // จัดการแท็บ Mobile
+  if (mobileBtn) {
+    mobileBtn.classList.add('active');
+  } else {
+    const mBtn = document.getElementById('m-tab-' + tab);
+    if (mBtn) mBtn.classList.add('active');
+  }
+  
+  if (tab === 'history') loadHistory();
+}
+
+let toastTimer;
+function showToast(type, msg) {
+  const t = document.getElementById('toast');
+  const icon = document.getElementById('toastIcon');
+  const text = document.getElementById('toastText');
+  t.className = 'toast toast-' + type + ' show';
+  icon.textContent = type === 'success' ? '✅' : '❌';
+  text.textContent = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+document.getElementById('inspectModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('inspectModal');
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>  }
 
   /* === TOP BAR === */
   #topBar {
