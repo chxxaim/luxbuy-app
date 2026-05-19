@@ -187,10 +187,7 @@
     font-weight: 700;
   }
   .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
-  .form-grid.items-grid { grid-template-columns: 1fr; }
-  .form-grid chanting { font-size: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.span2 { grid-column: span 2; }
   .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
   .form-control {
     padding: 11px 13px;
@@ -497,7 +494,6 @@
     .mobile-tabs { display: flex; }
     .tab-content { padding: 16px; }
     .form-grid { grid-template-columns: 1fr 1fr; }
-    .form-group.span2 { grid-column: span 2; }
     .equipment-grid { grid-template-columns: repeat(2,1fr); }
     .customer-stats { grid-template-columns: 1fr 1fr; }
     .stats-row { grid-template-columns: 1fr 1fr; }
@@ -505,7 +501,6 @@
   }
   @media (max-width: 480px) {
     .form-grid { grid-template-columns: 1fr; }
-    .form-group.span2 { grid-column: span 1; }
     .customer-stats { grid-template-columns: 1fr; }
     .equipment-grid { grid-template-columns: 1fr 1fr; }
   }
@@ -565,14 +560,6 @@
         <label>เวลานัด</label>
         <input class="form-control" id="f_time" type="time">
       </div>
-      <div class="form-group span2">
-        <label>ชื่อสินค้า / รุ่น (หากมีหลายชิ้นให้คั่นด้วยเครื่องหมายจุลภาค ,)</label>
-        <input class="form-control" id="f_product" placeholder="เช่น ชิ้นที่ 1, ชิ้นที่ 2">
-      </div>
-      <div class="form-group">
-        <label>ราคาประเมินรวมทั้งหมด (บาท)</label>
-        <input class="form-control" id="f_price" type="number" min="0" placeholder="เช่น 85000" oninput="checkBudgetLive()">
-      </div>
     </div>
     <div class="form-actions">
       <button class="btn btn-gold" id="addApptBtn" onclick="addAppointment()">
@@ -596,8 +583,8 @@
         <tr>
           <th>เวลา</th>
           <th>ลูกค้า</th>
-          <th>สินค้า</th>
-          <th>ราคา</th>
+          <th>สินค้าสรุป (จากใบตรวจ)</th>
+          <th>ราคาประเมินรวม</th>
           <th>สถานะนัด</th>
           <th>สถานะเงิน</th>
           <th>การดำเนินการ</th>
@@ -679,11 +666,11 @@
   <div class="form-card">
     <div class="form-card-title">📋 วิธีใช้งานเบื้องต้น</div>
     <div style="font-size:14px; line-height:2; color:var(--text-muted)">
-      <p>1. แท็บ <strong style="color:var(--text)">ตารางนัด</strong> → เพิ่มนัดหมายลูกค้าด้านบน</p>
+      <p>1. แท็บ <strong style="color:var(--text)">ตารางนัด</strong> → เพิ่มนัดหมายลูกค้าด้านบน (ไม่ต้องใส่ข้อมูลสินค้าล่วงหน้า)</p>
       <p>2. เมื่อลูกค้ามาถึง สามารถเลือกปรับสถานะนัดและเงินเป็นแบบ Dropdown ได้โดยตรงในตาราง</p>
-      <p>3. กดปุ่ม <strong style="color:var(--navy)">🔍 ตรวจสินค้า</strong> เพื่อประเมินและตรวจสภาพแบบรายชิ้น (รองรับหลายชิ้นพร้อมหน้ารวมสรุป)</p>
-      <p>4. เลือกหมวดสินค้าที่ต้องการตรวจ (รองรับ 4 ประเภท) → ระบบจะแสดงชุดอุปกรณ์ของสินค้านั้นให้โดยอัตโนมัติ</p>
-      <p>5. สามารถกดปุ่มตรวจสินค้าอีกครั้งเพื่อดูข้อมูลสรุปหรือกลับมาแก้ไขผลตรวจสภาพย้อนหลังได้ตลอดเวลา</p>
+      <p>3. กดปุ่ม <strong style="color:var(--navy)">🔍 ตรวจสินค้า</strong> เพื่อเริ่มกรอกประเมินสินค้า ข้อมูลสินค้าและราคาประเมินสุทธิจะลิ้งค์กลับมาแสดงบนตารางสรุปนัดหมายทันที</p>
+      <p>4. เลือกหมวดสินค้า (รองเท้า, กระเป๋า, Fine jewelry, acc อื่นๆ) → อุปกรณ์จะปรับเปลี่ยนตรงตามหมวดหมู่โดยอัตโนมัติ</p>
+      <p>5. สามารถกดปุ่มตรวจสินค้าอีกครั้ง เพื่อเพิ่มชิ้นที่ 2, 3, 4, 5+ หรือแก้ไขย้อนหลังได้ตลอดเวลา</p>
     </div>
   </div>
 </div>
@@ -741,17 +728,18 @@
       </div>
 
       <hr class="divider">
-      <div class="form-section-title">เลือกประเภทสินค้า</div>
+      <div class="form-section-title">ประเภทสินค้า</div>
       <div class="category-tabs">
-        <button class="cat-btn" id="cat_shoes" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
+        <button class="cat-btn active" id="cat_shoes" onclick="selectCategory('shoes',this)">👟 รองเท้า</button>
         <button class="cat-btn" id="cat_bag" onclick="selectCategory('bag',this)">👜 กระเป๋า</button>
         <button class="cat-btn" id="cat_jewelry" onclick="selectCategory('jewelry',this)">💎 Fine jewelry</button>
-        <button class="cat-btn" id="cat_acc" onclick="selectCategory('acc',this)">🧣 Acc อื่นๆ</button>
+        <button class="cat-btn" id="cat_acc" onclick="selectCategory('acc',this)">🧣 acc อื่นๆ</button>
       </div>
 
       <hr class="divider">
-      <div class="form-section-title">อุปกรณ์ที่ได้รับตามประเภทสินค้า</div>
-      <div class="equipment-grid" id="equipmentContainer"></div>
+      <div class="form-section-title">อุปกรณ์ที่ได้รับ (แยกตามประเภทสินค้า)</div>
+      <div class="equipment-grid" id="equipmentGridContainer">
+        </div>
 
       <div class="form-group" style="margin-bottom:16px">
         <label>หมายเหตุอุปกรณ์</label>
@@ -817,7 +805,7 @@
 
 <script>
 // =============================================
-// CONFIG — Script URL hardcoded
+// CONFIG
 // =============================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec';
 const BUDGET_LIMIT = 2000000;
@@ -829,9 +817,7 @@ const DEFAULT_PASS = 'luxbuy2025';
 let currentSpend    = 0;
 let allAppointments = [];
 let currentApptId   = null;
-let currentApptPrice = 0;
 
-// Multi-item data structures
 let inspectionItems = []; 
 let activeItemIndex = 0;
 
@@ -841,38 +827,13 @@ let currentCategory = 'shoes';
 let historyCache    = [];
 
 // =============================================
-// EQUIPMENT SCHEMAS PER CATEGORY
+// EQUIPMENT OPTIONS BY CATEGORY (ห้ามเปลี่ยนแปลงตามรูปแนบ)
 // =============================================
-const EQUIPMENT_SCHEMAS = {
-  shoes: [
-    { key: 'box', label: 'กล่อง' },
-    { key: 'dustbag', label: 'ถุงผ้า' },
-    { key: 'receipt', label: 'ใบเสร็จ' },
-    { key: 'extra_lace', label: 'เชือกสำรอง' },
-    { key: 'care_card', label: 'แคร์การ์ด/บุ๊ค' }
-  ],
-  bag: [
-    { key: 'box', label: 'กล่อง' },
-    { key: 'dustbag', label: 'ถุงผ้า' },
-    { key: 'receipt', label: 'ใบเสร็จ' },
-    { key: 'strap', label: 'สายสะพาย' },
-    { key: 'card', label: 'การ์ด/ชิป/เล่มบุ๊ค' },
-    { key: 'key_lock', label: 'กุญแจ/แม่กุญแจ' }
-  ],
-  jewelry: [
-    { key: 'box', label: 'กล่อง/กล่องนอก' },
-    { key: 'pouch', label: 'ถุงผ้า/เคสพกพา' },
-    { key: 'receipt', label: 'ใบเสร็จ' },
-    { key: 'cert', label: 'ใบเซอร์/การ์ดการันตี' },
-    { key: 'booklet', label: 'คู่มือ/เล่มบุ๊ค' }
-  ],
-  acc: [
-    { key: 'box', label: 'กล่อง' },
-    { key: 'dustbag', label: 'ถุงผ้า/ซองผ้า' },
-    { key: 'receipt', label: 'ใบเสร็จ' },
-    { key: 'tag', label: 'ป้ายแท็ก' },
-    { key: 'card_book', label: 'การ์ด/เล่มคู่มือ' }
-  ]
+const EQUIPMENT_OPTIONS = {
+  shoes: ['ใบเสร็จ', 'กล่อง', 'ถุงผ้า', 'ดันทรง'],
+  bag: ['ใบเสร็จ', 'กล่อง', 'ถุงผ้า', 'การ์ด', 'สายสะพาย', 'ถุงกระดาษ', 'ชุดกุญแจ', 'อินเสิร์ท'],
+  jewelry: ['ใบเสร็จ', 'กล่องนอก', 'กล่องใน', 'ใบเซอร์', 'ถุงกระดาษ'],
+  acc: ['ใบเสร็จ', 'กล่อง', 'ถุงผ้า', 'การ์ด', 'ถุงกระดาษ', 'สาย/สายสำรอง', 'อะไหล่สำรอง/ลิ้งค์ข้อ']
 };
 
 // =============================================
@@ -909,11 +870,11 @@ const CRITERIA = {
     { key:'oxidize', label:'ออกซิไดซ์',             max:20, opts:[['ไม่มี',20],['มี',0]] },
   ],
   acc: [
-    { key:'shape',   label:'รูปทรง/ความยืดหยุ่น',    max:20, opts:[['ปกติไม่ย้วย',20],['ย้วยเล็กน้อย',10],['ผิดรูปทรง',0]] },
-    { key:'hardware',label:'อะไหล่/กระดุม/ซิป',       max:20, opts:[['ใช้งานลื่นไหล',20],['ฝืดเล็กน้อย',10],['ชำรุด',0]] },
-    { key:'scratch', label:'รอยขีดข่วน/รอยเกี่ยว',    max:20, opts:[['ไม่มีรอย',20],['1-2 จุด',10],['3+ จุดขึ้นไป',0]] },
-    { key:'stain',   label:'คราบสกปรียบ/สีเฟด',      max:20, opts:[['สีสดไม่มีคราบ',20],['สีเฟด/คราบจาง',10],['คราบฝังลึก',0]] },
-    { key:'smell',   label:'กลิ่นอับ/น้ำหอมฉุน',      max:20, opts:[['กลิ่นปกติ',20],['มีกลิ่นอับ',10],['กลิ่นรุนแรง',0]] }
+    { key:'shape',   label:'ทรง/ความสมบูรณ์',        max:20, opts:[['ปกติ',20],['ด้ายรุ่ย/บิดเบี้ยว',10]] },
+    { key:'hardware',label:'ชิ้นส่วนอะไหล่/โลหะ',      max:20, opts:[['ไม่มีรอย',20],['ขนแมวบางๆ',10],['ขนแมวเยอะ',5]] },
+    { key:'scratch', label:'รอยถลอก/ขีดข่วน/เฟด',    max:20, opts:[['ไม่มีรอย',20],['มีรอยเล็กน้อย',10],['รอยชัดเจน',5]] },
+    { key:'stain',   label:'คราบเปื้อน/สิ่งสกปรก',    max:20, opts:[['ไม่มีคราบ',20],['คราบจางๆ',10],['คราบฝังลึก',5]] },
+    { key:'oxidize', label:'การเปลี่ยนสี/ออกซิไดซ์',   max:20, opts:[['ไม่มี',20],['มีคราบสนิม/เปลี่ยนสี',5]] },
   ]
 };
 
@@ -964,7 +925,7 @@ function toLocalDateStr(d) {
 function todayStr() { return toLocalDateStr(new Date()); }
 
 // =============================================
-// API CALL — POST to Google Apps Script
+// API CALL
 // =============================================
 async function apiCall(payload) {
   try {
@@ -989,8 +950,31 @@ async function apiCall(payload) {
 async function refreshBudget() {
   const data = await apiCall({ action: 'get_dashboard_data' });
   if (data && data.status === 'success') {
-    currentSpend    = Number(data.today_spend) || 0;
     allAppointments = data.appointments || [];
+    
+    // คำนวณยอดใช้วงเงินจริงรวมของวันนี้จากใบตรวจสภาพสินค้าใน LocalStorage (เพื่อให้ตารางหน้าแรกและ Budget Bar สอดคล้องกัน)
+    let dynamicTodaySpend = 0;
+    const today = todayStr();
+    
+    allAppointments.forEach(appt => {
+      if (appt.date === today && appt.appt_status !== 'ยกเลิก') {
+        const saved = localStorage.getItem('inspect_' + appt.appt_id);
+        if (saved) {
+          try {
+            const items = JSON.parse(saved);
+            const totalItemsPrice = items.reduce((s, i) => s + Number(i.price || 0), 0);
+            appt.estimated_price = totalItemsPrice;
+            appt.product_name = items.map(i => i.title || 'ไม่ระบุชื่อ').join(', ');
+          } catch(e) {}
+        } else {
+          appt.estimated_price = 0;
+          appt.product_name = 'รอตรวจสภาพ';
+        }
+        dynamicTodaySpend += Number(appt.estimated_price || 0);
+      }
+    });
+
+    currentSpend = dynamicTodaySpend;
     updateBudgetBar();
     renderTable(allAppointments);
   }
@@ -1012,15 +996,6 @@ function updateBudgetBar() {
   } else {
     bar.style.background = 'var(--navy)'; alert.style.display = 'none';
   }
-}
-
-function checkBudgetLive() {
-  const price  = Number(document.getElementById('f_price').value) || 0;
-  const fdate  = document.getElementById('f_date').value;
-  const isToday = fdate === todayStr();
-  const over   = isToday && (currentSpend + price > BUDGET_LIMIT);
-  document.getElementById('addApptBtn').disabled = over;
-  document.getElementById('budgetWarnInline').style.display = over ? 'block' : 'none';
 }
 
 // =============================================
@@ -1055,7 +1030,7 @@ function renderTable(appts) {
         <div class="customer-name">${esc(a.customer_name||'—')}</div>
         <div class="customer-phone">${esc(a.customer_phone||'')}</div>
       </td>
-      <td><div class="product-text">${esc(a.product_name||'—')}</div></td>
+      <td><div class="product-text" style="font-weight: 500; color: ${a.product_name === 'รอตรวจสภาพ' ? 'var(--text-muted)' : 'var(--navy)'};">${esc(a.product_name || 'รอตรวจสภาพ')}</div></td>
       <td><div class="price-text">฿${Number(a.estimated_price||0).toLocaleString('th-TH')}</div></td>
       <td>${renderApptDropdown(a.appt_status, a.appt_id)}</td>
       <td>${renderPayDropdown(a.payment_status, a.appt_id)}</td>
@@ -1112,14 +1087,9 @@ async function addAppointment() {
   const phone   = document.getElementById('f_phone').value.trim();
   const date    = document.getElementById('f_date').value;
   const time    = document.getElementById('f_time').value;
-  const product = document.getElementById('f_product').value.trim();
-  const price   = Number(document.getElementById('f_price').value) || 0;
 
-  if (!name || !phone || !date || !time || !product || !price) {
+  if (!name || !phone || !date || !time) {
     showToast('error','⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง'); return;
-  }
-  if (price <= 0) {
-    showToast('error','⚠️ ราคาต้องมากกว่า 0'); return;
   }
 
   const apptId = 'APT-' + date.replace(/-/g,'') + '-' + Date.now().toString().slice(-5);
@@ -1131,15 +1101,14 @@ async function addAppointment() {
     action: 'add_appointment',
     appt_id: apptId, date, time_slot: time,
     customer_name: name, customer_phone: phone,
-    product_name: product, estimated_price: price,
+    product_name: 'รอตรวจสภาพ', estimated_price: 0,
     appt_status: 'รอเข้าพบ', payment_status: 'ยังไม่จ่าย'
   });
 
   sp.style.display = 'none';
   if (res && res.status === 'success') {
     showToast('success','✅ เพิ่มนัดหมายเรียบร้อย!');
-    ['f_name','f_phone','f_product','f_price'].forEach(id => document.getElementById(id).value = '');
-    checkBudgetLive();
+    ['f_name','f_phone'].forEach(id => document.getElementById(id).value = '');
     await loadAppointments();
   } else {
     btn.disabled = false;
@@ -1155,11 +1124,10 @@ async function updateStatus(id, field, value) {
 }
 
 // =============================================
-// INSPECT MODAL (ระบบหลายชิ้นและรองรับสินค้า 4 ประเภท)
+// INSPECT MODAL
 // =============================================
 function openInspect(id, name, phone, product, price) {
   currentApptId    = id;
-  currentApptPrice = price;
 
   const savedInspection = localStorage.getItem('inspect_' + id);
   if (savedInspection) {
@@ -1173,14 +1141,14 @@ function openInspect(id, name, phone, product, price) {
   }
 
   if (inspectionItems.length === 0) {
-    addNewItem(product, price);
+    addNewItem('', 0);
   } else {
     activeItemIndex = 0;
     loadItemData(activeItemIndex);
   }
 
   document.getElementById('modal_custName').textContent   = name || '—';
-  document.getElementById('modal_custDetail').textContent = `📞 ${phone||'—'}  ·  นัดหมายเดิม: ${product||'—'}`;
+  document.getElementById('modal_custDetail').textContent = `📞 ${phone||'—'}`;
 
   renderItemTabs();
   updateItemsSummary();
@@ -1210,6 +1178,25 @@ function addNewItem(defaultTitle = '', defaultPrice = 0) {
   updateItemsSummary();
 }
 
+function renderEquipmentGrid(cat) {
+  const container = document.getElementById('equipmentGridContainer');
+  const opts = EQUIPMENT_OPTIONS[cat] || [];
+  
+  container.innerHTML = opts.map(eq => {
+    // ดึงสถานะเดิมที่เคยคลิกเลือกไว้ (ถ้ามี)
+    const currentVal = equipState[eq] || 'no'; 
+    return `
+      <div class="equip-item">
+        <span class="equip-label">${eq}</span>
+        <div class="toggle-wrap">
+          <button class="toggle-btn yes ${currentVal === 'yes' ? 'active' : ''}" onclick="toggleEquip(this,'${eq}','yes')">มี</button>
+          <button class="toggle-btn no ${currentVal === 'no' ? 'active' : ''}" onclick="toggleEquip(this,'${eq}','no')">ไม่มี</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 function loadItemData(index) {
   const item = inspectionItems[index];
   
@@ -1225,16 +1212,16 @@ function loadItemData(index) {
   scoreState = item.scores || {};
   currentCategory = item.category || 'shoes';
 
-  // ปรับ UI Category
+  // ปรับการตั้งค่า UI Category Tabs
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   const catBtn = document.getElementById('cat_' + currentCategory);
   if (catBtn) catBtn.classList.add('active');
 
-  // วาดและผูกข้อมูลอุปกรณ์
+  // วาดอุปกรณ์และหัวข้อตรวจประเมินคะแนนสภาพตามหมวดหมู่
   renderEquipmentGrid(currentCategory);
-  
-  // โหลดคะแนนที่เลือกไว้เดิมกลับมาบน UI
   renderCriteria(currentCategory);
+  
+  // โหลดคะแนนที่เคยกรอกเดิมขึ้นแสดงผลบน UI ตัวเลือกคะแนนสภาพ
   for (const [key, val] of Object.entries(scoreState)) {
     const inspectGroups = document.getElementById('inspectCriteria').querySelectorAll('.inspect-group');
     inspectGroups.forEach(group => {
@@ -1252,33 +1239,10 @@ function loadItemData(index) {
   updateScore(false);
 }
 
-function renderEquipmentGrid(cat) {
-  const container = document.getElementById('equipmentContainer');
-  const schema = EQUIPMENT_SCHEMAS[cat] || EQUIPMENT_SCHEMAS['shoes'];
-  
-  container.innerHTML = schema.map(eq => {
-    // กำหนดค่าเริ่มต้นของสเตตอุปกรณ์หากยังไม่มี
-    if (!equipState[eq.key]) {
-      equipState[eq.key] = 'no'; 
-    }
-    const currentVal = equipState[eq.key];
-    
-    return `
-      <div class="equip-item">
-        <span class="equip-label">${eq.label}</span>
-        <div class="toggle-wrap">
-          <button class="toggle-btn yes ${currentVal === 'yes' ? 'active' : ''}" onclick="toggleEquip(this,'${eq.key}','yes')">มี</button>
-          <button class="toggle-btn no ${currentVal === 'no' ? 'active' : ''}" onclick="toggleEquip(this,'${eq.key}','no')">ไม่มี</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
 function saveCurrentItemState() {
   if (inspectionItems[activeItemIndex]) {
     const item = inspectionItems[activeItemIndex];
-    item.title = document.getElementById('m_item_title').value;
+    item.title = document.getElementById('m_item_title').value.trim() || `สินค้าชิ้นที่ ${activeItemIndex + 1}`;
     item.inspector = document.getElementById('m_inspector').value;
     item.datecode = document.getElementById('m_datecode').value;
     item.declaration = document.getElementById('m_declaration').value;
@@ -1344,10 +1308,10 @@ function updateItemsSummary() {
   let totalAllItemsPrice = 0;
   let html = inspectionItems.map((item, idx) => {
     totalAllItemsPrice += Number(item.price || 0);
-    let catThai = item.category === 'shoes' ? 'รองเท้า' : item.category === 'bag' ? 'กระเป๋า' : item.category === 'jewelry' ? 'Fine jewelry' : 'Acc อื่นๆ';
+    const catLabels = {shoes:'รองเท้า', bag:'กระเป๋า', jewelry:'Fine jewelry', acc:'acc อื่นๆ'};
     return `
       <div class="items-summary-item">
-        <span><strong>ชิ้นที่ ${idx+1}:</strong> ${esc(item.title || 'ไม่ระบุชื่อ')} [หมวด: ${catThai}]</span>
+        <span><strong>ชิ้นที่ ${idx+1}:</strong> ${esc(item.title || 'ไม่ระบุชื่อ')} [หมวด: ${catLabels[item.category] || item.category}]</span>
         <span>สภาพเกรด: <span style="color:var(--navy); font-weight:bold;">${item.grade || 'USED'}</span> (${item.totalScore || 0} คะแนน) | ราคา: ฿${Number(item.price || 0).toLocaleString('th-TH')}</span>
       </div>
     `;
@@ -1374,10 +1338,19 @@ function closeModal(id) {
 }
 
 function selectCategory(cat, btn) {
+  saveCurrentItemState();
   currentCategory = cat;
-  scoreState = {};
-  equipState = {}; // เคลียร์สเตตอุปกรณ์ตัวเดิมเพื่อใช้อุปกรณ์ของหมวดหมู่ใหม่
   
+  // รีเซ็ตตัวเลือกคะแนนและอุปกรณ์เมื่อเปลี่ยนหมวดของชิ้นนั้น
+  scoreState = {};
+  equipState = {};
+  
+  if (inspectionItems[activeItemIndex]) {
+    inspectionItems[activeItemIndex].category = cat;
+    inspectionItems[activeItemIndex].scores = scoreState;
+    inspectionItems[activeItemIndex].equip = equipState;
+  }
+
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   
@@ -1458,10 +1431,10 @@ async function saveInspection() {
   }
 
   const totalAllItemsPrice = inspectionItems.reduce((s, item) => s + Number(item.price || 0), 0);
-
   const finalMergedCategory = inspectionItems.map(item => item.category).join(', ');
   const finalMergedGrade = inspectionItems.map((item, idx) => `ชิ้นที่${idx+1}:${item.grade}(${item.totalScore}คะแนน)`).join(' | ');
   const finalMergedEquipSummary = inspectionItems.map((item, idx) => `ชิ้นที่${idx+1}[${Object.entries(item.equip).map(([k,v]) => `${k}:${v}`).join(',')}]`).join(' | ');
+  const finalMergedProductsText = inspectionItems.map(item => item.title || 'ไม่ระบุชื่อ').join(', ');
 
   const btn = document.getElementById('saveInspectBtn');
   const sp  = document.getElementById('saveSpinner');
@@ -1479,7 +1452,8 @@ async function saveInspection() {
     score_details:    { multi_items_summary: finalMergedGrade },
     total_score:      Math.round(inspectionItems.reduce((s, item) => s + item.totalScore, 0) / inspectionItems.length), 
     final_condition:  `รวม ${inspectionItems.length} ชิ้น (${finalMergedGrade})`,
-    estimated_price:  totalAllItemsPrice 
+    estimated_price:  totalAllItemsPrice,
+    product_name:     finalMergedProductsText 
   });
 
   btn.disabled = false; sp.style.display = 'none';
@@ -1505,6 +1479,18 @@ async function loadHistory() {
   historyCache = res.appointments || [];
   const today  = todayStr();
 
+  // ดึงค่าการรวมชิ้นจาก LocalStorage ให้สอดคล้องกันย้อนหลัง
+  historyCache.forEach(appt => {
+    const saved = localStorage.getItem('inspect_' + appt.appt_id);
+    if (saved) {
+      try {
+        const items = JSON.parse(saved);
+        appt.estimated_price = items.reduce((s, i) => s + Number(i.price || 0), 0);
+        appt.product_name = items.map(i => i.title || 'ไม่ระบุชื่อ').join(', ');
+      } catch(e) {}
+    }
+  });
+
   const todayAppts = historyCache.filter(a => a.date === today);
   const todaySpend = todayAppts
     .filter(a => a.appt_status !== 'ยกเลิก')
@@ -1512,7 +1498,7 @@ async function loadHistory() {
   const doneCnt = todayAppts.filter(a => a.appt_status === 'สำเร็จ').length;
   const totalPaid = historyCache
     .filter(a => a.payment_status === 'จ่ายเงินสำเร็จ')
-    .reduce((s,a) => s + Number(a.estimated_price||0), 0);
+    .reduce((s,r) => s + Number(r.estimated_price||0), 0);
 
   document.getElementById('stat-appts').textContent = todayAppts.length;
   document.getElementById('stat-spend').textContent  = '฿' + todaySpend.toLocaleString('th-TH');
@@ -1644,10 +1630,6 @@ document.getElementById('inspectModal').addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape')
     document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-});
-
-document.getElementById('loginPass').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') doLogin();
 });
 </script>
 </body>
