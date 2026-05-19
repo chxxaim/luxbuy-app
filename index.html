@@ -1,119 +1,43 @@
-// เพิ่มฟังก์ชันตรวจรับนี้ในไฟล์ Apps Script หลังบ้านของคุณ
-function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetAppt = ss.getSheetByName("Daily_Appointments");
-  var sheetInspect = ss.getSheetByName("Inspection_Records");
-  
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var action = data.action;
-    
-    // ดึงข้อมูลทั้งหมดส่งให้หน้าเว็บ
-    if (action === "get_all_data") {
-      return ContentService.createTextOutput(JSON.stringify({
-        status: "success",
-        appointments: getRowsData(sheetAppt),
-        inspections: getRowsData(sheetInspect)
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // บันทึกนัดหมายคิวงานใหม่
-    if (action === "add_appointment") {
-      var newId = "APT-" + new Date().getTime(); // สร้าง ID เฉพาะ
-      sheetAppt.appendRow([
-        newId,
-        data.date,
-        data.time_slot,
-        data.customer_name,
-        data.customer_phone,
-        data.product_name,
-        data.estimated_price,
-        "รอเข้าพบ",
-        "ยังไม่จ่าย",
-        data.quantity || 1,
-        data.distance || "ระยะใกล้"
-      ]);
-      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // รองรับคำสั่งแก้ไขข้อมูลนัดหมาย (ตามข้อ 1)
-    if (action === "edit_appointment") {
-      var apptRows = sheetAppt.getDataRange().getValues();
-      for (var i = 1; i < apptRows.length; i++) {
-        if (apptRows[i][0] === data.appt_id) {
-          sheetAppt.getRange(i + 1, 2, 1, 6).setValues([[
-            data.date,
-            data.time_slot,
-            data.customer_name,
-            data.customer_phone,
-            data.product_name,
-            data.estimated_price
-          ]]);
-          sheetAppt.getRange(i + 1, 10, 1, 2).setValues([[
-            data.quantity,
-            data.distance
-          ]]);
-          break;
-        }
-      }
-      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // อัปเดตสถานะการเงิน/งานประจำแถว
-    if (action === "update_status") {
-      var apptRows = sheetAppt.getDataRange().getValues();
-      var colIdx = (data.field === "appt_status") ? 8 : 9;
-      for (var i = 1; i < apptRows.length; i++) {
-        if (apptRows[i][0] === data.appt_id) {
-          sheetAppt.getRange(i + 1, colIdx).setValue(data.value);
-          break;
-        }
-      }
-      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // บันทึกใบตรวจรับสภาพ
-    if (action === "save_inspection") {
-      sheetInspect.appendRow([
-        data.appt_id,
-        data.brand,
-        data.date_code,
-        data.declaration,
-        data.inspector,
-        new Date().toISOString().split('T')[0],
-        data.equipment_summary,
-        data.equipment_notes,
-        JSON.stringify(data.score_details),
-        data.total_score,
-        data.final_condition,
-        data.general_notes
-      ]);
-      return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()})).setMimeType(ContentService.MimeType.JSON);
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuxBuy — ระบบรับซื้อแบรนด์เนม</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --dark: #0D0D0D;
+    --dark2: #161616;
+    --dark3: #1F1F1F;
+    --dark4: #2A2A2A;
+    --text: #F0EDE8;
+    --text-muted: #8A8480;
+    --text-dim: #5A5550;
+    --green: #4CAF7A;
+    --orange: #E8943A;
+    --red: #E85A4A;
+    --blue: #4A8FE8;
+    --border: rgba(201,168,76,0.2);
+    --radius: 12px;
+    --radius-sm: 8px;
   }
-}
-
-// ฟังก์ชันแปลงข้อมูลในชีตให้เป็นก้อน Array Object ส่งกลับมาหน้าบ้าน
-function getRowsData(sheet) {
-  var rows = sheet.getDataRange().getValues();
-  if (rows.length <= 1) return [];
-  var headers = rows[0];
-  var result = [];
-  for (var i = 1; i < rows.length; i++) {
-    var obj = {};
-    for (var j = 0; j < headers.length; j++) {
-      obj[headers[j]] = rows[i][j];
-    }
-    result.push(obj);
-  }
-  return result;
-}  .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: var(--radius-sm); padding: 12px 24px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
+  body { background-color: var(--dark); color: var(--text); padding-bottom: 70px; }
+  .login-screen { position: fixed; inset: 0; background: var(--dark); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+  .login-box { background: var(--dark2); padding: 40px; border-radius: var(--radius); border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
+  .login-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); margin-bottom: 24px; }
+  .input-group { margin-bottom: 20px; text-align: left; }
+  .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .input-ctrl { width: 100%; background: var(--dark3); border: 1px solid var(--dark4); border-radius: var(--radius-sm); padding: 12px 16px; color: var(--text); font-size: 1rem; transition: all 0.2s; }
+  .input-ctrl:focus { outline: none; border-color: var(--gold); background: var(--dark4); }
+  .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: var(--radius-sm); padding: 12px 24px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
   .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
   .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
-  header { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 20px; sticky: top; top: 0; z-index: 100; }
+  header { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 20px; position: sticky; top: 0; z-index: 100; }
   .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
   .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); text-decoration: none; }
   .desktop-tabs { display: flex; gap: 12px; }
@@ -139,7 +63,7 @@ function getRowsData(sheet) {
   @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .desktop-tabs { display: none; } }
   .table-wrapper { width: 100%; overflow-x: auto; margin-top: 15px; }
   table { width: 100%; border-collapse: collapse; text-align: left; }
-  th { padding: 14px 16px; font-size: 0.85rem; uppercase: true; color: var(--text-muted); background: var(--dark3); border-bottom: 1px solid var(--dark4); }
+  th { padding: 14px 16px; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); background: var(--dark3); border-bottom: 1px solid var(--dark4); }
   td { padding: 16px; font-size: 0.95rem; border-bottom: 1px solid var(--dark4); color: var(--text); vertical-align: middle; }
   tr:hover td { background: rgba(255,255,255,0.01); }
   .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
@@ -151,6 +75,8 @@ function getRowsData(sheet) {
   .action-btn:hover { border-color: var(--gold); color: var(--gold); }
   .action-btn.btn-primary { background: var(--gold); color: var(--dark); border: none; font-weight: 500; }
   .action-btn.btn-primary:hover { background: var(--gold-light); color: var(--dark); }
+  .action-btn.btn-edit { border-color: var(--blue); color: var(--blue); }
+  .action-btn.btn-edit:hover { background: rgba(74,143,232,0.1); }
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; }
   .modal.show { opacity: 1; pointer-events: auto; }
   .modal-content { background: var(--dark2); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
@@ -172,9 +98,9 @@ function getRowsData(sheet) {
   .score-name { font-size: 0.95rem; }
   .score-select { background: var(--dark2); border: 1px solid var(--dark4); color: var(--text); padding: 6px 10px; border-radius: var(--radius-sm); outline: none; font-size: 0.9rem; }
   .score-select:focus { border-color: var(--gold); }
-  .live-grade-box { background: var(--gold-dim); border: 1px dashed var(--gold); border-radius: var(--radius-sm); padding: 16px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; }
-  .live-grade-title { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-  .live-grade-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold-light); }
+  .live-grade-box { background: var(--gold-dim); border: 1px dashed var(--gold); border-radius: var(--radius); padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; }
+  .live-grade-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .live-grade-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold-light); }
   .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--dark2); border: 1px solid var(--border); padding: 12px 24px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 10000; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .toast-success { border-color: var(--green); }
@@ -193,6 +119,8 @@ function getRowsData(sheet) {
   .hard-lock-msg { display: none; background: rgba(232,90,74,0.1); border: 1px solid var(--red); color: var(--red); padding: 12px; border-radius: var(--radius-sm); font-size: 0.9rem; text-align: center; margin-bottom: 15px; font-weight: 500; }
   .status-select-inline { background: transparent; border: none; color: var(--text); font-weight: 500; cursor: pointer; outline: none; padding: 2px 4px; border-radius: 4px; }
   .status-select-inline:focus { background: var(--dark4); }
+  .brand-other-group { display: none; margin-top: 12px; }
+  .brand-other-group.show { display: block; }
 </style>
 </head>
 <body>
@@ -227,7 +155,7 @@ function getRowsData(sheet) {
 <main class="main-content">
   <div class="dashboard-grid">
     <div id="cardSpend" class="stat-card">
-      <div class="stat-label">ยอดรับซื้อวันนี้</div>
+      <div class="stat-label">ยอดรับซื้อวันนี้ (จ่ายสำเร็จ/กำลังโอน)</div>
       <div id="statTodaySpend" class="stat-val">0 ฿</div>
       <div id="statBudgetLeft" class="stat-sub">คงเหลือโควตาประจำวัน: 2,000,000 ฿</div>
       <div class="budget-bar-bg">
@@ -235,7 +163,7 @@ function getRowsData(sheet) {
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">งานตรวจวันนี้</div>
+      <div class="stat-label">งานตรวจวันนี้ / ล่วงหน้า</div>
       <div id="stat-appts" class="stat-val">0</div>
       <div class="stat-sub">คิวนัดหมายที่ลงทะเบียนไว้</div>
     </div>
@@ -250,18 +178,19 @@ function getRowsData(sheet) {
       <table>
         <thead>
           <tr>
-            <th>เวลา</th>
+            <th>วันที่ / เวลา</th>
             <th>รหัสงาน</th>
             <th>ลูกค้า / เบอร์ติดต่อ</th>
-            <th>รายการสินค้า</th>
-            <th>ประเมินราคา</th>
+            <th>รายการสินค้า (จำนวน)</th>
+            <th>ระยะทาง</th>
+            <th>ประมาณราคาทั้งหมด</th>
             <th>สถานะงาน</th>
             <th>การชำระเงิน</th>
             <th>การจัดการ</th>
           </tr>
         </thead>
         <tbody id="apptTableBody">
-          <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">กำลังเชื่อมต่อฐานข้อมูล...</td></tr>
+          <tr><td colspan="9" style="text-align:center; color:var(--text-muted);">กำลังเชื่อมต่อฐานข้อมูล...</td></tr>
         </tbody>
       </table>
     </div>
@@ -281,8 +210,8 @@ function getRowsData(sheet) {
             <th>วันที่ตรวจ</th>
             <th>รหัสงาน</th>
             <th>แบรนด์</th>
-            <th>คะแนน</th>
-            <th>เกรดสภาพ</th>
+            <th>คะแนนสุทธิ</th>
+            <th>สรุปเกรดสภาพ</th>
             <th>ผู้ตรวจ</th>
             <th>รายละเอียดอุปกรณ์</th>
           </tr>
@@ -299,7 +228,7 @@ function getRowsData(sheet) {
       <div class="panel-title">การตั้งค่าระบบ</div>
     </div>
     <p style="color: var(--text-muted); margin-bottom: 20px;">จัดการข้อมูลผู้ใช้งานและลิ้งค์เชื่อมต่อระบบคลาวด์</p>
-    <div style="max-width: 500px; background: var(--dark3); p: 20px; padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--dark4);">
+    <div style="max-width: 500px; background: var(--dark3); padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--dark4);">
       <div class="input-group">
         <label>Google Web App URL</label>
         <input type="text" id="settingUrlInput" class="input-ctrl" readonly style="opacity: 0.7;">
@@ -316,42 +245,72 @@ function getRowsData(sheet) {
 </div>
 
 <div id="addApptModal" class="modal">
-  <div class="modal-content" style="max-width: 500px;">
+  <div class="modal-content" style="max-width: 550px;">
     <div class="modal-header">
-      <div class="modal-title">ลงทะเบียนนัดหมายลูกค้าใหม่</div>
+      <div class="modal-title" id="apptModalTitle">ลงทะเบียนนัดหมายลูกค้าใหม่</div>
       <button class="close-modal" onclick="closeModal('addApptModal')">&times;</button>
     </div>
     <form id="addApptForm" onsubmit="submitAppointment(event)">
-      <div class="input-group">
-        <label>เวลานัดหมาย</label>
-        <select id="newTime" class="input-ctrl" required>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="15:00">15:00</option>
-          <option value="16:00">16:00</option>
-          <option value="17:00">17:00</option>
-          <option value="18:00">18:00</option>
-        </select>
+      <input type="hidden" id="editApptId" value="">
+      <div class="grid-2">
+        <div class="input-group">
+          <label>วันที่นัดหมาย</label>
+          <input type="date" id="newDate" class="input-ctrl" required>
+        </div>
+        <div class="input-group">
+          <label>เวลานัดหมาย</label>
+          <select id="newTime" class="input-ctrl" required>
+            <option value="09:00">09:00 น.</option>
+            <option value="10:00">10:00 น.</option>
+            <option value="11:00">11:00 น.</option>
+            <option value="12:00">12:00 น. (ช่วงเที่ยง)</option>
+            <option value="13:00">13:00 น.</option>
+            <option value="14:00">14:00 น.</option>
+            <option value="15:00">15:00 น.</option>
+            <option value="16:00">16:00 น.</option>
+            <option value="17:00">17:00 น.</option>
+            <option value="18:00">18:00 น.</option>
+            <option value="19:00">19:00 น.</option>
+            <option value="20:00">20:00 น.</option>
+            <option value="21:00">21:00 น.</option>
+          </select>
+        </div>
       </div>
-      <div class="input-group">
-        <label>ชื่อลูกค้าผู้ขาย</label>
-        <input type="text" id="newName" class="input-ctrl" placeholder="เช่น คุณสมชาย" required>
+      <div class="grid-2">
+        <div class="input-group">
+          <label>ชื่อลูกค้าผู้ขาย</label>
+          <input type="text" id="newName" class="input-ctrl" placeholder="เช่น คุณเอ" required>
+        </div>
+        <div class="input-group">
+          <label>เบอร์ติดต่อลูกค้า</label>
+          <input type="tel" id="newPhone" class="input-ctrl" placeholder="เช่น 0812345678" required>
+        </div>
       </div>
-      <div class="input-group">
-        <label>เบอร์ติดต่อลูกค้า</label>
-        <input type="tel" id="newPhone" class="input-ctrl" placeholder="เช่น 0812345678" required>
+      <div class="grid-2">
+        <div class="input-group">
+          <label>รายละเอียดสินค้า</label>
+          <input type="text" id="newProduct" class="input-ctrl" placeholder="เช่น กระเป๋าสตางค์ chanel" required>
+        </div>
+        <div class="input-group">
+          <label>จำนวนชิ้นโดยประมาณ</label>
+          <input type="number" id="newQuantity" class="input-ctrl" min="1" placeholder="1" required>
+        </div>
       </div>
-      <div class="input-group">
-        <label>รายละเอียดสินค้า</label>
-        <input type="text" id="newProduct" class="input-ctrl" placeholder="เช่น Loro Piana Summer Walk" required>
+      <div class="grid-2">
+        <div class="input-group">
+          <label>ประมาณราคาทั้งหมด (บาท)</label>
+          <input type="number" id="newPrice" class="input-ctrl" placeholder="เช่น 50000" required>
+        </div>
+        <div class="input-group">
+          <label>ที่อยู่เข้ารับสินค้า (ระยะทาง)</label>
+          <select id="newDistance" class="input-ctrl" required>
+            <option value="ระยะใกล้">📍 ระยะใกล้</option>
+            <option value="ระยะกลาง">🚗 ระยะกลาง</option>
+            <option value="ระยะไกล">✈️ ระยะไกล</option>
+          </select>
+        </div>
       </div>
-      <div class="input-group">
-        <label>ประมาณการราคารับซื้อ (บาท)</label>
-        <input type="number" id="newPrice" class="input-ctrl" placeholder="เช่น 25000" required>
-      </div>
-      <button type="submit" class="btn-gold">💾 บันทึกการนัดหมาย</button>
+      <button type="submit" class="btn-gold" id="apptSubmitBtn">💾 บันทึกการนัดหมาย</button>
     </form>
   </div>
 </div>
@@ -364,17 +323,6 @@ function getRowsData(sheet) {
     </div>
     <div id="hardLockMsg" class="hard-lock-msg">⚠️ ไม่สามารถบันทึกได้ เนื่องจากราคารับซื้อนี้ทำให้ยอดรวมประจำวันเกิน 2,000,000 บาท</div>
     
-    <div class="live-grade-box">
-      <div>
-        <div class="live-grade-title">คะแนนประเมิน</div>
-        <div id="liveScore" class="live-grade-val">100</div>
-      </div>
-      <div>
-        <div class="live-grade-title">สรุปเกรดสภาพ</div>
-        <div id="liveCondition" class="live-grade-val">NEW</div>
-      </div>
-    </div>
-
     <form id="inspectForm" onsubmit="submitInspection(event)">
       <input type="hidden" id="inspectApptId">
       <input type="hidden" id="inspectEstPrice">
@@ -391,16 +339,21 @@ function getRowsData(sheet) {
         </div>
         <div class="input-group">
           <label>แบรนด์สินค้า</label>
-          <select id="insBrand" class="input-ctrl" required>
-            <option value="Loro Piana">Loro Piana</option>
+          <select id="insBrand" class="input-ctrl" onchange="toggleBrandOtherField()" required>
             <option value="Chanel">Chanel</option>
             <option value="Hermes">Hermes</option>
             <option value="Louis Vuitton">Louis Vuitton</option>
+            <option value="Loro Piana">Loro Piana</option>
+            <option value="Bvlgari">Bvlgari</option>
+            <option value="Alaia">Alaia</option>
             <option value="Dior">Dior</option>
             <option value="Cartier">Cartier</option>
             <option value="Gucci">Gucci</option>
             <option value="อื่นๆ">อื่นๆ</option>
           </select>
+          <div id="brandOtherGroup" class="brand-other-group">
+            <input type="text" id="insBrandOther" class="input-ctrl" placeholder="โปรดระบุแบรนด์สินค้าอื่นๆ...">
+          </div>
         </div>
       </div>
 
@@ -425,26 +378,35 @@ function getRowsData(sheet) {
 
       <div class="form-section">
         <div class="form-section-title">📦 อุปกรณ์ที่มาพร้อมสินค้า (ติ๊กชิ้นที่มี)</div>
-        <div class="checkbox-grid" id="equipmentCheckboxes">
-          </div>
+        <div class="checkbox-grid" id="equipmentCheckboxes"></div>
         <div class="input-group" style="margin-top: 15px; margin-bottom:0;">
           <label>หมายเหตุอุปกรณ์เพิ่มเติม / ประเทศที่ซื้อ</label>
-          <input type="text" id="insEquipmentNotes" class="input-ctrl" placeholder="เช่น ใบเสร็จช็อป Saudi Arabia, อุปกรณ์ขาดสายสะพาย">
+          <input type="text" id="insEquipmentNotes" class="input-ctrl" placeholder="เช่น ใบเสร็จช็อปฝรั่งเศส, อุปกรณ์ครบขาดถุงกระดาษ">
         </div>
       </div>
 
       <div class="form-section">
         <div class="form-section-title">🔍 เกณฑ์คะแนนตรวจเช็คสภาพเครื่องและการหักแต้ม</div>
-        <div id="scoreDeductionRows">
-          </div>
+        <div id="scoreDeductionRows"></div>
       </div>
 
       <div class="input-group">
         <label>หมายเหตุ/ตำหนิเพิ่มเติม (ถ้าเกรด USED จำเป็นต้องระบุ)</label>
-        <input type="text" id="insGeneralNotes" class="input-ctrl" placeholder="ระบุตำหนิที่ตรวจพบภายนอกอย่างละเอียด">
+        <input type="text" id="insGeneralNotes" class="input-ctrl" placeholder="ระบุตำหนิที่ตรวจพบอย่างละเอียด">
       </div>
 
-      <button type="submit" id="saveInspectBtn" class="btn-gold" style="margin-top: 10px;">🔒 บันทึกใบประเมินและปิดเคส</button>
+      <div class="live-grade-box">
+        <div>
+          <div class="live-grade-title">📊 สรุปคะแนนประเมินรวม</div>
+          <div id="liveScore" class="live-grade-val">100</div>
+        </div>
+        <div>
+          <div class="live-grade-title">✨ สรุปสภาพผลลัพธ์สุดท้าย</div>
+          <div id="liveCondition" class="live-grade-val">NEW</div>
+        </div>
+      </div>
+
+      <button type="submit" id="saveInspectBtn" class="btn-gold" style="margin-top: 10px; width: 100%;">🔒 บันทึกใบประเมินและปิดเคส</button>
     </form>
   </div>
 </div>
@@ -455,12 +417,7 @@ function getRowsData(sheet) {
 </div>
 
 <script>
-// =============================================
-// LUXBUY — หลังบ้านถูกฝัง URL ตามคำขอเรียบร้อย
-// =============================================
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec";
-
-// ข้อมูลตัวเลือกการตรวจรับแยกตามหมวดหมู่
+// ตัวเลือกเกณฑ์คะแนนสำหรับประเมิน
 const SCHEMA = {
   footwear: {
     equip: ['ใบเสร็จช็อปจริง', 'ถุงผ้า', 'กล่องสินค้า', 'การ์ดรับรอง', 'ถุงกระดาษ'],
@@ -475,27 +432,27 @@ const SCHEMA = {
     ]
   },
   handbag: {
-    equip: ['ใบเสร็จตัวจริง', 'ใบเสร็จสำเนา', 'การ์ดรับรอง', 'ถุงผ้า', 'กล่อง', 'ถุงกระดาษ', 'ริบบิ้น/ดอกคามิเลีย', 'Cites (กรณีหนังเอ็กโซติก)', 'ใบตรวจสถาบันนอก'],
+    equip: ['ใบเสร็จตัวจริง', 'ใบเสร็จสำเนา', 'การ์ดรับรอง', 'ถุงผ้า', 'กล่อง', 'ถุงกระดาษ', 'ริบบิ้น/ดอกคามิเลีย', 'ใบตรวจสถาบันนอก'],
     deductions: [
       { id: 'leather', label: 'สภาพหนังและโครงสร้างทรง', options: [{t:'หนังแข็งสวยทรงเป๊ะ',p:15}, {t:'หนังนิ่มลงเล็กน้อย',p:10}, {t:'หนังย้วยเสียทรง',p:5}] },
-      { id: 'hardware', label: 'อะไหล่โลหะและตราปั๊ม', options: [{t:'ไม่มีรอย',p:10}, {t:'ขนแมวบางๆ',p:5}, {t:'รอยขีดข่วนลึก/จาง',p:0}] },
+      { id: 'hardware', label: 'อะไหล่โลหะและตราปั๊ม', options: [{t:'ไม่มีรอย',p:10}, {t:'ขนแมวบางๆ',p:5}, {t:'รอยขีดข่วนลึก',p:0}] },
       { id: 'smell', label: 'กลิ่นกระเป๋าภายใน', options: [{t:'ปกติ/กลิ่นหนังหอม',p:5}, {t:'กลิ่นอับ/น้ำหอมฉุน',p:0}] },
       { id: 'corner', label: 'ขอบมุมกระเป๋าทั้ง 4 มุม', options: [{t:'ไม่มีรอยถลอก',p:10}, {t:'มีรอยบางๆ',p:5}, {t:'ถลอกลึกจนถึงเนื้อหนัง',p:0}] },
       { id: 'ink', label: 'รอยปากกา/เครื่องสำอาง/ดูดสี', options: [{t:'สะอาดไม่มีรอย',p:10}, {t:'จุดเล็ก 1-2 ตำแหน่ง',p:5}, {t:'รอยใหญ่เกิน 1 ซม.',p:0}] },
       { id: 'scratch', label: 'รอยเล็บ/รอยขีดข่วนเนื้อหนัง', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยบาง 1-2 จุด',p:5}, {t:'รอยลึกหลายจุด',p:0}] },
       { id: 'glue', label: 'ยาแนวหลุด/คราบกาวซึม', options: [{t:'ปกติเรียบร้อย',p:10}, {t:'เหนียว/ซึม 1-2 จุด',p:5}, {t:'ยาแนวแตกหลุดลุ่ย',p:0}] },
       { id: 'water', label: 'คราบน้ำ/คราบด่างความชื้น', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยจางๆ',p:5}, {t:'ด่างเป็นวงกว้าง',p:0}] },
-      { id: 'press', label: 'รอยกดทับจากการจัดเก็บ', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยตื้นๆ ฟื้นตัวได้',p:5}, {t:'บุ๋มลึกถาวร',p:0}] },
-      { id: 'oxidize', label: 'โลหะขึ้นสนิมเขียว/อะไหล่เฟด', options: [{t:'ไม่มีสนิม',p:10}, {t:'มีสนิม/สีลอกชัดเจน',p:0}] }
+      { id: 'press', label: 'รอยกดทับจากการจัดเก็บ', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยตื้นๆ',p:5}, {t:'บุ๋มลึกถาวร',p:0}] },
+      { id: 'oxidize', label: 'โลหะขึ้นสนิมเขียว/อะไหล่เฟด', options: [{t:'ไม่มีสนิม',p:10}, {t:'มีสนิมชัดเจน',p:0}] }
     ]
   },
   jewelry: {
-    equip: ['Certificate/ใบรับรอง', 'ใบเสร็จตัวจริง', 'ใบเสร็จสำเนา', 'กล่องใน/ซองใส่', 'กล่องนอก', 'ถุงผ้า', 'การ์ด', 'ถุงกระดาษ'],
+    equip: ['Certificate/ใบรับรอง', 'ใบเสร็จตัวจริง', 'กล่องใน/ซองใส่', 'กล่องนอก', 'ถุงผ้า', 'ถุงกระดาษ'],
     deductions: [
       { id: 'shape', label: 'รูปทรงความสมมาตรบิดเบี้ยว', options: [{t:'ทรงปกติเป๊ะ',p:10}, {t:'เบี้ยว/บิดงอ',p:0}] },
       { id: 'hardware', label: 'รอยขนแมวบนพื้นผิวทอง/พลาตินัม', options: [{t:'เงาสวยไม่มีรอย',p:20}, {t:'ขนแมวบางๆ',p:10}, {t:'รอยลึกเนื้อเงินแหว่ง',p:5}] },
       { id: 'scratch', label: 'รอยกระแทก/รอยบิ่นลึก', options: [{t:'ไม่มีรอย',p:20}, {t:'บิ่นเล็ก 1-2 จุด',p:10}, {t:'รอยบุบกระแทกใหญ่',p:5}] },
-      { id: 'dirty', label: 'คราบสกปรกฝังลึก/คราบแป้ง', options: [{t:'สะอาดเงางาม',p:20}, {t:'มีคราบเล็กน้อย',p:10}, {t:'คราบหนาบดบังแสงเพชร',p:5}] },
+      { id: 'dirty', label: 'คราบสกปรกฝังลึก/คราบแป้ง', options: [{t:'สะอาดเงางาม',p:20}, {t:'มีคราบเล็กน้อย',p:10}, {t:'คราบหนาบดบังแสง',p:5}] },
       { id: 'glue', label: 'คราบกาวฝังจุดยึดพลอย', options: [{t:'ไม่มีคราบ',p:10}, {t:'มีรอยกาวแห้ง 1-2 จุด',p:5}, {t:'หลุดร่อน',p:0}] },
       { id: 'oxidize', label: 'การเปลี่ยนสีของโลหะ/หมองคล้ำ', options: [{t:'สีสว่างสดใส',p:20}, {t:'สีคล้ำชำรุด',p:0}] }
     ]
@@ -505,8 +462,8 @@ const SCHEMA = {
     deductions: [
       { id: 'shape', label: 'โครงทรงวัสดุผ้า/หนัง', options: [{t:'ทรงปกติ',p:10}, {t:'เสียทรงรุนแรง',p:0}] },
       { id: 'hardware', label: 'รอยถลอกบนอะไหล่ประกอบ', options: [{t:'ไม่มีรอยขูดขีด',p:20}, {t:'ขนแมวบางๆ',p:10}, {t:'ถลอกจนลอกเห็นเนื้อใน',p:5}] },
-      { id: 'scratch', label: 'ด้ายรุ่ย/ด้ายรัน/เนื้อผ้าขาด', options: [{t:'สมบูรณ์ 100%',p:20}, {t:'รุ่ยเล็กน้อย 1-2 จุด',p:10}, {t:'ผ้าขาดเป็นรู/รันยาว',p:5}] },
-      { id: 'dirty', label: 'คราบเปื้อน/คราบเหลืองฝังเนื้อผ้า', options: [{t:'สะอาดไม่มีคราบ',p:20}, {t:'คราบจางๆ ซักออกได้',p:10}, {t:'คราบฝังแน่นด่างดำ',p:5}] },
+      { id: 'scratch', label: 'ด้ายรุ่ย/ด้ายรัน/เนื้อผ้าขาด', options: [{t:'สมบูรณ์ 100%',p:20}, {t:'รุ่ยเล็กน้อย 1-2 จุด',p:10}, {t:'ผ้าขาดเป็นรู',p:5}] },
+      { id: 'dirty', label: 'คราบเปื้อน/คราบเหลืองฝังเนื้อผ้า', options: [{t:'สะอาดไม่มีคราบ',p:20}, {t:'คราบจางๆ',p:10}, {t:'คราบฝังแน่นด่างดำ',p:5}] },
       { id: 'glue', label: 'ขอบกาวชิ้นส่วนประกอบซึม', options: [{t:'ไม่มีรอยกาว',p:10}, {t:'มีกาวเยิ้มเล็กน้อย',p:5}, {t:'กาวเสื่อมหลุดจากกัน',p:0}] },
       { id: 'oxidize', label: 'วัสดุโลหะผสมเปลี่ยนสี/ขึ้นสนิม', options: [{t:'ปกติเงางาม',p:20}, {t:'โลหะคล้ำหมองขัดไม่ออก',p:0}] }
     ]
@@ -516,7 +473,6 @@ const SCHEMA = {
 let cachedData = null;
 let currentTodaySpend = 0;
 
-// ระบบความปลอดภัยตรวจสอบสิทธิ์หน้าจอ
 function checkAuth() {
   if (localStorage.getItem('luxbuy_logged') === 'true') {
     document.getElementById('loginScreen').style.display = 'none';
@@ -527,18 +483,22 @@ function checkAuth() {
 
 function attemptLogin() {
   const pass = document.getElementById('passInput').value;
-  if (pass === '2569') { // รหัสผ่านตั้งค่าเริ่มต้นสำหรับใช้งานในทีม
+  if (pass === '2569') {
     localStorage.setItem('luxbuy_logged', 'true');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('settingUrlInput').value = SCRIPT_URL;
     fetchDashboardData();
-    showToast('success', 'ยินดีต้อนรับเข้าสู่ระบบ LuxBuy');
+    showToast('success', 'เข้าสู่ระบบ LuxBuy เรียบร้อยแล้ว');
   } else {
     showToast('error', 'รหัสผ่านผิดพลาด กรุณาลองใหม่อีกครั้ง');
   }
 }
 
-window.addEventListener('DOMContentLoaded', checkAuth);
+window.addEventListener('DOMContentLoaded', () => {
+  // ตั้งค่าเริ่มต้นวันที่ในฟอร์มเป็นวันปัจจุบันเพื่อความสะดวก
+  document.getElementById('newDate').value = new Date().toISOString().split('T')[0];
+  checkAuth();
+});
 
 function showLoading(text) {
   document.getElementById('loadingText').textContent = text || 'กำลังประมวลผลข้อมูล...';
@@ -548,9 +508,8 @@ function hideLoading() {
   document.getElementById('loadingOverlay').classList.remove('show');
 }
 
-// เรียกดึงข้อมูลทั้งหมดจากคลาวด์ Google Sheets เรียบลำดับแบบ Real-time
 function fetchDashboardData() {
-  showLoading('กำลังอัพเดทข้อมูลจากคลาวด์...');
+  showLoading('กำลังอัพเดทข้อมูล...');
   fetch(SCRIPT_URL, {
     method: 'POST',
     body: JSON.stringify({ action: 'get_all_data' })
@@ -559,18 +518,37 @@ function fetchDashboardData() {
   .then(res => {
     if (res.status === 'success') {
       cachedData = res;
-      currentTodaySpend = Number(res.today_spend) || 0;
+      calculateEffectiveSpend(); // คำนวณวงเงินตามเงื่อนไขข้อ 6
       renderDashboard();
     } else {
-      showToast('error', 'เกิดข้อผิดพลาดในการโหลด: ' + res.message);
+      showToast('error', 'เกิดข้อผิดพลาด: ' + res.message);
     }
   })
-  .catch(err => showToast('error', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์คลาวด์ได้'))
+  .catch(() => showToast('error', 'ไม่สามารถเชื่อมต่อคลาวด์ได้'))
   .finally(hideLoading);
 }
 
+// ข้อ 6: ตรรกะคำนวณเงินที่มีการเปลี่ยนแปลงอ้างอิงสถานะสำเร็จและการโอนเงินสำเร็จของวันปัจจุบัน
+function calculateEffectiveSpend() {
+  const appts = cachedData.appointments || [];
+  const todayStr = new Date().toISOString().split('T')[0];
+  let total = 0;
+  
+  appts.forEach(a => {
+    // ตัดรูปแบบวันที่ให้อยู่ในฟอร์แมต YYYY-MM-DD ตรงกัน
+    const apptDate = a.date ? a.date.split('T')[0] : "";
+    if (apptDate === todayStr && a.appt_status !== 'ยกเลิก') {
+      // นับเฉพาะที่สถานะการชำระเงินไม่ใช่ "ยังไม่จ่าย" เพื่อความแม่นยำของวงเงินที่ตัดจริง
+      if (a.payment_status === 'จ่ายเงินสำเร็จ' || a.payment_status === 'กำลังโอนเงิน' || a.appt_status === 'สำเร็จ') {
+        total += Number(a.estimated_price) || 0;
+      }
+    }
+  });
+  currentTodaySpend = total;
+}
+
 function renderDashboard() {
-  // สรุปยอดเงินและเรนเดอร์ Progress Bar ควบคุมความเสี่ยง 2 ล้านบาท
+  // ควบคุมแถบวงเงิน 2 ล้านบาทประจำวัน
   document.getElementById('statTodaySpend').textContent = currentTodaySpend.toLocaleString() + ' ฿';
   const leftBudget = 2000000 - currentTodaySpend;
   document.getElementById('statBudgetLeft').textContent = `คงเหลือโควตาประจำวัน: ${leftBudget.toLocaleString()} ฿`;
@@ -583,35 +561,34 @@ function renderDashboard() {
   card.className = 'stat-card';
   bar.className = 'budget-bar-fill';
   
-  if (currentTodaySpend >= 2000000) {
-    card.classList.add('budget-danger');
-    bar.classList.add('danger');
-  } else if (currentTodaySpend >= 1500000) {
-    card.classList.add('budget-warn');
-    bar.classList.add('warn');
-  } else {
-    card.classList.add('budget-safe');
-    bar.classList.add('safe');
-  }
+  if (currentTodaySpend >= 2000000) { card.classList.add('budget-danger'); bar.classList.add('danger'); }
+  else if (currentTodaySpend >= 1500000) { card.classList.add('budget-warn'); bar.classList.add('warn'); }
+  else { card.classList.add('budget-safe'); bar.classList.add('safe'); }
 
-  // เติมตารางนัดรับซื้อวันนี้
-  const apptTable = document.getElementById('apptTableBody');
-  apptTable.innerHTML = '';
+  // แสดงยอดจำนวนงานนัดหมายทั้งหมด
   const appts = cachedData.appointments || [];
   document.getElementById('stat-appts').textContent = appts.length;
 
+  // เรนเดอร์ตารางนัดหมาย
+  const apptTable = document.getElementById('apptTableBody');
+  apptTable.innerHTML = '';
+
   if (appts.length === 0) {
-    apptTable.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">ไม่มีรายการนัดหมายสำหรับวันนี้</td></tr>`;
+    apptTable.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">ไม่มีรายการนัดหมายในระบบ</td></tr>`;
   } else {
     appts.forEach(a => {
-      const isInspected = cachedData.inspections.some(i => i.appt_id === a.appt_id);
+      // แก้ไขข้อ 4: ตรวจเช็คค่าในตารางตรวจสภาพจริงๆ โดยแมทช์ผ่านรหัส appt_id 
+      const isInspected = cachedData.inspections && cachedData.inspections.some(i => i.appt_id === a.appt_id);
+      
       const tr = document.createElement('tr');
+      // เติมข้อมูลจำนวนชิ้น และที่อยู่ระยะทางในแถวตารางตามข้อ 1
       tr.innerHTML = `
-        <td style="font-weight:600; color:var(--gold-light);">${a.time_slot}</td>
+        <td><span style="font-size:0.85rem; color:var(--text-muted);">${a.date ? a.date.split('T')[0] : ''}</span><br><strong style="color:var(--gold-light);">${a.time_slot} น.</strong></td>
         <td style="font-size:0.85rem; font-family:monospace; color:var(--text-muted);">${a.appt_id}</td>
         <td><strong>${a.customer_name}</strong><br><span style="color:var(--text-muted); font-size:0.85rem;">📱 ${a.customer_phone}</span></td>
-        <td>${a.product_name}</td>
-        <td style="font-weight:600;">${Number(a.estimated_price).toLocaleString()} ฿</td>
+        <td>${a.product_name} <span style="color:var(--gold); font-weight:600;">(${a.quantity || 1} ชิ้น)</span></td>
+        <td><span class="badge badge-info">${a.distance || 'ระยะใกล้'}</span></td>
+        <td style="font-weight:600; color:var(--gold-light);">${Number(a.estimated_price).toLocaleString()} ฿</td>
         <td>
           <select class="status-select-inline" onchange="changeStatus('${a.appt_id}', 'appt_status', this.value)">
             <option value="รอเข้าพบ" ${a.appt_status === 'รอเข้าพบ' ? 'selected' : ''}>⏳ รอเข้าพบ</option>
@@ -628,23 +605,26 @@ function renderDashboard() {
           </select>
         </td>
         <td>
-          ${isInspected 
-            ? `<span class="badge badge-success">✓ ตรวจแล้ว</span>`
-            : `<button class="action-btn btn-primary" onclick="openInspectModal('${a.appt_id}', '${a.product_name}', ${a.estimated_price})">🔍 ตรวจสภาพ</button>`
-          }
+          <div style="display: flex; gap: 4px;">
+            <button class="action-btn btn-edit" onclick="openEditApptModal('${a.appt_id}')" title="แก้ไขจำนวนสินค้าหรือข้อมูลนัด">✏️ แก้ไข</button>
+            ${isInspected 
+              ? `<span class="badge badge-success" style="padding: 6px 12px;">✓ ตรวจแล้ว</span>`
+              : `<button class="action-btn btn-primary" onclick="openInspectModal('${a.appt_id}', '${a.customer_name}', '${a.product_name}', ${a.estimated_price})">🔍 ตรวจสภาพ</button>`
+            }
+          </div>
         </td>
       `;
       apptTable.appendChild(tr);
     });
   }
 
-  // เติมตารางประวัติย้อนหลังทั้งหมด
+  // เรนเดอร์ตารางประวัติย้อนหลัง
   const histTable = document.getElementById('historyTableBody');
   histTable.innerHTML = '';
   const inspects = cachedData.inspections || [];
 
   if (inspects.length === 0) {
-    histTable.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">ไม่พบประวัติการทำรายการใบประเมินในระบบ</td></tr>`;
+    histTable.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">ไม่พบประวัติใบประเมินในระบบ</td></tr>`;
   } else {
     inspects.forEach(i => {
       const tr = document.createElement('tr');
@@ -655,14 +635,14 @@ function renderDashboard() {
       if (i.final_condition === 'LIKE NEW') gradeClass = 'badge-pending';
       
       tr.innerHTML = `
-        <td style="color:var(--text-muted); font-size:0.9rem;">${i.inspection_date}</td>
+        <td style="color:var(--text-muted); font-size:0.9rem;">${i.inspection_date ? i.inspection_date.split('T')[0] : ''}</td>
         <td style="font-family:monospace; font-size:0.85rem;">${i.appt_id}</td>
-        <td><strong>${i.brand}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">DC: ${i.date_code_year}</span></td>
-        <td style="font-weight:600; color:var(--gold-light);">${i.total_score} แต้ม</td>
+        <td><strong>${i.brand}</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">DC: ${i.date_code_year || '-'}</span></td>
+        <td style="font-weight:600; color:var(--gold-light);">${i.total_score} คะแนน</td>
         <td><span class="badge ${gradeClass}">${i.final_condition}</span></td>
         <td>👤 ${i.inspector_name}</td>
-        <td style="font-size:0.85rem; color:var(--text-muted); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${i.equipment_summary} (${i.equipment_notes})">
-          ${i.equipment_summary} ${i.equipment_notes ? `| *${i.equipment_notes}*` : ''}
+        <td style="font-size:0.85rem; color:var(--text-muted); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${i.equipment_summary}">
+          ${i.equipment_summary} ${i.equipment_notes ? `(${i.equipment_notes})` : ''}
         </td>
       `;
       histTable.appendChild(tr);
@@ -685,27 +665,62 @@ function switchTab(tab) {
   if (mbtn) mbtn.classList.add('active');
 }
 
-function openAddApptModal() { document.getElementById('addApptModal').classList.add('show'); }
-function closeModal(id) { document.getElementById('addApptModal').classList.remove('show'); document.getElementById('inspectModal').classList.remove('show'); }
+function openAddApptModal() {
+  document.getElementById('editApptId').value = "";
+  document.getElementById('apptModalTitle').textContent = "ลงทะเบียนนัดหมายลูกค้าใหม่";
+  document.getElementById('addApptForm').reset();
+  document.getElementById('newDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('addApptModal').classList.add('show');
+}
 
-// ส่งคำขอบันทึกข้อมูลการจอง/นัดหมายรายวันเข้า Google Sheets
+// ฟังก์ชันเปิด Modal แก้ไขข้อมูลนัดหมายตามข้อ 1
+function openEditApptModal(apptId) {
+  const appt = cachedData.appointments.find(a => a.appt_id === apptId);
+  if (!appt) return;
+  
+  document.getElementById('editApptId').value = apptId;
+  document.getElementById('apptModalTitle').textContent = `✏️ แก้ไขข้อมูลนัดหมายคิว [${apptId}]`;
+  
+  document.getElementById('newDate').value = appt.date ? appt.date.split('T')[0] : "";
+  document.getElementById('newTime').value = appt.time_slot;
+  document.getElementById('newName').value = appt.customer_name;
+  document.getElementById('newPhone').value = appt.customer_phone;
+  document.getElementById('newProduct').value = appt.product_name;
+  document.getElementById('newQuantity').value = appt.quantity || 1;
+  document.getElementById('newPrice').value = appt.estimated_price;
+  document.getElementById('newDistance').value = appt.distance || "ระยะใกล้";
+  
+  document.getElementById('addApptModal').classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+// บันทึกเพิ่มคิวงาน / หรือแก้ไขข้อมูลคิวงานตามข้อ 1 และ 5
 function submitAppointment(e) {
   e.preventDefault();
+  const editId = document.getElementById('editApptId').value;
+  
   const data = {
-    action: 'add_appointment',
+    action: editId ? 'edit_appointment' : 'add_appointment',
+    appt_id: editId || undefined,
+    date: document.getElementById('newDate').value,
     time_slot: document.getElementById('newTime').value,
     customer_name: document.getElementById('newName').value,
     customer_phone: document.getElementById('newPhone').value,
     product_name: document.getElementById('newProduct').value,
-    estimated_price: Number(document.getElementById('newPrice').value)
+    quantity: Number(document.getElementById('newQuantity').value),
+    estimated_price: Number(document.getElementById('newPrice').value),
+    distance: document.getElementById('newDistance').value
   };
   
-  showLoading('กำลังบันทึกคิวนัดลงคลาวด์...');
+  showLoading('กำลังบันทึกข้อมูลเข้าฐานคลาวด์...');
   fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
   .then(res => res.json())
   .then(res => {
     if (res.status === 'success') {
-      showToast('success', 'ลงทะเบียนนัดหมายลูกค้าเรียบร้อยแล้ว');
+      showToast('success', editId ? 'อัพเดทการแก้ไขข้อมูลนัดหมายเรียบร้อย!' : 'ลงทะเบียนนัดหมายลูกค้าเรียบร้อยแล้ว');
       closeModal('addApptModal');
       document.getElementById('addApptForm').reset();
       fetchDashboardData();
@@ -713,13 +728,13 @@ function submitAppointment(e) {
       showToast('error', res.message);
     }
   })
-  .catch(() => showToast('error', 'ระบบเครือข่ายขัดข้อง'))
+  .catch(() => showToast('error', 'ระบบเครือข่ายส่งข้อมูลขัดข้อง'))
   .finally(hideLoading);
 }
 
-// ปรับปรุงสถานะแถวตารางทางตรงเรียลไทม์
+// อัปเดตสถานะจากหน้าตารางหลัก (ข้อ 6 ยอดรวมเงินจะเปลี่ยนตามทันที)
 function changeStatus(apptId, field, val) {
-  showLoading('กำลังอัพเดทสถานะลงชีต...');
+  showLoading('กำลังบันทึกสถานะ...');
   fetch(SCRIPT_URL, {
     method: 'POST',
     body: JSON.stringify({ action: 'update_status', appt_id: apptId, field: field, value: val })
@@ -727,23 +742,24 @@ function changeStatus(apptId, field, val) {
   .then(res => res.json())
   .then(res => {
     if (res.status === 'success') {
-      showToast('success', 'อัพเดทสถานะสำเร็จ');
-      fetchDashboardData();
+      showToast('success', 'ปรับเปลี่ยนสถานะเรียบร้อย');
+      fetchDashboardData(); // โหลดใหม่เพื่อคำนวณวงเงิน Real-time
     } else {
       showToast('error', res.message);
     }
   })
-  .catch(() => showToast('error', 'อัพเดทขัดข้อง'))
+  .catch(() => showToast('error', 'อัปเดตสถานะขัดข้อง'))
   .finally(hideLoading);
 }
 
-// เปิดเปิดฟอร์มประเมินสภาพพร้อมตรรกะคุมงบและคำนวณคะแนนสด
-function openInspectModal(apptId, prodName, estPrice) {
+// ข้อ 2: ปรับปรุงหัวข้อชื่อและสินค้าให้เป็นไดนามิกอัตโนมัติ
+function openInspectModal(apptId, custName, prodName, estPrice) {
   document.getElementById('inspectApptId').value = apptId;
   document.getElementById('inspectEstPrice').value = estPrice;
-  document.getElementById('inspectTitle').textContent = `ใบตรวจสภาพสำหรับ: ${prodName}`;
   
-  // ตรวจเช็คทันทีว่าถ้ารับเคสนี้แล้ว ยอดจะรวมเกิน 2 ล้านบาทหรือไม่ (Hard Cap Lock)
+  // ปรับหัวข้อตามข้อ 2 ของคุณ
+  document.getElementById('inspectTitle').textContent = `ใบตรวจสภาพสินค้าของลูกค้า: คุณ ${custName} | สินค้า: ${prodName}`;
+  
   if (currentTodaySpend + Number(estPrice) > 2000000) {
     document.getElementById('hardLockMsg').style.display = 'block';
     document.getElementById('saveInspectBtn').disabled = true;
@@ -752,27 +768,39 @@ function openInspectModal(apptId, prodName, estPrice) {
     document.getElementById('saveInspectBtn').disabled = false;
   }
   
-  document.getElementById('insCategory').value = 'footwear';
+  document.getElementById('insCategory').value = 'handbag';
+  document.getElementById('insBrand').value = 'Chanel';
+  toggleBrandOtherField();
   renderInspectionFields();
   document.getElementById('inspectModal').classList.add('show');
 }
 
-// สร้างฟิลด์ข้อมูลไดนามิกขึ้นมาตามหมวดหมู่ประเภทสินค้าที่เลือกตรวจ
+// แสดง/ซ่อน ช่องกรอกแบรนด์พิมพ์เองเมื่อเลือก "อื่นๆ" (ตามข้อ 2)
+function toggleBrandOtherField() {
+  const brandVal = document.getElementById('insBrand').value;
+  const otherGroup = document.getElementById('brandOtherGroup');
+  if (brandVal === 'อื่นๆ') {
+    otherGroup.classList.add('show');
+    document.getElementById('insBrandOther').required = true;
+  } else {
+    otherGroup.classList.remove('show');
+    document.getElementById('insBrandOther').required = false;
+  }
+}
+
 function renderInspectionFields() {
   const cat = document.getElementById('insCategory').value;
   const schema = SCHEMA[cat];
   
-  // สร้างกล่องติ๊กอุปกรณ์
   const equipBox = document.getElementById('equipmentCheckboxes');
   equipBox.innerHTML = '';
-  schema.equip.forEach((eq, idx) => {
+  schema.equip.forEach(eq => {
     const lbl = document.createElement('label');
     lbl.className = 'check-label';
     lbl.innerHTML = `<input type="checkbox" name="insEquip" value="${eq}"> ${eq}`;
     equipBox.appendChild(lbl);
   });
   
-  // สร้างตารางตัดเกรดแต้มชำรุด
   const scoreRows = document.getElementById('scoreDeductionRows');
   scoreRows.innerHTML = '';
   schema.deductions.forEach(d => {
@@ -796,13 +824,11 @@ function renderInspectionFields() {
   calculateLiveGrade();
 }
 
-// ตรรกะคำนวณคะแนนดิบและแปลงเป็นเกรดสภาพแบบสดๆ บนหน้าจอพนักงาน (Live Calculation)
+// ข้อ 3: ระบบคำนวณและสรุปแสดงผลแต้มและเกรดสภาพท้ายฟอร์ม
 function calculateLiveGrade() {
   const selects = document.querySelectorAll('select[name="insDeduct"]');
   let total = 0;
-  selects.forEach(s => {
-    total += Number(s.value);
-  });
+  selects.forEach(s => { total += Number(s.value); });
   
   let cond = 'USED';
   if (total >= 95) cond = 'NEW';
@@ -819,7 +845,6 @@ function calculateLiveGrade() {
   }
 }
 
-// บันทึกส่งใบตรวจสภาพเรียบร้อยเข้าสู่คลาวด์ชีตฐานข้อมูล
 function submitInspection(e) {
   e.preventDefault();
   const score = Number(document.getElementById('liveScore').textContent);
@@ -827,14 +852,17 @@ function submitInspection(e) {
   const notes = document.getElementById('insGeneralNotes').value;
   
   if (cond === 'USED' && !notes.trim()) {
-    showToast('error', 'กรณีผลตรวจเป็นเกรด USED จำเป็นต้องระบุตำหนิเพิ่มเติมเพื่อประกอบการพิจารณา');
+    showToast('error', 'ผลประเมินเป็น USED จำเป็นต้องระบุตำหนิเพิ่มเติมในกล่องข้อความด้านล่าง');
     return;
   }
   
+  let finalBrand = document.getElementById('insBrand').value;
+  if (finalBrand === 'อื่นๆ') {
+    finalBrand = document.getElementById('insBrandOther').value;
+  }
+  
   const selectedEquip = [];
-  document.querySelectorAll('input[name="insEquip"]:checked').forEach(c => {
-    selectedEquip.push(c.value);
-  });
+  document.querySelectorAll('input[name="insEquip"]:checked').forEach(c => { selectedEquip.push(c.value); });
   
   const scoreDetails = {};
   document.querySelectorAll('select[name="insDeduct"]').forEach(s => {
@@ -845,7 +873,7 @@ function submitInspection(e) {
     action: 'save_inspection',
     appt_id: document.getElementById('inspectApptId').value,
     estimated_price: Number(document.getElementById('inspectEstPrice').value),
-    brand: document.getElementById('insBrand').value,
+    brand: finalBrand,
     date_code: document.getElementById('insDateCode').value,
     declaration: document.querySelector('input[name="insDeclaration"]:checked').value,
     inspector: document.getElementById('insInspector').value,
@@ -857,13 +885,13 @@ function submitInspection(e) {
     general_notes: notes
   };
 
-  showLoading('กำลังส่งใบตรวจสภาพและบันทึกปิดเคส...');
+  showLoading('กำลังบันทึกใบตรวจสภาพ...');
   fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
   .then(res => res.json())
   .then(res => {
     if (res.status === 'success') {
-      showToast('success', 'บันทึกประเมินสภาพและปิดเคสรับซื้อสำเร็จ');
-      document.getElementById('inspectModal').classList.remove('show');
+      showToast('success', 'บันทึกประเมินสภาพและปิดเคสรับซื้อสำเร็จ!');
+      closeModal('inspectModal');
       document.getElementById('inspectForm').reset();
       fetchDashboardData();
     } else {
@@ -879,19 +907,15 @@ function filterHistoryTable() {
   const rows = document.querySelectorAll('#historyTableBody tr');
   rows.forEach(r => {
     if (r.children.length < 2) return;
-    const txt = r.textContent.toLowerCase();
-    r.style.display = txt.includes(query) ? '' : 'none';
+    r.style.display = r.textContent.toLowerCase().includes(query) ? '' : 'none';
   });
 }
 
-let toastTimer;
 function showToast(type, msg) {
   const t = document.getElementById('toast');
-  const icon = document.getElementById('toastIcon');
-  const text = document.getElementById('toastText');
+  document.getElementById('toastIcon').textContent = type === 'success' ? '✅' : '❌';
+  document.getElementById('toastText').textContent = msg;
   t.className = 'toast toast-' + type + ' show';
-  icon.textContent = type === 'success' ? '✅' : '❌';
-  text.textContent = msg;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
