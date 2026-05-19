@@ -868,17 +868,43 @@ async function apiCall(payload) {
 function fetchGlobalDataJSONP() {
   const script = document.createElement('script');
   const callbackName = 'luxbuy_callback_' + Math.round(Math.random() * 100000);
-  
+  let settled = false;
+
+  const cleanup = () => {
+    if (settled) return;
+    settled = true;
+    try { delete window[callbackName]; } catch(e) { window[callbackName] = undefined; }
+    if (script.parentNode) script.parentNode.removeChild(script);
+  };
+
   window[callbackName] = function(data) {
-    delete window[callbackName];
-    document.body.removeChild(script);
-    
+    cleanup();
     if (data && data.status === 'success') {
       allAppointments = data.appointments || [];
       processAppointmentsBudget();
+    } else {
+      // ตอบกลับมาแต่ไม่สำเร็จ ให้เคลียร์ spinner และเรนเดอร์รายการเดิม (หรือว่าง)
+      renderTable(allAppointments || []);
+      showToast('error', '⚠️ โหลดข้อมูลไม่สำเร็จ: ' + ((data && data.message) ? data.message : 'รูปแบบข้อมูลไม่ถูกต้อง'));
     }
   };
-  
+
+  // กรณีโหลด script ไม่สำเร็จ (เช่น URL ผิด, Apps Script ยังไม่ deploy, network error)
+  script.onerror = function() {
+    cleanup();
+    renderTable(allAppointments || []);
+    showToast('error', '⚠️ เชื่อมต่อ Apps Script ไม่ได้ ตรวจสอบ URL หรือสิทธิ์การเข้าถึง');
+  };
+
+  // กรณีไม่มีการตอบกลับใน 15 วินาที (เช่น Apps Script ส่ง JSON ธรรมดา ไม่ใช่ JSONP - callback จะไม่ถูกเรียก)
+  setTimeout(function() {
+    if (!settled) {
+      cleanup();
+      renderTable(allAppointments || []);
+      showToast('error', '⚠️ เซิร์ฟเวอร์ไม่ตอบสนอง (อาจเป็นเพราะ Apps Script ไม่รองรับ JSONP) กรุณาตรวจสอบโค้ดฝั่ง doGet ให้คืนค่าแบบ "callback(...)"');
+    }
+  }, 15000);
+
   script.src = BASE_URL + '?action=get_dashboard_data&callback=' + callbackName + '&_t=' + Date.now();
   document.body.appendChild(script);
 }
