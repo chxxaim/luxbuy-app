@@ -36,7 +36,6 @@
   .input-ctrl:focus { outline: none; border-color: var(--gold); background: var(--dark4); }
   .btn-gold { background: var(--gold); color: var(--dark); border: none; border-radius: var(--radius-sm); padding: 12px 24px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 100%; transition: all 0.2s; }
   .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
   header { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 20px; position: sticky; top: 0; z-index: 100; }
   .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
   .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); text-decoration: none; }
@@ -54,7 +53,7 @@
   .stat-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--text); }
   .stat-sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; }
   .budget-bar-bg { width: 100%; height: 6px; background: var(--dark4); border-radius: 3px; margin-top: 12px; overflow: hidden; }
-  .budget-bar-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.5s ease, background-color 0.3s; }
+  .budget-bar-fill { height: 100%; width: 0%; background: var(--gold); transition: width 0.5s ease; }
   .panel { background: var(--dark2); border: 1px solid var(--dark4); border-radius: var(--radius); padding: 30px; margin-bottom: 30px; display: none; }
   .panel.active { display: block; }
   .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--dark4); padding-bottom: 15px; }
@@ -74,7 +73,7 @@
   .action-btn { background: var(--dark3); border: 1px solid var(--dark4); color: var(--text); padding: 6px 12px; font-size: 0.85rem; border-radius: var(--radius-sm); cursor: pointer; margin-right: 4px; transition: all 0.2s; }
   .action-btn:hover { border-color: var(--gold); color: var(--gold); }
   .action-btn.btn-primary { background: var(--gold); color: var(--dark); border: none; font-weight: 500; }
-  .action-btn.btn-primary:hover { background: var(--gold-light); color: var(--dark); }
+  .action-btn.btn-primary:hover { background: var(--gold-light); }
   .action-btn.btn-edit { border-color: var(--blue); color: var(--blue); }
   .action-btn.btn-edit:hover { background: rgba(74,143,232,0.1); }
   .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; }
@@ -92,33 +91,22 @@
   .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
   .check-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); }
   .check-label input { accent-color: var(--gold); width: 16px; height: 16px; }
-  .check-label:hover { color: var(--text); }
   .score-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-  .score-row:last-child { border-bottom: none; }
-  .score-name { font-size: 0.95rem; }
   .score-select { background: var(--dark2); border: 1px solid var(--dark4); color: var(--text); padding: 6px 10px; border-radius: var(--radius-sm); outline: none; font-size: 0.9rem; }
-  .score-select:focus { border-color: var(--gold); }
   .live-grade-box { background: var(--gold-dim); border: 1px dashed var(--gold); border-radius: var(--radius); padding: 20px; display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; }
   .live-grade-title { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
   .live-grade-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold-light); }
-  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--dark2); border: 1px solid var(--border); padding: 12px 24px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 10000; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--dark2); border: 1px solid var(--border); padding: 12px 24px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px; z-index: 10000; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .toast-success { border-color: var(--green); }
   .toast-error { border-color: var(--red); }
   .mobile-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark2); border-top: 1px solid var(--dark4); display: flex; justify-content: space-around; padding: 10px 0; z-index: 99; }
   .mobile-nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.7rem; cursor: pointer; width: 20%; }
   .mobile-nav-btn.active { color: var(--gold); }
-  .mobile-nav-btn span { font-size: 1.2rem; }
   .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
   .loading-overlay.show { display: flex; }
   .spinner { width: 40px; height: 40px; border: 4px solid rgba(201,168,76,0.1); border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  .budget-bar-fill.safe { background: var(--green); }
-  .budget-bar-fill.warn { background: var(--orange); }
-  .budget-bar-fill.danger { background: var(--red); }
-  .hard-lock-msg { display: none; background: rgba(232,90,74,0.1); border: 1px solid var(--red); color: var(--red); padding: 12px; border-radius: var(--radius-sm); font-size: 0.9rem; text-align: center; margin-bottom: 15px; font-weight: 500; }
-  .status-select-inline { background: transparent; border: none; color: var(--text); font-weight: 500; cursor: pointer; outline: none; padding: 2px 4px; border-radius: 4px; }
-  .status-select-inline:focus { background: var(--dark4); }
   .brand-other-group { display: none; margin-top: 12px; }
   .brand-other-group.show { display: block; }
 </style>
@@ -163,7 +151,7 @@
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">งานตรวจวันนี้ / ล่วงหน้า</div>
+      <div class="stat-label">งานตรวจทั้งหมดในระบบ</div>
       <div id="stat-appts" class="stat-val">0</div>
       <div class="stat-sub">คิวนัดหมายที่ลงทะเบียนไว้</div>
     </div>
@@ -201,7 +189,7 @@
       <div class="panel-title">ประวัติการรับซื้อสินค้าและตรวจสภาพย้อนหลัง</div>
     </div>
     <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
-      <input type="text" id="searchHistory" class="input-ctrl" placeholder="🔍 ค้นหาด้วย ชื่อลูกค้า, เบอร์โทร, แบรนด์ หรือรหัสงาน..." style="max-width: 400px;" oninput="filterHistoryTable()">
+      <input type="text" id="searchHistory" class="input-ctrl" placeholder="🔍 ค้นหาด้วย ชื่อลูกค้า, แบรนด์ หรือรหัสงาน..." style="max-width: 400px;" oninput="filterHistoryTable()">
     </div>
     <div class="table-wrapper">
       <table>
@@ -227,7 +215,6 @@
     <div class="panel-header">
       <div class="panel-title">การตั้งค่าระบบ</div>
     </div>
-    <p style="color: var(--text-muted); margin-bottom: 20px;">จัดการข้อมูลผู้ใช้งานและลิ้งค์เชื่อมต่อระบบคลาวด์</p>
     <div style="max-width: 500px; background: var(--dark3); padding: 20px; border-radius: var(--radius-sm); border: 1px solid var(--dark4);">
       <div class="input-group">
         <label>Google Web App URL</label>
@@ -321,8 +308,6 @@
       <div class="modal-title" id="inspectTitle">ใบตรวจรับและประเมินสภาพสินค้า</div>
       <button class="close-modal" onclick="closeModal('inspectModal')">&times;</button>
     </div>
-    <div id="hardLockMsg" class="hard-lock-msg">⚠️ ไม่สามารถบันทึกได้ เนื่องจากราคารับซื้อนี้ทำให้ยอดรวมประจำวันเกิน 2,000,000 บาท</div>
-    
     <form id="inspectForm" onsubmit="submitInspection(event)">
       <input type="hidden" id="inspectApptId">
       <input type="hidden" id="inspectEstPrice">
@@ -332,7 +317,7 @@
           <label>หมวดหมู่สินค้า</label>
           <select id="insCategory" class="input-ctrl" onchange="renderInspectionFields()" required>
             <option value="footwear">👟 รองเท้า (Footwear)</option>
-            <option value="handbag">👜 กระเป๋า (Handbag)</option>
+            <option value="handbag" selected>👜 กระเป๋า (Handbag)</option>
             <option value="jewelry">💎 Fine Jewelry</option>
             <option value="acc">🧣 Accessories อื่นๆ</option>
           </select>
@@ -377,11 +362,11 @@
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">📦 อุปกรณ์ที่มาพร้อมสินค้า (ติ๊กชิ้นที่มี)</div>
+        <div class="form-section-title">📦 อุปกรณ์ที่มาพร้อมสินค้า</div>
         <div class="checkbox-grid" id="equipmentCheckboxes"></div>
         <div class="input-group" style="margin-top: 15px; margin-bottom:0;">
           <label>หมายเหตุอุปกรณ์เพิ่มเติม / ประเทศที่ซื้อ</label>
-          <input type="text" id="insEquipmentNotes" class="input-ctrl" placeholder="เช่น ใบเสร็จช็อปฝรั่งเศส, อุปกรณ์ครบขาดถุงกระดาษ">
+          <input type="text" id="insEquipmentNotes" class="input-ctrl" placeholder="เช่น ใบเสร็จช็อปฝรั่งเศส, อุปกรณ์ครบ">
         </div>
       </div>
 
@@ -406,7 +391,7 @@
         </div>
       </div>
 
-      <button type="submit" id="saveInspectBtn" class="btn-gold" style="margin-top: 10px; width: 100%;">🔒 บันทึกใบประเมินและปิดเคส</button>
+      <button type="submit" id="saveInspectBtn" class="btn-gold" style="width: 100%;">🔒 บันทึกใบประเมินและปิดเคส</button>
     </form>
   </div>
 </div>
@@ -417,61 +402,60 @@
 </div>
 
 <script>
-// ตัวเลือกเกณฑ์คะแนนสำหรับประเมิน
+// ฝังลิ้งค์ Web App Script คลาวด์ตรงตามที่คุณระบุเรียบร้อยครับ
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1tsSrrXCnnlBgYsJVsbBp-XveunNrIVG5kC8Y1nnRzaT-dtjQRgIRnaGW2EeIQSPo/exec";
+
 const SCHEMA = {
   footwear: {
-    equip: ['ใบเสร็จช็อปจริง', 'ถุงผ้า', 'กล่องสินค้า', 'การ์ดรับรอง', 'ถุงกระดาษ'],
+    equip: ['ใบเสร็จช็อปจริง', 'ถุงผ้า', 'กล่องสินค้า', 'การ์ดรับรอง', 'ถุงกระดา'],
     deductions: [
       { id: 'shape', label: 'ทรงรองเท้า', options: [{t:'ปกติ',p:20}, {t:'ไม่ปกติ/เบี้ยว',p:10}] },
-      { id: 'oxidize', label: 'อะไหล่ออกซิไดซ์/สนิม', options: [{t:'ไม่มีรอย',p:20}, {t:'มี 1-2 จุด',p:10}, {t:'มี 3 จุดขึ้นไป',p:0}] },
-      { id: 'glue', label: 'คราบกาวซึมรอบข้อ/พื้น', options: [{t:'ไม่มีรอยกาว',p:20}, {t:'คราบ 1-2 จุด',p:10}, {t:'คราบ 3 จุดขึ้นไป',p:0}] },
+      { id: 'oxidize', label: 'อะไหล่ออกซิไดซ์/สนิม', options: [{t:'ไม่มีรอย',p:20}, {t:'มี 1-2 จุด',p:10}] },
+      { id: 'glue', label: 'คราบกาวซึมรอบข้อ', options: [{t:'ไม่มีรอยกาว',p:20}, {t:'คราบ 1-2 จุด',p:10}] },
       { id: 'smell', label: 'กลิ่นอับชื้นภายใน', options: [{t:'ปกติ',p:10}, {t:'มีกลิ่นไม่ปกติ',p:5}] },
-      { id: 'stone', label: 'เพชร/คริสตัลประดับหลุด', options: [{t:'ครบถ้วน',p:10}, {t:'หลุด 1-2 เม็ด',p:5}, {t:'หลุด 3 เม็ดขึ้นไป',p:0}] },
-      { id: 'scratch', label: 'รอยถลอก/สีเฟด/รอยขีดข่วน', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยเล็ก 1-2 จุด',p:5}, {t:'รอยลึก 3 จุดขึ้นไป',p:0}] },
-      { id: 'sole', label: 'พื้นรองเท้าด้านล่าง', options: [{t:'ไม่มีรอยเดิน',p:10}, {t:'รอยเดินเล็กน้อย',p:5}, {t:'สึกหรอ/รอยเยอะ',p:0}] }
+      { id: 'scratch', label: 'รอยถลอก/สีเฟด', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยเล็ก 1-2 จุด',p:5}] },
+      { id: 'sole', label: 'พื้นรองเท้าด้านล่าง', options: [{t:'ไม่มีรอยเดิน',p:10}, {t:'รอยเดินเล็กน้อย',p:5}] }
     ]
   },
   handbag: {
-    equip: ['ใบเสร็จตัวจริง', 'ใบเสร็จสำเนา', 'การ์ดรับรอง', 'ถุงผ้า', 'กล่อง', 'ถุงกระดาษ', 'ริบบิ้น/ดอกคามิเลีย', 'ใบตรวจสถาบันนอก'],
+    equip: ['ใบเสร็จตัวจริง', 'ใบเสร็จสำเนา', 'การ์ดรับรอง', 'ถุงผ้า', 'กล่อง', 'ถุงกระดาษ', 'ริบบิ้น'],
     deductions: [
       { id: 'leather', label: 'สภาพหนังและโครงสร้างทรง', options: [{t:'หนังแข็งสวยทรงเป๊ะ',p:15}, {t:'หนังนิ่มลงเล็กน้อย',p:10}, {t:'หนังย้วยเสียทรง',p:5}] },
-      { id: 'hardware', label: 'อะไหล่โลหะและตราปั๊ม', options: [{t:'ไม่มีรอย',p:10}, {t:'ขนแมวบางๆ',p:5}, {t:'รอยขีดข่วนลึก',p:0}] },
-      { id: 'smell', label: 'กลิ่นกระเป๋าภายใน', options: [{t:'ปกติ/กลิ่นหนังหอม',p:5}, {t:'กลิ่นอับ/น้ำหอมฉุน',p:0}] },
-      { id: 'corner', label: 'ขอบมุมกระเป๋าทั้ง 4 มุม', options: [{t:'ไม่มีรอยถลอก',p:10}, {t:'มีรอยบางๆ',p:5}, {t:'ถลอกลึกจนถึงเนื้อหนัง',p:0}] },
-      { id: 'ink', label: 'รอยปากกา/เครื่องสำอาง/ดูดสี', options: [{t:'สะอาดไม่มีรอย',p:10}, {t:'จุดเล็ก 1-2 ตำแหน่ง',p:5}, {t:'รอยใหญ่เกิน 1 ซม.',p:0}] },
-      { id: 'scratch', label: 'รอยเล็บ/รอยขีดข่วนเนื้อหนัง', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยบาง 1-2 จุด',p:5}, {t:'รอยลึกหลายจุด',p:0}] },
-      { id: 'glue', label: 'ยาแนวหลุด/คราบกาวซึม', options: [{t:'ปกติเรียบร้อย',p:10}, {t:'เหนียว/ซึม 1-2 จุด',p:5}, {t:'ยาแนวแตกหลุดลุ่ย',p:0}] },
-      { id: 'water', label: 'คราบน้ำ/คราบด่างความชื้น', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยจางๆ',p:5}, {t:'ด่างเป็นวงกว้าง',p:0}] },
-      { id: 'press', label: 'รอยกดทับจากการจัดเก็บ', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยตื้นๆ',p:5}, {t:'บุ๋มลึกถาวร',p:0}] },
-      { id: 'oxidize', label: 'โลหะขึ้นสนิมเขียว/อะไหล่เฟด', options: [{t:'ไม่มีสนิม',p:10}, {t:'มีสนิมชัดเจน',p:0}] }
+      { id: 'hardware', label: 'อะไหล่โลหะและตราปั๊ม', options: [{t:'ไม่มีรอย',p:10}, {t:'ขนแมวบางๆ',p:5}] },
+      { id: 'smell', label: 'กลิ่นกระเป๋าภายใน', options: [{t:'ปกติ/กลิ่นหนังหอม',p:5}, {t:'กลิ่นอับ',p:0}] },
+      { id: 'corner', label: 'ขอบมุมกระเป๋าทั้ง 4 มุม', options: [{t:'ไม่มีรอยถลอก',p:10}, {t:'มีรอยบางๆ',p:5}] },
+      { id: 'scratch', label: 'รอยเล็บ/รอยขีดข่วน', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยบาง 1-2 จุด',p:5}] },
+      { id: 'glue', label: 'ยาแนวหลุด/คราบกาวซึม', options: [{t:'ปกติเรียบร้อย',p:10}, {t:'เหนียว/ซึม',p:5}] },
+      { id: 'water', label: 'คราบน้ำ/คราบด่าง', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยจางๆ',p:5}] },
+      { id: 'press', label: 'รอยกดทับจากการจัดเก็บ', options: [{t:'ไม่มีรอย',p:10}, {t:'รอยตื้นๆ',p:5}] },
+      { id: 'oxidize', label: 'โลหะขึ้นสนิมเขียว/อะไหล่เฟด', options: [{t:'ไม่มีสนิม',p:10}, {t:'มีสนิม',p:0}] }
     ]
   },
   jewelry: {
-    equip: ['Certificate/ใบรับรอง', 'ใบเสร็จตัวจริง', 'กล่องใน/ซองใส่', 'กล่องนอก', 'ถุงผ้า', 'ถุงกระดาษ'],
+    equip: ['Certificate/ใบรับรอง', 'ใบเสร็จตัวจริง', 'กล่องใน', 'กล่องนอก', 'ถุงผ้า'],
     deductions: [
-      { id: 'shape', label: 'รูปทรงความสมมาตรบิดเบี้ยว', options: [{t:'ทรงปกติเป๊ะ',p:10}, {t:'เบี้ยว/บิดงอ',p:0}] },
-      { id: 'hardware', label: 'รอยขนแมวบนพื้นผิวทอง/พลาตินัม', options: [{t:'เงาสวยไม่มีรอย',p:20}, {t:'ขนแมวบางๆ',p:10}, {t:'รอยลึกเนื้อเงินแหว่ง',p:5}] },
-      { id: 'scratch', label: 'รอยกระแทก/รอยบิ่นลึก', options: [{t:'ไม่มีรอย',p:20}, {t:'บิ่นเล็ก 1-2 จุด',p:10}, {t:'รอยบุบกระแทกใหญ่',p:5}] },
-      { id: 'dirty', label: 'คราบสกปรกฝังลึก/คราบแป้ง', options: [{t:'สะอาดเงางาม',p:20}, {t:'มีคราบเล็กน้อย',p:10}, {t:'คราบหนาบดบังแสง',p:5}] },
-      { id: 'glue', label: 'คราบกาวฝังจุดยึดพลอย', options: [{t:'ไม่มีคราบ',p:10}, {t:'มีรอยกาวแห้ง 1-2 จุด',p:5}, {t:'หลุดร่อน',p:0}] },
-      { id: 'oxidize', label: 'การเปลี่ยนสีของโลหะ/หมองคล้ำ', options: [{t:'สีสว่างสดใส',p:20}, {t:'สีคล้ำชำรุด',p:0}] }
+      { id: 'shape', label: 'รูปทรงความสมมาตร', options: [{t:'ทรงปกติเป๊ะ',p:10}, {t:'เบี้ยว/บิดงอ',p:0}] },
+      { id: 'hardware', label: 'รอยขนแมวบนพื้นผิว', options: [{t:'เงาสวยไม่มีรอย',p:20}, {t:'ขนแมวบางๆ',p:10}] },
+      { id: 'scratch', label: 'รอยกระแทก/รอยบิ่นลึก', options: [{t:'ไม่มีรอย',p:20}, {t:'บิ่นเล็ก 1-2 จุด',p:10}] },
+      { id: 'dirty', label: 'คราบสกปรกฝังลึก', options: [{t:'สะอาดเงางาม',p:20}, {t:'มีคราบเล็กน้อย',p:10}] },
+      { id: 'oxidize', label: 'การเปลี่ยนสีของโลหะ', options: [{t:'สีสว่างสดใส',p:30}, {t:'สีคล้ำชำรุด',p:0}] }
     ]
   },
   acc: {
     equip: ['ใบเสร็จตัวจริง', 'ถุงผ้า', 'กล่องสินค้า', 'การ์ดข้อมูล', 'ถุงกระดาษ'],
     deductions: [
-      { id: 'shape', label: 'โครงทรงวัสดุผ้า/หนัง', options: [{t:'ทรงปกติ',p:10}, {t:'เสียทรงรุนแรง',p:0}] },
-      { id: 'hardware', label: 'รอยถลอกบนอะไหล่ประกอบ', options: [{t:'ไม่มีรอยขูดขีด',p:20}, {t:'ขนแมวบางๆ',p:10}, {t:'ถลอกจนลอกเห็นเนื้อใน',p:5}] },
-      { id: 'scratch', label: 'ด้ายรุ่ย/ด้ายรัน/เนื้อผ้าขาด', options: [{t:'สมบูรณ์ 100%',p:20}, {t:'รุ่ยเล็กน้อย 1-2 จุด',p:10}, {t:'ผ้าขาดเป็นรู',p:5}] },
-      { id: 'dirty', label: 'คราบเปื้อน/คราบเหลืองฝังเนื้อผ้า', options: [{t:'สะอาดไม่มีคราบ',p:20}, {t:'คราบจางๆ',p:10}, {t:'คราบฝังแน่นด่างดำ',p:5}] },
-      { id: 'glue', label: 'ขอบกาวชิ้นส่วนประกอบซึม', options: [{t:'ไม่มีรอยกาว',p:10}, {t:'มีกาวเยิ้มเล็กน้อย',p:5}, {t:'กาวเสื่อมหลุดจากกัน',p:0}] },
-      { id: 'oxidize', label: 'วัสดุโลหะผสมเปลี่ยนสี/ขึ้นสนิม', options: [{t:'ปกติเงางาม',p:20}, {t:'โลหะคล้ำหมองขัดไม่ออก',p:0}] }
+      { id: 'shape', label: 'โครงทรงวัสดุผ้า/หนัง', options: [{t:'ทรงปกติ',p:10}, {t:'เสียทรง',p:0}] },
+      { id: 'hardware', label: 'รอยถลอกบนอะไหล่', options: [{t:'ไม่มีรอยขูดขีด',p:20}, {t:'ขนแมวบางๆ',p:10}] },
+      { id: 'scratch', label: 'ด้ายรุ่ย/เนื้อผ้าขาด', options: [{t:'สมบูรณ์ 100%',p:20}, {t:'รุ่ยเล็กน้อย',p:10}] },
+      { id: 'dirty', label: 'คราบเปื้อน/คราบเหลือง', options: [{t:'สะอาดไม่มีคราบ',p:20}, {t:'คราบจางๆ',p:10}] },
+      { id: 'oxidize', label: 'วัสดุเปลี่ยนสี/ขึ้นสนิม', options: [{t:'ปกติเงางาม',p:30}, {t:'โลหะคล้ำหมอง',p:0}] }
     ]
   }
 };
 
 let cachedData = null;
 let currentTodaySpend = 0;
+let toastTimer;
 
 function checkAuth() {
   if (localStorage.getItem('luxbuy_logged') === 'true') {
@@ -482,26 +466,24 @@ function checkAuth() {
 }
 
 function attemptLogin() {
-  const pass = document.getElementById('passInput').value;
-  if (pass === '2569') {
+  if (document.getElementById('passInput').value === '2569') {
     localStorage.setItem('luxbuy_logged', 'true');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('settingUrlInput').value = SCRIPT_URL;
     fetchDashboardData();
     showToast('success', 'เข้าสู่ระบบ LuxBuy เรียบร้อยแล้ว');
   } else {
-    showToast('error', 'รหัสผ่านผิดพลาด กรุณาลองใหม่อีกครั้ง');
+    showToast('error', 'รหัสผ่านผิดพลาด');
   }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  // ตั้งค่าเริ่มต้นวันที่ในฟอร์มเป็นวันปัจจุบันเพื่อความสะดวก
   document.getElementById('newDate').value = new Date().toISOString().split('T')[0];
   checkAuth();
 });
 
 function showLoading(text) {
-  document.getElementById('loadingText').textContent = text || 'กำลังประมวลผลข้อมูล...';
+  document.getElementById('loadingText').textContent = text || 'กำลังประมวลผล...';
   document.getElementById('loadingOverlay').classList.add('show');
 }
 function hideLoading() {
@@ -518,7 +500,7 @@ function fetchDashboardData() {
   .then(res => {
     if (res.status === 'success') {
       cachedData = res;
-      calculateEffectiveSpend(); // คำนวณวงเงินตามเงื่อนไขข้อ 6
+      calculateEffectiveSpend();
       renderDashboard();
     } else {
       showToast('error', 'เกิดข้อผิดพลาด: ' + res.message);
@@ -528,17 +510,14 @@ function fetchDashboardData() {
   .finally(hideLoading);
 }
 
-// ข้อ 6: ตรรกะคำนวณเงินที่มีการเปลี่ยนแปลงอ้างอิงสถานะสำเร็จและการโอนเงินสำเร็จของวันปัจจุบัน
 function calculateEffectiveSpend() {
   const appts = cachedData.appointments || [];
   const todayStr = new Date().toISOString().split('T')[0];
   let total = 0;
   
   appts.forEach(a => {
-    // ตัดรูปแบบวันที่ให้อยู่ในฟอร์แมต YYYY-MM-DD ตรงกัน
     const apptDate = a.date ? a.date.split('T')[0] : "";
     if (apptDate === todayStr && a.appt_status !== 'ยกเลิก') {
-      // นับเฉพาะที่สถานะการชำระเงินไม่ใช่ "ยังไม่จ่าย" เพื่อความแม่นยำของวงเงินที่ตัดจริง
       if (a.payment_status === 'จ่ายเงินสำเร็จ' || a.payment_status === 'กำลังโอนเงิน' || a.appt_status === 'สำเร็จ') {
         total += Number(a.estimated_price) || 0;
       }
@@ -548,7 +527,6 @@ function calculateEffectiveSpend() {
 }
 
 function renderDashboard() {
-  // ควบคุมแถบวงเงิน 2 ล้านบาทประจำวัน
   document.getElementById('statTodaySpend').textContent = currentTodaySpend.toLocaleString() + ' ฿';
   const leftBudget = 2000000 - currentTodaySpend;
   document.getElementById('statBudgetLeft').textContent = `คงเหลือโควตาประจำวัน: ${leftBudget.toLocaleString()} ฿`;
@@ -559,17 +537,13 @@ function renderDashboard() {
   
   const card = document.getElementById('cardSpend');
   card.className = 'stat-card';
-  bar.className = 'budget-bar-fill';
-  
-  if (currentTodaySpend >= 2000000) { card.classList.add('budget-danger'); bar.classList.add('danger'); }
-  else if (currentTodaySpend >= 1500000) { card.classList.add('budget-warn'); bar.classList.add('warn'); }
-  else { card.classList.add('budget-safe'); bar.classList.add('safe'); }
+  if (currentTodaySpend >= 2000000) card.classList.add('budget-danger');
+  else if (currentTodaySpend >= 1500000) card.classList.add('budget-warn');
+  else card.classList.add('budget-safe');
 
-  // แสดงยอดจำนวนงานนัดหมายทั้งหมด
   const appts = cachedData.appointments || [];
   document.getElementById('stat-appts').textContent = appts.length;
 
-  // เรนเดอร์ตารางนัดหมาย
   const apptTable = document.getElementById('apptTableBody');
   apptTable.innerHTML = '';
 
@@ -577,11 +551,8 @@ function renderDashboard() {
     apptTable.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">ไม่มีรายการนัดหมายในระบบ</td></tr>`;
   } else {
     appts.forEach(a => {
-      // แก้ไขข้อ 4: ตรวจเช็คค่าในตารางตรวจสภาพจริงๆ โดยแมทช์ผ่านรหัส appt_id 
       const isInspected = cachedData.inspections && cachedData.inspections.some(i => i.appt_id === a.appt_id);
-      
       const tr = document.createElement('tr');
-      // เติมข้อมูลจำนวนชิ้น และที่อยู่ระยะทางในแถวตารางตามข้อ 1
       tr.innerHTML = `
         <td><span style="font-size:0.85rem; color:var(--text-muted);">${a.date ? a.date.split('T')[0] : ''}</span><br><strong style="color:var(--gold-light);">${a.time_slot} น.</strong></td>
         <td style="font-size:0.85rem; font-family:monospace; color:var(--text-muted);">${a.appt_id}</td>
@@ -606,7 +577,7 @@ function renderDashboard() {
         </td>
         <td>
           <div style="display: flex; gap: 4px;">
-            <button class="action-btn btn-edit" onclick="openEditApptModal('${a.appt_id}')" title="แก้ไขจำนวนสินค้าหรือข้อมูลนัด">✏️ แก้ไข</button>
+            <button class="action-btn btn-edit" onclick="openEditApptModal('${a.appt_id}')">✏️ แก้ไข</button>
             ${isInspected 
               ? `<span class="badge badge-success" style="padding: 6px 12px;">✓ ตรวจแล้ว</span>`
               : `<button class="action-btn btn-primary" onclick="openInspectModal('${a.appt_id}', '${a.customer_name}', '${a.product_name}', ${a.estimated_price})">🔍 ตรวจสภาพ</button>`
@@ -618,7 +589,6 @@ function renderDashboard() {
     });
   }
 
-  // เรนเดอร์ตารางประวัติย้อนหลัง
   const histTable = document.getElementById('historyTableBody');
   histTable.innerHTML = '';
   const inspects = cachedData.inspections || [];
@@ -630,9 +600,8 @@ function renderDashboard() {
       const tr = document.createElement('tr');
       let gradeClass = 'badge-info';
       if (i.final_condition === 'NEW') gradeClass = 'badge-success';
-      if (i.final_condition === 'USED') gradeClass = 'badge-danger';
-      if (i.final_condition === 'KEPT UNUSED') gradeClass = 'badge-info';
       if (i.final_condition === 'LIKE NEW') gradeClass = 'badge-pending';
+      if (i.final_condition === 'USED') gradeClass = 'badge-danger';
       
       tr.innerHTML = `
         <td style="color:var(--text-muted); font-size:0.9rem;">${i.inspection_date ? i.inspection_date.split('T')[0] : ''}</td>
@@ -641,9 +610,7 @@ function renderDashboard() {
         <td style="font-weight:600; color:var(--gold-light);">${i.total_score} คะแนน</td>
         <td><span class="badge ${gradeClass}">${i.final_condition}</span></td>
         <td>👤 ${i.inspector_name}</td>
-        <td style="font-size:0.85rem; color:var(--text-muted); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${i.equipment_summary}">
-          ${i.equipment_summary} ${i.equipment_notes ? `(${i.equipment_notes})` : ''}
-        </td>
+        <td style="font-size:0.85rem; color:var(--text-muted); max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.equipment_summary}</td>
       `;
       histTable.appendChild(tr);
     });
@@ -660,9 +627,7 @@ function switchTab(tab) {
   const order = ['appt', 'history', 'settings'];
   const idx = order.indexOf(tab);
   if (btns[idx]) btns[idx].classList.add('active');
-  
-  const mbtn = document.getElementById('mbtn-' + tab);
-  if (mbtn) mbtn.classList.add('active');
+  if (document.getElementById('mbtn-' + tab)) document.getElementById('mbtn-' + tab).classList.add('active');
 }
 
 function openAddApptModal() {
@@ -673,11 +638,9 @@ function openAddApptModal() {
   document.getElementById('addApptModal').classList.add('show');
 }
 
-// ฟังก์ชันเปิด Modal แก้ไขข้อมูลนัดหมายตามข้อ 1
 function openEditApptModal(apptId) {
   const appt = cachedData.appointments.find(a => a.appt_id === apptId);
   if (!appt) return;
-  
   document.getElementById('editApptId').value = apptId;
   document.getElementById('apptModalTitle').textContent = `✏️ แก้ไขข้อมูลนัดหมายคิว [${apptId}]`;
   
@@ -697,11 +660,9 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('show');
 }
 
-// บันทึกเพิ่มคิวงาน / หรือแก้ไขข้อมูลคิวงานตามข้อ 1 และ 5
 function submitAppointment(e) {
   e.preventDefault();
   const editId = document.getElementById('editApptId').value;
-  
   const data = {
     action: editId ? 'edit_appointment' : 'add_appointment',
     appt_id: editId || undefined,
@@ -715,26 +676,24 @@ function submitAppointment(e) {
     distance: document.getElementById('newDistance').value
   };
   
-  showLoading('กำลังบันทึกข้อมูลเข้าฐานคลาวด์...');
+  showLoading('กำลังบันทึกข้อมูลเข้าสู่ระบบคลาวด์...');
   fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
   .then(res => res.json())
   .then(res => {
     if (res.status === 'success') {
-      showToast('success', editId ? 'อัพเดทการแก้ไขข้อมูลนัดหมายเรียบร้อย!' : 'ลงทะเบียนนัดหมายลูกค้าเรียบร้อยแล้ว');
+      showToast('success', editId ? 'แก้ไขข้อมูลนัดหมายเรียบร้อย!' : 'ลงทะเบียนนัดหมายลูกค้าเรียบร้อยแล้ว');
       closeModal('addApptModal');
-      document.getElementById('addApptForm').reset();
       fetchDashboardData();
     } else {
       showToast('error', res.message);
     }
   })
-  .catch(() => showToast('error', 'ระบบเครือข่ายส่งข้อมูลขัดข้อง'))
+  .catch(() => showToast('error', 'ระบบขัดข้อง'))
   .finally(hideLoading);
 }
 
-// อัปเดตสถานะจากหน้าตารางหลัก (ข้อ 6 ยอดรวมเงินจะเปลี่ยนตามทันที)
 function changeStatus(apptId, field, val) {
-  showLoading('กำลังบันทึกสถานะ...');
+  showLoading('กำลังอัปเดตสถานะ...');
   fetch(SCRIPT_URL, {
     method: 'POST',
     body: JSON.stringify({ action: 'update_status', appt_id: apptId, field: field, value: val })
@@ -742,31 +701,20 @@ function changeStatus(apptId, field, val) {
   .then(res => res.json())
   .then(res => {
     if (res.status === 'success') {
-      showToast('success', 'ปรับเปลี่ยนสถานะเรียบร้อย');
-      fetchDashboardData(); // โหลดใหม่เพื่อคำนวณวงเงิน Real-time
+      showToast('success', 'เปลี่ยนสถานะเรียบร้อย');
+      fetchDashboardData();
     } else {
       showToast('error', res.message);
     }
   })
-  .catch(() => showToast('error', 'อัปเดตสถานะขัดข้อง'))
+  .catch(() => showToast('error', 'การสื่อสารระบบคลาวด์ขัดข้อง'))
   .finally(hideLoading);
 }
 
-// ข้อ 2: ปรับปรุงหัวข้อชื่อและสินค้าให้เป็นไดนามิกอัตโนมัติ
 function openInspectModal(apptId, custName, prodName, estPrice) {
   document.getElementById('inspectApptId').value = apptId;
   document.getElementById('inspectEstPrice').value = estPrice;
-  
-  // ปรับหัวข้อตามข้อ 2 ของคุณ
   document.getElementById('inspectTitle').textContent = `ใบตรวจสภาพสินค้าของลูกค้า: คุณ ${custName} | สินค้า: ${prodName}`;
-  
-  if (currentTodaySpend + Number(estPrice) > 2000000) {
-    document.getElementById('hardLockMsg').style.display = 'block';
-    document.getElementById('saveInspectBtn').disabled = true;
-  } else {
-    document.getElementById('hardLockMsg').style.display = 'none';
-    document.getElementById('saveInspectBtn').disabled = false;
-  }
   
   document.getElementById('insCategory').value = 'handbag';
   document.getElementById('insBrand').value = 'Chanel';
@@ -775,7 +723,6 @@ function openInspectModal(apptId, custName, prodName, estPrice) {
   document.getElementById('inspectModal').classList.add('show');
 }
 
-// แสดง/ซ่อน ช่องกรอกแบรนด์พิมพ์เองเมื่อเลือก "อื่นๆ" (ตามข้อ 2)
 function toggleBrandOtherField() {
   const brandVal = document.getElementById('insBrand').value;
   const otherGroup = document.getElementById('brandOtherGroup');
@@ -806,12 +753,8 @@ function renderInspectionFields() {
   schema.deductions.forEach(d => {
     const row = document.createElement('div');
     row.className = 'score-row';
-    
     let optHtml = '';
-    d.options.forEach(opt => {
-      optHtml += `<option value="${opt.p}">${opt.t} (${opt.p} แต้ม)</option>`;
-    });
-    
+    d.options.forEach(opt => { optHtml += `<option value="${opt.p}">${opt.t} (${opt.p} แต้ม)</option>`; });
     row.innerHTML = `
       <div class="score-name">${d.label}</div>
       <select class="score-select" name="insDeduct" data-id="${d.id}" onchange="calculateLiveGrade()">
@@ -820,11 +763,9 @@ function renderInspectionFields() {
     `;
     scoreRows.appendChild(row);
   });
-  
   calculateLiveGrade();
 }
 
-// ข้อ 3: ระบบคำนวณและสรุปแสดงผลแต้มและเกรดสภาพท้ายฟอร์ม
 function calculateLiveGrade() {
   const selects = document.querySelectorAll('select[name="insDeduct"]');
   let total = 0;
@@ -837,12 +778,7 @@ function calculateLiveGrade() {
   
   document.getElementById('liveScore').textContent = total;
   document.getElementById('liveCondition').textContent = cond;
-  
-  if (cond === 'USED') {
-    document.getElementById('liveCondition').style.color = 'var(--red)';
-  } else {
-    document.getElementById('liveCondition').style.color = 'var(--gold-light)';
-  }
+  document.getElementById('liveCondition').style.color = (cond === 'USED') ? 'var(--red)' : 'var(--gold-light)';
 }
 
 function submitInspection(e) {
@@ -852,14 +788,12 @@ function submitInspection(e) {
   const notes = document.getElementById('insGeneralNotes').value;
   
   if (cond === 'USED' && !notes.trim()) {
-    showToast('error', 'ผลประเมินเป็น USED จำเป็นต้องระบุตำหนิเพิ่มเติมในกล่องข้อความด้านล่าง');
+    showToast('error', 'เกรด USED จำเป็นต้องระบุตำหนิเพิ่มเติม');
     return;
   }
   
   let finalBrand = document.getElementById('insBrand').value;
-  if (finalBrand === 'อื่นๆ') {
-    finalBrand = document.getElementById('insBrandOther').value;
-  }
+  if (finalBrand === 'อื่นๆ') finalBrand = document.getElementById('insBrandOther').value;
   
   const selectedEquip = [];
   document.querySelectorAll('input[name="insEquip"]:checked').forEach(c => { selectedEquip.push(c.value); });
@@ -890,15 +824,14 @@ function submitInspection(e) {
   .then(res => res.json())
   .then(res => {
     if (res.status === 'success') {
-      showToast('success', 'บันทึกประเมินสภาพและปิดเคสรับซื้อสำเร็จ!');
+      showToast('success', 'บันทึกใบตรวจสภาพและปิดเคสเรียบร้อย!');
       closeModal('inspectModal');
-      document.getElementById('inspectForm').reset();
       fetchDashboardData();
     } else {
       showToast('error', res.message);
     }
   })
-  .catch(() => showToast('error', 'ระบบขัดข้องกรุณาลองใหม่อีกครั้ง'))
+  .catch(() => showToast('error', 'บันทึกข้อมูลขัดข้อง'))
   .finally(hideLoading);
 }
 
