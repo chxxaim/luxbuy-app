@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuxBuy — ระบบรับซื้อแบรนด์เนม</title>
+<title>Farevefarm — ระบบรับซื้อแบรนด์เนม</title>
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -34,62 +34,18 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+
+  :lang(th) {
+    font-family: 'Anuphan', sans-serif !important;
+  }
+
   body {
-    font-family: 'Work Sans', 'Anuphan', sans-serif;
+    font-family: 'Work Sans', sans-serif;
     background: var(--cream);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
     padding-bottom: 70px;
-  }
-
-  /* === LOGIN OVERLAY === */
-  #loginOverlay {
-    position: fixed; inset: 0; z-index: 9999;
-    background: var(--navy);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 24px;
-  }
-  .login-box {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 48px 40px;
-    width: 340px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  }
-  .login-logo {
-    font-family: 'Work Sans', 'Anuphan', serif;
-    font-size: 28px; color: var(--navy);
-    letter-spacing: 3px; margin-bottom: 6px;
-    font-weight: 700;
-  }
-  .login-sub { color: var(--text-muted); font-size: 13px; margin-bottom: 28px; }
-  .login-box input {
-    width: 100%; padding: 14px 18px;
-    background: var(--gray-light); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); color: var(--text);
-    font-family: 'Work Sans', 'Anuphan', sans-serif; font-size: 15px;
-    text-align: center; letter-spacing: 4px;
-    outline: none; margin-bottom: 14px;
-    transition: border-color 0.2s;
-  }
-  .login-box input:focus { border-color: var(--navy); }
-  .login-box input::placeholder { letter-spacing: 1px; color: var(--text-dim); }
-  .login-btn {
-    width: 100%; padding: 14px;
-    background: var(--navy); border: none;
-    border-radius: var(--radius-sm); color: var(--white);
-    font-family: 'Work Sans', 'Anuphan', sans-serif; font-weight: 600;
-    font-size: 15px; cursor: pointer; transition: all 0.2s;
-  }
-  .login-btn:hover { background: var(--navy-light); }
-  .login-error {
-    color: var(--red); font-size: 13px; margin-top: 10px;
-    display: none;
-    background: rgba(239,68,68,0.1); padding: 8px 12px;
-    border-radius: var(--radius-sm);
   }
 
   /* === TOP BAR === */
@@ -141,7 +97,7 @@
   .tab-btn {
     padding: 8px 18px; border-radius: 30px;
     background: transparent; border: 1px solid transparent;
-    color: var(--coarse-wool); font-family: 'Work Sans', 'Anuphan', sans-serif;
+    color: var(--coarse-wool); font-family: 'Work Sans', sans-serif;
     font-size: 13px; font-weight: 500; cursor: pointer;
     transition: all 0.2s; white-space: nowrap;
   }
@@ -168,7 +124,7 @@
   /* === BUTTONS === */
   .btn {
     padding: 10px 20px; border-radius: var(--radius-sm);
-    border: none; font-family: 'Work Sans', 'Anuphan', sans-serif;
+    border: none; font-family: 'Work Sans', sans-serif;
     font-size: 13px; font-weight: 500; cursor: pointer;
     transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px;
   }
@@ -198,7 +154,7 @@
     padding: 11px 13px;
     background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text);
-    font-family: 'Work Sans', 'Anuphan', sans-serif; font-size: 14px;
+    font-family: 'Work Sans', sans-serif; font-size: 14px;
     outline: none; transition: border-color 0.2s; width: 100%;
   }
   .form-control:focus { border-color: var(--navy); }
@@ -240,7 +196,7 @@
   /* Dropdown Badges Styles */
   .badge-select {
     padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
-    font-family: 'Work Sans', 'Anuphan', sans-serif; cursor: pointer; outline: none; border: 1px solid transparent;
+    font-family: 'Work Sans', sans-serif; cursor: pointer; outline: none; border: 1px solid transparent;
   }
   .badge-select-wait   { background: var(--gray-light); color: var(--gray-dark); border-color: var(--border); }
   .badge-select-arrived{ background: rgba(59,130,246,0.15); color: var(--blue); border-color: rgba(59,130,246,0.3); }
@@ -317,7 +273,7 @@
   .item-tab {
     padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
     background: var(--white); font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap;
-    font-family: 'Work Sans', 'Anuphan', sans-serif;
+    font-family: 'Work Sans', sans-serif;
   }
   .item-tab.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
   .item-tab.add-btn { background: var(--gray-light); border-style: dashed; color: var(--navy); }
@@ -344,7 +300,7 @@
   .cat-btn {
     padding: 7px 15px; border-radius: 20px;
     border: 1px solid var(--border); background: var(--white);
-    color: var(--text-muted); font-family: 'Work Sans', 'Anuphan', sans-serif;
+    color: var(--text-muted); font-family: 'Work Sans', sans-serif;
     font-size: 13px; cursor: pointer; transition: all 0.2s;
   }
   .cat-btn:hover { border-color: var(--navy); color: var(--navy); }
@@ -377,7 +333,7 @@
   .toggle-btn {
     padding: 3px 9px; border-radius: 12px; font-size: 11px;
     border: 1px solid transparent; cursor: pointer; transition: all 0.2s;
-    background: transparent; font-family: 'Work Sans', 'Anuphan', sans-serif;
+    background: transparent; font-family: 'Work Sans', sans-serif;
   }
   .toggle-btn.yes { border-color: var(--green); color: var(--green); }
   .toggle-btn.yes.active { background: var(--green); color: var(--white); font-weight: bold; }
@@ -420,7 +376,7 @@
     width: 100%; padding: 11px 13px 11px 40px;
     background: var(--white); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text);
-    font-family: 'Work Sans', 'Anuphan', sans-serif; font-size: 14px;
+    font-family: 'Work Sans', sans-serif; font-size: 14px;
     outline: none; transition: border-color 0.2s;
   }
   .search-input:focus { border-color: var(--navy); }
@@ -487,7 +443,7 @@
   .mobile-tab {
     flex: 1; display: flex; flex-direction: column; align-items: center;
     gap: 3px; padding: 6px 4px; border: none; background: transparent;
-    color: var(--text-muted); font-family: 'Work Sans', 'Anuphan', sans-serif;
+    color: var(--text-muted); font-family: 'Work Sans', sans-serif;
     font-size: 10px; cursor: pointer; transition: color 0.2s;
   }
   .mobile-tab.active { color: var(--navy); }
@@ -522,16 +478,13 @@
 
 <div id="loginOverlay">
   <div class="login-box">
-    <div class="login-logo">LUXBUY</div>
+    <div class="login-logo">FAREVEFARM</div>
     <div class="login-sub">ระบบบริหารจัดการการรับซื้อสินค้าแบรนด์เนม</div>
-    <input type="password" id="loginPass" placeholder="รหัสผ่านเข้าใช้งานระบบ">
-    <button class="login-btn" onclick="checkLogin()">เข้าสู่ระบบ</button>
-    <div class="login-error" id="loginError">❌ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</div>
-  </div>
+    </div>
 </div>
 
 <div id="topBar">
-  <div class="logo">LUXBUY<span>ระบบรับซื้อแบรนด์เนม</span></div>
+  <div class="logo">FAREVEFARM<span>ระบบรับซื้อแบรนด์เนม</span></div>
   
   <div class="budget-wrap" onclick="showTab('settings')">
     <span class="budget-label">ใช้วงเงินวันนี้:</span>
@@ -852,16 +805,14 @@ const CRITERIA = {
 // LOGIN PROTECTION
 // =============================================
 function checkLogin() {
-  const p = document.getElementById('loginPass').value;
-  if (p === '2525' || p === '1155') {
-    document.getElementById('loginOverlay').style.display = 'none';
-    initApp();
-  } else {
-    const err = document.getElementById('loginError');
-    err.style.display = 'block';
-    setTimeout(() => err.style.display = 'none', 3000);
-  }
+  document.getElementById('loginOverlay').style.display = 'none';
+  initApp();
 }
+
+window.addEventListener('load', () => {
+  document.getElementById('loginOverlay').style.display = 'none';
+  initApp();
+});
 
 function initApp() {
   document.getElementById('cfg_base_url').value = BASE_URL;
